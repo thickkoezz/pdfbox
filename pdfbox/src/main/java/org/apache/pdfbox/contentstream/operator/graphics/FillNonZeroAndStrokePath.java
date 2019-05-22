@@ -16,32 +16,28 @@
  */
 package org.apache.pdfbox.contentstream.operator.graphics;
 
+import java.awt.geom.Path2D;
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
-
-import java.awt.geom.GeneralPath;
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
- * B Fill and then stroke the path, using the nonzero winding number rule to determine the region
- * to fill.
+ * B Fill and then stroke the path, using the nonzero winding number rule to
+ * determine the region to fill.
  *
  * @author Ben Litchfield
  */
-public class FillNonZeroAndStrokePath extends GraphicsOperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> operands) throws IOException
-    {
-        context.fillAndStrokePath(GeneralPath.WIND_NON_ZERO);
-    }
+public class FillNonZeroAndStrokePath extends GraphicsOperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> operands) throws IOException {
+    context.fillAndStrokePath(Path2D.WIND_NON_ZERO);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.FILL_NON_ZERO_AND_STROKE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.FILL_NON_ZERO_AND_STROKE;
+  }
 }
