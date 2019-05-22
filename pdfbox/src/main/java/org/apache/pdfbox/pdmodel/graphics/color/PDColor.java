@@ -16,176 +16,167 @@
  */
 package org.apache.pdfbox.pdmodel.graphics.color;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSNumber;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 /**
- * A color value, consisting of one or more color components, or for pattern color spaces,
- * a name and optional color components.
- * Color values are not associated with any given color space.
+ * A color value, consisting of one or more color components, or for pattern
+ * color spaces, a name and optional color components. Color values are not
+ * associated with any given color space.
  *
  * Instances of PDColor are immutable.
  *
  * @author John Hewson
  */
-public final class PDColor
-{
-    private final float[] components;
-    private final COSName patternName;
-    private final PDColorSpace colorSpace;
+public final class PDColor {
+  private final float[] components;
+  private final COSName patternName;
+  private final PDColorSpace colorSpace;
 
-    /**
-     * Creates a PDColor containing the given color value.
-     * @param array a COS array containing the color value
-     * @param colorSpace color space in which the color value is defined
-     */
-    public PDColor(COSArray array, PDColorSpace colorSpace)
-    {
-        if (array.size() > 0 && array.get(array.size() - 1) instanceof COSName)
-        {
-            // color components (optional), for the color of an uncoloured tiling pattern
-            components = new float[array.size() - 1];
-            for (int i = 0; i < array.size() - 1; i++)
-            {
-                components[i] = ((COSNumber)array.get(i)).floatValue();
-            }
+  /**
+   * Creates a PDColor containing the given color value.
+   *
+   * @param array      a COS array containing the color value
+   * @param colorSpace color space in which the color value is defined
+   */
+  public PDColor(final COSArray array, final PDColorSpace colorSpace) {
+    if (array.size() > 0 && array.get(array.size() - 1) instanceof COSName) {
+      // color components (optional), for the color of an uncoloured tiling pattern
+      components = new float[array.size() - 1];
+      for (int i = 0; i < array.size() - 1; i++) {
+        components[i] = ((COSNumber) array.get(i)).floatValue();
+      }
 
-            // pattern name (required)
-            patternName = (COSName)array.get(array.size() - 1);
-        }
-        else
-        {
-            // color components only
-            components = new float[array.size()];
-            for (int i = 0; i < array.size(); i++)
-            {
-                components[i] = ((COSNumber)array.get(i)).floatValue();
-            }
-            patternName = null;
-        }
-        this.colorSpace = colorSpace;
+      // pattern name (required)
+      patternName = (COSName) array.get(array.size() - 1);
+    } else {
+      // color components only
+      components = new float[array.size()];
+      for (int i = 0; i < array.size(); i++) {
+        components[i] = ((COSNumber) array.get(i)).floatValue();
+      }
+      patternName = null;
     }
+    this.colorSpace = colorSpace;
+  }
 
-    /**
-     * Creates a PDColor containing the given color component values.
-     * @param components array of color component values
-     * @param colorSpace color space in which the components are defined
-     */
-    public PDColor(float[] components, PDColorSpace colorSpace)
-    {
-        this.components = components.clone();
-        this.patternName = null;
-        this.colorSpace = colorSpace;
-    }
+  /**
+   * Creates a PDColor containing the given color component values.
+   *
+   * @param components array of color component values
+   * @param colorSpace color space in which the components are defined
+   */
+  public PDColor(final float[] components, final PDColorSpace colorSpace) {
+    this.components = components.clone();
+    patternName = null;
+    this.colorSpace = colorSpace;
+  }
 
-    /**
-     * Creates a PDColor containing the given pattern name.
-     * @param patternName the name of a pattern in a pattern dictionary
-     * @param colorSpace color space in which the pattern is defined
-     */
-    public PDColor(COSName patternName, PDColorSpace colorSpace)
-    {
-        this.components = new float[0];
-        this.patternName = patternName;
-        this.colorSpace = colorSpace;
-    }
+  /**
+   * Creates a PDColor containing the given pattern name.
+   *
+   * @param patternName the name of a pattern in a pattern dictionary
+   * @param colorSpace  color space in which the pattern is defined
+   */
+  public PDColor(final COSName patternName, final PDColorSpace colorSpace) {
+    components = new float[0];
+    this.patternName = patternName;
+    this.colorSpace = colorSpace;
+  }
 
-    /**
-     * Creates a PDColor containing the given color component values and pattern name.
-     * @param components array of color component values
-     * @param patternName the name of a pattern in a pattern dictionary
-     * @param colorSpace color space in which the pattern/components are defined
-     */
-    public PDColor(float[] components, COSName patternName, PDColorSpace colorSpace)
-    {
-        this.components = components.clone();
-        this.patternName = patternName;
-        this.colorSpace = colorSpace;
-    }
+  /**
+   * Creates a PDColor containing the given color component values and pattern
+   * name.
+   *
+   * @param components  array of color component values
+   * @param patternName the name of a pattern in a pattern dictionary
+   * @param colorSpace  color space in which the pattern/components are defined
+   */
+  public PDColor(final float[] components, final COSName patternName, final PDColorSpace colorSpace) {
+    this.components = components.clone();
+    this.patternName = patternName;
+    this.colorSpace = colorSpace;
+  }
 
-    /**
-     * Returns the components of this color value.
-     * @return the components of this color value, never null.
-     */
-    public float[] getComponents()
-    {
-        if (colorSpace instanceof PDPattern || colorSpace == null)
-        {
-            // colorspace of the pattern color isn't known, so just clone
-            // null colorspace can happen with empty annotation color
-            // see PDFBOX-3351-538928-p4.pdf
-            return components.clone();
-        }
-        // PDFBOX-4279: copyOf instead of clone in case array is too small
-        return Arrays.copyOf(components, colorSpace.getNumberOfComponents());
-    }
+  /**
+   * Returns the components of this color value.
+   *
+   * @return the components of this color value, never null.
+   */
+  public float[] getComponents() {
+    if (colorSpace instanceof PDPattern || colorSpace == null)
+      // colorspace of the pattern color isn't known, so just clone
+      // null colorspace can happen with empty annotation color
+      // see PDFBOX-3351-538928-p4.pdf
+      return components.clone();
+    // PDFBOX-4279: copyOf instead of clone in case array is too small
+    return Arrays.copyOf(components, colorSpace.getNumberOfComponents());
+  }
 
-    /**
-     * Returns the pattern name from this color value.
-     * @return the pattern name from this color value
-     */
-    public COSName getPatternName()
-    {
-        return patternName;
-    }
+  /**
+   * Returns the pattern name from this color value.
+   *
+   * @return the pattern name from this color value
+   */
+  public COSName getPatternName() {
+    return patternName;
+  }
 
-    /**
-     * Returns true if this color value is a pattern.
-     * @return true if this color value is a pattern
-     */
-    public boolean isPattern()
-    {
-        return patternName != null;
-    }
+  /**
+   * Returns true if this color value is a pattern.
+   *
+   * @return true if this color value is a pattern
+   */
+  public boolean isPattern() {
+    return patternName != null;
+  }
 
-    /**
-     * Returns the packed RGB value for this color, if any.
-     * @return RGB
-     * @throws IOException if the color conversion fails
-     * @throws IllegalStateException if this color value is a pattern.
-     */
-    public int toRGB() throws IOException
-    {
-        float[] floats = colorSpace.toRGB(components);
-        int r = Math.round(floats[0] * 255);
-        int g = Math.round(floats[1] * 255);
-        int b = Math.round(floats[2] * 255);
-        int rgb = r;
-        rgb = (rgb << 8) + g;
-        rgb = (rgb << 8) + b;
-        return rgb;
-    }
+  /**
+   * Returns the packed RGB value for this color, if any.
+   *
+   * @return RGB
+   * @throws IOException           if the color conversion fails
+   * @throws IllegalStateException if this color value is a pattern.
+   */
+  public int toRGB() throws IOException {
+    final float[] floats = colorSpace.toRGB(components);
+    final int r = Math.round(floats[0] * 255);
+    final int g = Math.round(floats[1] * 255);
+    final int b = Math.round(floats[2] * 255);
+    int rgb = r;
+    rgb = (rgb << 8) + g;
+    rgb = (rgb << 8) + b;
+    return rgb;
+  }
 
-    /**
-     * Returns the color component values as a COS array
-     * @return the color component values as a COS array
-     */
-    public COSArray toCOSArray()
-    {
-        COSArray array = new COSArray();
-        array.setFloatArray(components);
-        if (patternName != null)
-        {
-            array.add(patternName);
-        }
-        return array;
+  /**
+   * Returns the color component values as a COS array
+   *
+   * @return the color component values as a COS array
+   */
+  public COSArray toCOSArray() {
+    final COSArray array = new COSArray();
+    array.setFloatArray(components);
+    if (patternName != null) {
+      array.add(patternName);
     }
+    return array;
+  }
 
-    /**
-     * Returns the color space in which this color value is defined.
-     */
-    public PDColorSpace getColorSpace()
-    {
-        return colorSpace;
-    }
+  /**
+   * Returns the color space in which this color value is defined.
+   */
+  public PDColorSpace getColorSpace() {
+    return colorSpace;
+  }
 
-    @Override
-    public String toString()
-    {
-        return "PDColor{components=" + Arrays.toString(components) + ", patternName=" + patternName + ", colorSpace=" + colorSpace + '}';
-    }
+  @Override
+  public String toString() {
+    return "PDColor{components=" + Arrays.toString(components) + ", patternName=" + patternName + ", colorSpace="
+        + colorSpace + '}';
+  }
 }
