@@ -17,8 +17,6 @@
 
 package org.apache.pdfbox.pdmodel.fdf;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -30,76 +28,69 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.pdmodel.common.COSArrayList;
+import org.junit.Assert;
 import org.junit.Test;
 
 /*
  * Test some characteristics of FDFFields
  */
-public class FDFFieldTest
-{
-    @Test
-    public void testCOSStringValue() throws IOException
-    {
-        String testString = "Test value";
-        COSString testCOSString = new COSString(testString);
-        
-        FDFField field = new FDFField();
-        field.setValue(testCOSString);
-        
-        assertEquals(testCOSString, (COSString) field.getCOSValue());
-        assertEquals(testString, field.getValue());
-    }
+public class FDFFieldTest {
+  @Test
+  public void testCOSStringValue() throws IOException {
+    final String testString = "Test value";
+    final COSString testCOSString = new COSString(testString);
 
-    
-    @Test
-    public void testTextAsCOSStreamValue() throws IOException
-    {
-        String testString = "Test value";
-        byte[] testBytes = testString.getBytes("ASCII");
-        COSStream stream = createStream(testBytes, null);
-        
-        FDFField field = new FDFField();
-        field.setValue(stream);
-        
-        assertEquals(testString, field.getValue());
-    }
-        
-    @Test
-    public void testCOSNameValue() throws IOException
-    {
-        String testString = "Yes";
-        COSName testCOSSName = COSName.getPDFName(testString);
-        
-        FDFField field = new FDFField();
-        field.setValue(testCOSSName);
-        
-        assertEquals(testCOSSName, (COSName) field.getCOSValue());
-        assertEquals(testString, field.getValue());
-    }
+    final FDFField field = new FDFField();
+    field.setValue(testCOSString);
 
-    @Test
-    public void testCOSArrayValue() throws IOException
-    {
-        List<String> testList = new ArrayList<>();
-        testList.add("A");
-        testList.add("B");
-        
-        COSArray testCOSArray = COSArrayList.convertStringListToCOSStringCOSArray(testList);
-        
-        FDFField field = new FDFField();
-        field.setValue(testCOSArray);
-        
-        assertEquals(testCOSArray, (COSArray) field.getCOSValue());
-        assertEquals(testList, field.getValue());
-    }
-    
-    
-    private COSStream createStream(byte[] testString, COSBase filters) throws IOException
-    {
-        COSStream stream = new COSStream();
-        OutputStream output = stream.createOutputStream(filters);
-        output.write(testString);
-        output.close();
-        return stream;
-    }
+    Assert.assertEquals(testCOSString, field.getCOSValue());
+    Assert.assertEquals(testString, field.getValue());
+  }
+
+  @Test
+  public void testTextAsCOSStreamValue() throws IOException {
+    final String testString = "Test value";
+    final byte[] testBytes = testString.getBytes("ASCII");
+    final COSStream stream = createStream(testBytes, null);
+
+    final FDFField field = new FDFField();
+    field.setValue(stream);
+
+    Assert.assertEquals(testString, field.getValue());
+  }
+
+  @Test
+  public void testCOSNameValue() throws IOException {
+    final String testString = "Yes";
+    final COSName testCOSSName = COSName.getPDFName(testString);
+
+    final FDFField field = new FDFField();
+    field.setValue(testCOSSName);
+
+    Assert.assertEquals(testCOSSName, field.getCOSValue());
+    Assert.assertEquals(testString, field.getValue());
+  }
+
+  @Test
+  public void testCOSArrayValue() throws IOException {
+    final List<String> testList = new ArrayList<>();
+    testList.add("A");
+    testList.add("B");
+
+    final COSArray testCOSArray = COSArrayList.convertStringListToCOSStringCOSArray(testList);
+
+    final FDFField field = new FDFField();
+    field.setValue(testCOSArray);
+
+    Assert.assertEquals(testCOSArray, field.getCOSValue());
+    Assert.assertEquals(testList, field.getValue());
+  }
+
+  private COSStream createStream(final byte[] testString, final COSBase filters) throws IOException {
+    final COSStream stream = new COSStream();
+    final OutputStream output = stream.createOutputStream(filters);
+    output.write(testString);
+    output.close();
+    return stream;
+  }
 }
