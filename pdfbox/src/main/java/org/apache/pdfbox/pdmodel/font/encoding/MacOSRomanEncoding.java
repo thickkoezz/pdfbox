@@ -19,63 +19,46 @@ package org.apache.pdfbox.pdmodel.font.encoding;
 import org.apache.pdfbox.cos.COSBase;
 
 /**
- * This is the Mac OS Roman encoding, which is similar to the
- * MacRomanEncoding with the addition of 15 entries
+ * This is the Mac OS Roman encoding, which is similar to the MacRomanEncoding
+ * with the addition of 15 entries
  */
-public class MacOSRomanEncoding extends MacRomanEncoding
-{
+public class MacOSRomanEncoding extends MacRomanEncoding {
 
-    private static final int CHAR_CODE = 0;
-    private static final int CHAR_NAME = 1;
-    
-    /**
-     * Table of octal character codes and their corresponding names
-     * on top of {@link MacRomanEncoding}.
-     */
-    private static final Object[][] MAC_OS_ROMAN_ENCODING_TABLE = {
-            {255, "notequal"},
-            {260, "infinity"},
-            {262, "lessequal"},
-            {263, "greaterequal"},
-            {266, "partialdiff"},
-            {267, "summation"},
-            {270, "product"},
-            {271, "pi"},
-            {272, "integral"},
-            {275, "Omega"},
-            {303, "radical"},
-            {305, "approxequal"},
-            {306, "Delta"},
-            {327, "lozenge"},
-            {333, "Euro"},
-            {360, "apple"}    
-    };
-    
-    /**
-     * Singleton instance of this class.
-     *
-     * @since Apache PDFBox 2.0.0
-     */
-    public static final MacOSRomanEncoding INSTANCE = new MacOSRomanEncoding();
+  private static final int CHAR_CODE = 0;
+  private static final int CHAR_NAME = 1;
 
-    /**
-     * Constructor.
-     */
-    public MacOSRomanEncoding()
-    {
-        super();
+  /**
+   * Table of octal character codes and their corresponding names on top of
+   * {@link MacRomanEncoding}.
+   */
+  private static final Object[][] MAC_OS_ROMAN_ENCODING_TABLE = { { 255, "notequal" }, { 260, "infinity" },
+      { 262, "lessequal" }, { 263, "greaterequal" }, { 266, "partialdiff" }, { 267, "summation" }, { 270, "product" },
+      { 271, "pi" }, { 272, "integral" }, { 275, "Omega" }, { 303, "radical" }, { 305, "approxequal" },
+      { 306, "Delta" }, { 327, "lozenge" }, { 333, "Euro" }, { 360, "apple" } };
 
-        // differences and additions to MacRomanEncoding
-        for (Object[] encodingEntry : MAC_OS_ROMAN_ENCODING_TABLE)
-        {
-            add((Integer) encodingEntry[CHAR_CODE], encodingEntry[CHAR_NAME].toString());
-        }
+  /**
+   * Singleton instance of this class.
+   *
+   * @since Apache PDFBox 2.0.0
+   */
+  public static final MacOSRomanEncoding INSTANCE = new MacOSRomanEncoding();
 
+  /**
+   * Constructor.
+   */
+  public MacOSRomanEncoding() {
+    super();
+
+    // differences and additions to MacRomanEncoding
+    for (final Object[] encodingEntry : MacOSRomanEncoding.MAC_OS_ROMAN_ENCODING_TABLE) {
+      add((Integer) encodingEntry[MacOSRomanEncoding.CHAR_CODE],
+          encodingEntry[MacOSRomanEncoding.CHAR_NAME].toString());
     }
 
-    @Override
-    public COSBase getCOSObject()
-    {
-        return null;
-    }
+  }
+
+  @Override
+  public COSBase getCOSObject() {
+    return null;
+  }
 }
