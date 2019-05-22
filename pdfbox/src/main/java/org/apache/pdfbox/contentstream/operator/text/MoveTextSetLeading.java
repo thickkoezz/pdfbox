@@ -19,47 +19,40 @@ package org.apache.pdfbox.contentstream.operator.text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.pdfbox.contentstream.operator.MissingOperandException;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSFloat;
-import org.apache.pdfbox.cos.COSNumber;
+import org.apache.pdfbox.contentstream.operator.MissingOperandException;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSFloat;
+import org.apache.pdfbox.cos.COSNumber;
 
 /**
  * TD: Move text position and set leading.
  *
  * @author Laurent Huault
  */
-public class MoveTextSetLeading extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (arguments.size() < 2)
-        {
-            throw new MissingOperandException(operator, arguments);
-        }
-        
-        //move text position and set leading
-        COSBase base1 = arguments.get(1);
-        if (!(base1 instanceof COSNumber))
-        {
-            return;
-        }
-        COSNumber y = (COSNumber) base1;
-        
-        List<COSBase> args = new ArrayList<>();
-        args.add(new COSFloat(-1 * y.floatValue()));
-        context.processOperator(OperatorName.SET_TEXT_LEADING, args);
-        context.processOperator(OperatorName.MOVE_TEXT, arguments);
-    }
+public class MoveTextSetLeading extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (arguments.size() < 2)
+      throw new MissingOperandException(operator, arguments);
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.MOVE_TEXT_SET_LEADING;
-    }
+    // move text position and set leading
+    final COSBase base1 = arguments.get(1);
+    if (!(base1 instanceof COSNumber))
+      return;
+    final COSNumber y = (COSNumber) base1;
+
+    final List<COSBase> args = new ArrayList<>();
+    args.add(new COSFloat(-1 * y.floatValue()));
+    context.processOperator(OperatorName.SET_TEXT_LEADING, args);
+    context.processOperator(OperatorName.MOVE_TEXT, arguments);
+  }
+
+  @Override
+  public String getName() {
+    return OperatorName.MOVE_TEXT_SET_LEADING;
+  }
 }
