@@ -21,86 +21,79 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class RenderingIntentTest
-{
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+public class RenderingIntentTest {
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull()
-    {
-        // Arrange
-        final String value = "AbsoluteColorimetric";
+  @Test
+  public void fromStringInputNotNullOutputNotNull() {
+    // Arrange
+    final String value = "AbsoluteColorimetric";
 
-        // Act
-        final RenderingIntent retval = RenderingIntent.fromString(value);
+    // Act
+    final RenderingIntent retval = RenderingIntent.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(RenderingIntent.ABSOLUTE_COLORIMETRIC, retval);
-    }
+    // Assert result
+    Assert.assertEquals(RenderingIntent.ABSOLUTE_COLORIMETRIC, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull2()
-    {
-        // Arrange
-        final String value = "RelativeColorimetric";
+  @Test
+  public void fromStringInputNotNullOutputNotNull2() {
+    // Arrange
+    final String value = "RelativeColorimetric";
 
-        // Act
-        final RenderingIntent retval = RenderingIntent.fromString(value);
+    // Act
+    final RenderingIntent retval = RenderingIntent.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(RenderingIntent.RELATIVE_COLORIMETRIC, retval);
-    }
+    // Assert result
+    Assert.assertEquals(RenderingIntent.RELATIVE_COLORIMETRIC, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull3()
-    {
-        // Arrange
-        final String value = "Perceptual";
+  @Test
+  public void fromStringInputNotNullOutputNotNull3() {
+    // Arrange
+    final String value = "Perceptual";
 
-        // Act
-        final RenderingIntent retval = RenderingIntent.fromString(value);
+    // Act
+    final RenderingIntent retval = RenderingIntent.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(RenderingIntent.PERCEPTUAL, retval);
-    }
+    // Assert result
+    Assert.assertEquals(RenderingIntent.PERCEPTUAL, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull4()
-    {
-        // Arrange
-        final String value = "Saturation";
+  @Test
+  public void fromStringInputNotNullOutputNotNull4() {
+    // Arrange
+    final String value = "Saturation";
 
-        // Act
-        final RenderingIntent retval = RenderingIntent.fromString(value);
+    // Act
+    final RenderingIntent retval = RenderingIntent.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(RenderingIntent.SATURATION, retval);
-    }
+    // Assert result
+    Assert.assertEquals(RenderingIntent.SATURATION, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull5()
-    {
-        // Arrange
-        final String value = "";
+  @Test
+  public void fromStringInputNotNullOutputNotNull5() {
+    // Arrange
+    final String value = "";
 
-        // Act
-        final RenderingIntent retval = RenderingIntent.fromString(value);
+    // Act
+    final RenderingIntent retval = RenderingIntent.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(RenderingIntent.RELATIVE_COLORIMETRIC, retval);
-    }
+    // Assert result
+    Assert.assertEquals(RenderingIntent.RELATIVE_COLORIMETRIC, retval);
+  }
 
-    @Test
-    public void stringValueOutputNotNull()
-    {
-        // Arrange
-        final RenderingIntent objectUnderTest = RenderingIntent.ABSOLUTE_COLORIMETRIC;
+  @Test
+  public void stringValueOutputNotNull() {
+    // Arrange
+    final RenderingIntent objectUnderTest = RenderingIntent.ABSOLUTE_COLORIMETRIC;
 
-        // Act
-        final String retval = objectUnderTest.stringValue();
+    // Act
+    final String retval = objectUnderTest.stringValue();
 
-        // Assert result
-        Assert.assertEquals("AbsoluteColorimetric", retval);
-    }
+    // Assert result
+    Assert.assertEquals("AbsoluteColorimetric", retval);
+  }
 }
