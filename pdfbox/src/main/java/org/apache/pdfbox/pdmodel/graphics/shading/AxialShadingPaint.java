@@ -24,6 +24,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.util.Matrix;
@@ -32,39 +33,33 @@ import org.apache.pdfbox.util.Matrix;
  * AWT Paint for axial shading.
  *
  */
-public class AxialShadingPaint extends ShadingPaint<PDShadingType2>
-{
-    private static final Log LOG = LogFactory.getLog(AxialShadingPaint.class);
+public class AxialShadingPaint extends ShadingPaint<PDShadingType2> {
+  private static final Log LOG = LogFactory.getLog(AxialShadingPaint.class);
 
-    /**
-     * Constructor.
-     *
-     * @param shadingType2 the shading resources
-     * @param matrix the pattern matrix concatenated with that of the parent content stream
-     */
-    AxialShadingPaint(PDShadingType2 shadingType2, Matrix matrix)
-    {
-        super(shadingType2, matrix);
-    }
+  /**
+   * Constructor.
+   *
+   * @param shadingType2 the shading resources
+   * @param matrix       the pattern matrix concatenated with that of the parent
+   *                     content stream
+   */
+  AxialShadingPaint(final PDShadingType2 shadingType2, final Matrix matrix) {
+    super(shadingType2, matrix);
+  }
 
-    @Override
-    public int getTransparency()
-    {
-        return 0;
-    }
+  @Override
+  public int getTransparency() {
+    return 0;
+  }
 
-    @Override
-    public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds,
-                                      AffineTransform xform, RenderingHints hints)
-    {
-        try
-        {
-            return new AxialShadingContext(shading, cm, xform, matrix, deviceBounds);
-        }
-        catch (IOException e)
-        {
-            LOG.error("An error occurred while painting", e);
-            return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
-        }
+  @Override
+  public PaintContext createContext(final ColorModel cm, final Rectangle deviceBounds, final Rectangle2D userBounds,
+      final AffineTransform xform, final RenderingHints hints) {
+    try {
+      return new AxialShadingContext(shading, cm, xform, matrix, deviceBounds);
+    } catch (final IOException e) {
+      AxialShadingPaint.LOG.error("An error occurred while painting", e);
+      return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
     }
+  }
 }
