@@ -21,60 +21,57 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 
 /**
- * CIE-based colour spaces specify colours in a way that is independent of the characteristics
- * of any particular output device. They are based on an international standard for colour
- * specification created by the Commission Internationale de l'Éclairage (CIE).
+ * CIE-based colour spaces specify colours in a way that is independent of the
+ * characteristics of any particular output device. They are based on an
+ * international standard for colour specification created by the Commission
+ * Internationale de l'Éclairage (CIE).
  *
  * @author John Hewson
  */
-public abstract class PDCIEBasedColorSpace extends PDColorSpace
-{
-    //
-    // WARNING: this method is performance sensitive, modify with care!
-    //
-    @Override
-    public BufferedImage toRGBImage(WritableRaster raster) throws IOException
-    {
-        // This method calls toRGB to convert images one pixel at a time. For matrix-based
-        // CIE color spaces this is fast enough. However, it should not be used with any
-        // color space which uses an ICC Profile as it will be far too slow.
+public abstract class PDCIEBasedColorSpace extends PDColorSpace {
+  //
+  // WARNING: this method is performance sensitive, modify with care!
+  //
+  @Override
+  public BufferedImage toRGBImage(final WritableRaster raster) throws IOException {
+    // This method calls toRGB to convert images one pixel at a time. For
+    // matrix-based
+    // CIE color spaces this is fast enough. However, it should not be used with any
+    // color space which uses an ICC Profile as it will be far too slow.
 
-        int width = raster.getWidth();
-        int height = raster.getHeight();
+    final int width = raster.getWidth();
+    final int height = raster.getHeight();
 
-        BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        WritableRaster rgbRaster = rgbImage.getRaster();
+    final BufferedImage rgbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    final WritableRaster rgbRaster = rgbImage.getRaster();
 
-        // always three components: ABC
-        float[] abc = new float[3];
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                raster.getPixel(x, y, abc);
+    // always three components: ABC
+    final float[] abc = new float[3];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        raster.getPixel(x, y, abc);
 
-                // 0..255 -> 0..1
-                abc[0] /= 255;
-                abc[1] /= 255;
-                abc[2] /= 255;
+        // 0..255 -> 0..1
+        abc[0] /= 255;
+        abc[1] /= 255;
+        abc[2] /= 255;
 
-                float[] rgb = toRGB(abc);
+        final float[] rgb = toRGB(abc);
 
-                // 0..1 -> 0..255
-                rgb[0] *= 255;
-                rgb[1] *= 255;
-                rgb[2] *= 255;
+        // 0..1 -> 0..255
+        rgb[0] *= 255;
+        rgb[1] *= 255;
+        rgb[2] *= 255;
 
-                rgbRaster.setPixel(x, y, rgb);
-            }
-        }
-
-        return rgbImage;
+        rgbRaster.setPixel(x, y, rgb);
+      }
     }
 
-    @Override
-    public String toString()
-    {
-        return getName();   // TODO return more info
-    }
+    return rgbImage;
+  }
+
+  @Override
+  public String toString() {
+    return getName(); // TODO return more info
+  }
 }
