@@ -20,16 +20,14 @@ package org.apache.pdfbox.contentstream.operator.color;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 
 /**
- * scn: Sets the colour to use for non-stroking operations.
- * Supports Pattern, Separation, DeviceN and ICCBased colour spaces.
+ * scn: Sets the colour to use for non-stroking operations. Supports Pattern,
+ * Separation, DeviceN and ICCBased colour spaces.
  *
  * @author John Hewson
  */
-public class SetNonStrokingColorN extends SetNonStrokingColor
-{
-    @Override
-    public String getName()
-    {
-        return OperatorName.NON_STROKING_COLOR_N;
-    }
+public class SetNonStrokingColorN extends SetNonStrokingColor {
+  @Override
+  public String getName() {
+    return OperatorName.NON_STROKING_COLOR_N;
+  }
 }
