@@ -19,12 +19,12 @@ package org.apache.pdfbox.contentstream.operator.color;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 
 /**
  * cs: Sets the non-stroking color space.
@@ -32,21 +32,18 @@ import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
  * @author Ben Litchfield
  * @author John Hewson
  */
-public class SetNonStrokingColorSpace extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        COSName name = (COSName)arguments.get(0);
+public class SetNonStrokingColorSpace extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    final COSName name = (COSName) arguments.get(0);
 
-        PDColorSpace cs = context.getResources().getColorSpace(name);
-        context.getGraphicsState().setNonStrokingColorSpace(cs);
-        context.getGraphicsState().setNonStrokingColor(cs.getInitialColor());
-    }
+    final PDColorSpace cs = context.getResources().getColorSpace(name);
+    context.getGraphicsState().setNonStrokingColorSpace(cs);
+    context.getGraphicsState().setNonStrokingColor(cs.getInitialColor());
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.NON_STROKING_COLORSPACE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.NON_STROKING_COLORSPACE;
+  }
 }
