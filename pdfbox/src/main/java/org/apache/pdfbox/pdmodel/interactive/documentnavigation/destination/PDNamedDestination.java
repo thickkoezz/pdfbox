@@ -27,95 +27,81 @@ import org.apache.pdfbox.cos.COSString;
  *
  * @author Ben Litchfield
  */
-public class PDNamedDestination extends PDDestination
-{
-    private COSBase namedDestination;
+public class PDNamedDestination extends PDDestination {
+  private COSBase namedDestination;
 
-    /**
-     * Constructor.
-     *
-     * @param dest The named destination.
-     */
-    public PDNamedDestination( COSString dest )
-    {
-        namedDestination = dest;
+  /**
+   * Constructor.
+   *
+   * @param dest The named destination.
+   */
+  public PDNamedDestination(final COSString dest) {
+    namedDestination = dest;
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dest The named destination.
+   */
+  public PDNamedDestination(final COSName dest) {
+    namedDestination = dest;
+  }
+
+  /**
+   * Default constructor.
+   */
+  public PDNamedDestination() {
+    // default, so do nothing
+  }
+
+  /**
+   * Default constructor.
+   *
+   * @param dest The named destination.
+   */
+  public PDNamedDestination(final String dest) {
+    namedDestination = new COSString(dest);
+  }
+
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSBase getCOSObject() {
+    return namedDestination;
+  }
+
+  /**
+   * This will get the name of the destination.
+   *
+   * @return The name of the destination.
+   */
+  public String getNamedDestination() {
+    String retval = null;
+    if (namedDestination instanceof COSString) {
+      retval = ((COSString) namedDestination).getString();
+    } else if (namedDestination instanceof COSName) {
+      retval = ((COSName) namedDestination).getName();
     }
 
-    /**
-     * Constructor.
-     *
-     * @param dest The named destination.
-     */
-    public PDNamedDestination( COSName dest )
-    {
-        namedDestination = dest;
-    }
+    return retval;
+  }
 
-    /**
-     * Default constructor.
-     */
-    public PDNamedDestination()
-    {
-        //default, so do nothing
+  /**
+   * Set the named destination.
+   *
+   * @param dest The new named destination.
+   *
+   * @throws IOException If there is an error setting the named destination.
+   */
+  public void setNamedDestination(final String dest) throws IOException {
+    if (dest == null) {
+      namedDestination = null;
+    } else {
+      namedDestination = new COSString(dest);
     }
-
-    /**
-     * Default constructor.
-     *
-     * @param dest The named destination.
-     */
-    public PDNamedDestination( String dest )
-    {
-        namedDestination = new COSString( dest );
-    }
-
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSBase getCOSObject()
-    {
-        return namedDestination;
-    }
-
-    /**
-     * This will get the name of the destination.
-     *
-     * @return The name of the destination.
-     */
-    public String getNamedDestination()
-    {
-        String retval = null;
-        if( namedDestination instanceof COSString )
-        {
-            retval = ((COSString)namedDestination).getString();
-        }
-        else if( namedDestination instanceof COSName )
-        {
-            retval = ((COSName)namedDestination).getName();
-        }
-
-        return retval;
-    }
-
-    /**
-     * Set the named destination.
-     *
-     * @param dest The new named destination.
-     *
-     * @throws IOException If there is an error setting the named destination.
-     */
-    public void setNamedDestination( String dest ) throws IOException
-    {
-        if (dest == null)
-        {
-            namedDestination = null;
-        }
-        else
-        {
-            namedDestination = new COSString( dest );
-        }
-    }
+  }
 }
