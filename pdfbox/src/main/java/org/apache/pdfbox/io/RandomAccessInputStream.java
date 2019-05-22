@@ -16,81 +16,69 @@
  */
 package org.apache.pdfbox.io;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * An InputStream which reads from a RandomAccessRead.
- * 
+ *
  * @author Ben Litchfield
  * @author John Hewson
  */
-public class RandomAccessInputStream extends InputStream
-{
-    private final RandomAccessRead input;
-    private long position;
+public class RandomAccessInputStream extends InputStream {
+  private final RandomAccessRead input;
+  private long position;
 
-    /**
-     * Creates a new RandomAccessInputStream, with a position of zero. The InputStream will maintain
-     * its own position independent of the RandomAccessRead.
-     *
-     * @param randomAccessRead The RandomAccessRead to read from.
-     */
-    public RandomAccessInputStream(RandomAccessRead randomAccessRead)
-    {
-        input = randomAccessRead;
-        position = 0;
-    }
+  /**
+   * Creates a new RandomAccessInputStream, with a position of zero. The
+   * InputStream will maintain its own position independent of the
+   * RandomAccessRead.
+   *
+   * @param randomAccessRead The RandomAccessRead to read from.
+   */
+  public RandomAccessInputStream(final RandomAccessRead randomAccessRead) {
+    input = randomAccessRead;
+    position = 0;
+  }
 
-    void restorePosition() throws IOException
-    {
-        input.seek(position);
-    }
-    
-    @Override
-    public int available() throws IOException
-    {
-        restorePosition();
-        long available = input.length() - input.getPosition();
-        if (available > Integer.MAX_VALUE)
-        {
-            return Integer.MAX_VALUE;
-        }
-        return (int)available;
-    }
+  void restorePosition() throws IOException {
+    input.seek(position);
+  }
 
-    @Override
-    public int read() throws IOException
-    {
-        restorePosition();
-        if (input.isEOF())
-        {
-            return -1;
-        }
-        int b = input.read();
-        position += 1;
-        return b;
-    }
+  @Override
+  public int available() throws IOException {
+    restorePosition();
+    final long available = input.length() - input.getPosition();
+    if (available > Integer.MAX_VALUE)
+      return Integer.MAX_VALUE;
+    return (int) available;
+  }
 
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException
-    {
-        restorePosition();
-        if (input.isEOF())
-        {
-            return -1;
-        }
-        int n = input.read(b, off, len);
-        position += n;
-        return n;
-    }
+  @Override
+  public int read() throws IOException {
+    restorePosition();
+    if (input.isEOF())
+      return -1;
+    final int b = input.read();
+    position += 1;
+    return b;
+  }
 
-    @Override
-    public long skip(long n) throws IOException
-    {
-        restorePosition();
-        input.seek(position + n);
-        position += n;
-        return n;
-    }
+  @Override
+  public int read(final byte[] b, final int off, final int len) throws IOException {
+    restorePosition();
+    if (input.isEOF())
+      return -1;
+    final int n = input.read(b, off, len);
+    position += n;
+    return n;
+  }
+
+  @Override
+  public long skip(final long n) throws IOException {
+    restorePosition();
+    input.seek(position + n);
+    position += n;
+    return n;
+  }
 }
