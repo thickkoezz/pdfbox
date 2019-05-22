@@ -20,15 +20,14 @@ package org.apache.pdfbox.contentstream.operator.graphics;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 
 /**
- * F Fill path using non zero winding rule. Included only for compatibility with Acrobat.
+ * F Fill path using non zero winding rule. Included only for compatibility with
+ * Acrobat.
  *
  * @author John Hewson
  */
-public final class LegacyFillNonZeroRule extends FillNonZeroRule
-{
-    @Override
-    public String getName()
-    {
-        return OperatorName.LEGACY_FILL_NON_ZERO;
-    }
+public final class LegacyFillNonZeroRule extends FillNonZeroRule {
+  @Override
+  public String getName() {
+    return OperatorName.LEGACY_FILL_NON_ZERO;
+  }
 }
