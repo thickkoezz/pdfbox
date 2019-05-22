@@ -26,85 +26,89 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AcroFormsRotationTest {
+public class AcroFormsRotationTest
+{
 
-  private static final File OUT_DIR = new File("target/test-output");
-  private static final File IN_DIR = new File("src/test/resources/org/apache/pdfbox/pdmodel/interactive/form");
-  private static final String NAME_OF_PDF = "AcroFormsRotation.pdf";
-  private static final String TEST_VALUE = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,"
-      + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
+    private static final File OUT_DIR = new File("target/test-output");
+    private static final File IN_DIR = new File("src/test/resources/org/apache/pdfbox/pdmodel/interactive/form");
+    private static final String NAME_OF_PDF = "AcroFormsRotation.pdf";
+    private static final String TEST_VALUE = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,"
+            + " sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
 
-  private PDDocument document;
-  private PDAcroForm acroForm;
+    private PDDocument document;
+    private PDAcroForm acroForm;
 
-  @Before
-  public void setUp() throws IOException {
-    document = PDDocument.load(new File(AcroFormsRotationTest.IN_DIR, AcroFormsRotationTest.NAME_OF_PDF));
-    acroForm = document.getDocumentCatalog().getAcroForm();
-    AcroFormsRotationTest.OUT_DIR.mkdirs();
-  }
-
-  @Test
-  public void fillFields() throws IOException {
-
-    // portrait page
-    // single line fields
-    PDField field = acroForm.getField("pdfbox.portrait.single.rotation0");
-    field.setValue(field.getFullyQualifiedName());
-    field = acroForm.getField("pdfbox.portrait.single.rotation90");
-    field.setValue(field.getFullyQualifiedName());
-    field = acroForm.getField("pdfbox.portrait.single.rotation180");
-    field.setValue(field.getFullyQualifiedName());
-    field = acroForm.getField("pdfbox.portrait.single.rotation270");
-    field.setValue(field.getFullyQualifiedName());
-
-    // multiline fields
-    field = acroForm.getField("pdfbox.portrait.multi.rotation0");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.portrait.multi.rotation90");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.portrait.multi.rotation180");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.portrait.multi.rotation270");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-
-    // 90 degrees rotated page
-    // single line fields
-    field = acroForm.getField("pdfbox.page90.single.rotation0");
-    field.setValue("pdfbox.page90.single.rotation0");
-    field = acroForm.getField("pdfbox.page90.single.rotation90");
-    field.setValue("pdfbox.page90.single.rotation90");
-    field = acroForm.getField("pdfbox.page90.single.rotation180");
-    field.setValue("pdfbox.page90.single.rotation180");
-    field = acroForm.getField("pdfbox.page90.single.rotation270");
-    field.setValue("pdfbox.page90.single.rotation270");
-
-    // multiline fields
-    field = acroForm.getField("pdfbox.page90.multi.rotation0");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.page90.multi.rotation90");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.page90.multi.rotation180");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-    field = acroForm.getField("pdfbox.page90.multi.rotation270");
-    field.setValue(field.getFullyQualifiedName() + "\n" + AcroFormsRotationTest.TEST_VALUE);
-
-    // compare rendering
-    final File file = new File(AcroFormsRotationTest.OUT_DIR, AcroFormsRotationTest.NAME_OF_PDF);
-    document.save(file);
-    final TestPDFToImage testPDFToImage = new TestPDFToImage(TestPDFToImage.class.getName());
-    if (!testPDFToImage.doTestFile(file, AcroFormsRotationTest.IN_DIR.getAbsolutePath(),
-        AcroFormsRotationTest.OUT_DIR.getAbsolutePath())) {
-      // don't fail, rendering is different on different systems, result
-      // must be viewed manually
-      System.err.println("Rendering of " + file + " failed or is not identical to expected rendering in "
-          + AcroFormsRotationTest.IN_DIR + " directory");
+    @Before
+    public void setUp() throws IOException
+    {
+        document = PDDocument.load(new File(IN_DIR, NAME_OF_PDF));
+        acroForm = document.getDocumentCatalog().getAcroForm();
+        OUT_DIR.mkdirs();
     }
-  }
 
-  @After
-  public void tearDown() throws IOException {
-    document.close();
-  }
+    @Test
+    public void fillFields() throws IOException
+    {
+
+        // portrait page
+        // single line fields
+        PDField field = acroForm.getField("pdfbox.portrait.single.rotation0");
+        field.setValue(field.getFullyQualifiedName());
+        field = acroForm.getField("pdfbox.portrait.single.rotation90");
+        field.setValue(field.getFullyQualifiedName());
+        field = acroForm.getField("pdfbox.portrait.single.rotation180");
+        field.setValue(field.getFullyQualifiedName());
+        field = acroForm.getField("pdfbox.portrait.single.rotation270");
+        field.setValue(field.getFullyQualifiedName());
+
+        // multiline fields
+        field = acroForm.getField("pdfbox.portrait.multi.rotation0");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.portrait.multi.rotation90");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.portrait.multi.rotation180");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.portrait.multi.rotation270");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+
+        // 90 degrees rotated page
+        // single line fields
+        field = acroForm.getField("pdfbox.page90.single.rotation0");
+        field.setValue("pdfbox.page90.single.rotation0");
+        field = acroForm.getField("pdfbox.page90.single.rotation90");
+        field.setValue("pdfbox.page90.single.rotation90");
+        field = acroForm.getField("pdfbox.page90.single.rotation180");
+        field.setValue("pdfbox.page90.single.rotation180");
+        field = acroForm.getField("pdfbox.page90.single.rotation270");
+        field.setValue("pdfbox.page90.single.rotation270");
+
+        // multiline fields
+        field = acroForm.getField("pdfbox.page90.multi.rotation0");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.page90.multi.rotation90");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.page90.multi.rotation180");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+        field = acroForm.getField("pdfbox.page90.multi.rotation270");
+        field.setValue(field.getFullyQualifiedName() + "\n" + TEST_VALUE);
+
+        // compare rendering
+        File file = new File(OUT_DIR, NAME_OF_PDF);
+        document.save(file);
+        TestPDFToImage testPDFToImage = new TestPDFToImage(TestPDFToImage.class.getName());
+        if (!testPDFToImage.doTestFile(file, IN_DIR.getAbsolutePath(), OUT_DIR.getAbsolutePath()))
+        {
+            // don't fail, rendering is different on different systems, result
+            // must be viewed manually
+            System.err.println("Rendering of " + file + " failed or is not identical to expected rendering in " + IN_DIR
+                    + " directory");
+        }
+    }
+
+    @After
+    public void tearDown() throws IOException
+    {
+        document.close();
+    }
 
 }
