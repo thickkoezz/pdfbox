@@ -27,67 +27,55 @@ import org.apache.pdfbox.cos.COSString;
  *
  * @author Michael Schwarzenberger
  */
-public class PDActionJavaScript extends PDAction
-{
-    /**
-     * This type of action this object represents.
-     */
-    public static final String SUB_TYPE = "JavaScript";
+public class PDActionJavaScript extends PDAction {
+  /**
+   * This type of action this object represents.
+   */
+  public static final String SUB_TYPE = "JavaScript";
 
-    /**
-     * Constructor #1.
-     */
-    public PDActionJavaScript()
-    {
-        setSubType( SUB_TYPE );
-    }
+  /**
+   * Constructor #1.
+   */
+  public PDActionJavaScript() {
+    setSubType(PDActionJavaScript.SUB_TYPE);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param js Some javascript code.
-     */
-    public PDActionJavaScript( String js )
-    {
-        this();
-        setAction(js);
-    }
+  /**
+   * Constructor.
+   *
+   * @param js Some javascript code.
+   */
+  public PDActionJavaScript(final String js) {
+    this();
+    setAction(js);
+  }
 
-    /**
-     * Constructor #2.
-     *
-     *  @param a The action dictionary.
-     */
-    public PDActionJavaScript(COSDictionary a)
-    {
-        super(a);
-    }
-    
-    /**
-     * @param sAction The JavaScript.
-     */
-    public final void setAction(String sAction)
-    {
-        action.setString(COSName.JS, sAction);
-    }
+  /**
+   * Constructor #2.
+   *
+   * @param a The action dictionary.
+   */
+  public PDActionJavaScript(final COSDictionary a) {
+    super(a);
+  }
 
-    /**
-     * @return The Javascript Code.
-     */
-    public String getAction()
-    {
-        COSBase base = action.getDictionaryObject( COSName.JS );
-        if (base instanceof COSString)
-        {
-            return ((COSString)base).getString();
-        }
-        else if (base instanceof COSStream)
-        {
-            return ((COSStream)base).toTextString();
-        }
-        else
-        {
-            return null;
-        }
-    }
+  /**
+   * @param sAction The JavaScript.
+   */
+  public final void setAction(final String sAction) {
+    action.setString(COSName.JS, sAction);
+  }
+
+  /**
+   * @return The Javascript Code.
+   */
+  public String getAction() {
+    final COSBase base = action.getDictionaryObject(COSName.JS);
+    if (base instanceof COSString)
+      return ((COSString) base).getString();
+    else if (base instanceof COSStream)
+      return ((COSStream) base).toTextString();
+    else
+      return null;
+  }
 }
