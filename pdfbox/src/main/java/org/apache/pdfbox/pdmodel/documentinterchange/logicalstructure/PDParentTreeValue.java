@@ -22,34 +22,30 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
- * Described in the PDF specification in the ParentTree segment of the table "Entries in the
- * structure tree root". This is either a dictionary or an array.
+ * Described in the PDF specification in the ParentTree segment of the table
+ * "Entries in the structure tree root". This is either a dictionary or an
+ * array.
  *
  * @author Tilman Hausherr
  */
-public class PDParentTreeValue implements COSObjectable
-{
-    COSObjectable obj;
+public class PDParentTreeValue implements COSObjectable {
+  COSObjectable obj;
 
-    public PDParentTreeValue(COSArray obj)
-    {
-        this.obj = obj;
-    }
+  public PDParentTreeValue(final COSArray obj) {
+    this.obj = obj;
+  }
 
-    public PDParentTreeValue(COSDictionary obj)
-    {
-        this.obj = obj;
-    }
+  public PDParentTreeValue(final COSDictionary obj) {
+    this.obj = obj;
+  }
 
-    @Override
-    public COSBase getCOSObject()
-    {
-        return obj.getCOSObject();
-    }
+  @Override
+  public COSBase getCOSObject() {
+    return obj.getCOSObject();
+  }
 
-    @Override
-    public String toString()
-    {
-        return obj.toString();
-    }
+  @Override
+  public String toString() {
+    return obj.toString();
+  }
 }
