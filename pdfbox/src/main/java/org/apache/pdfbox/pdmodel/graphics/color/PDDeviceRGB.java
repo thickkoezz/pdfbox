@@ -30,91 +30,79 @@ import org.apache.pdfbox.cos.COSName;
  * @author Ben Litchfield
  * @author John Hewson
  */
-public final class PDDeviceRGB extends PDDeviceColorSpace
-{
-    /**  This is the single instance of this class. */
-    public static final PDDeviceRGB INSTANCE = new PDDeviceRGB();
-    
-    private final PDColor initialColor = new PDColor(new float[] { 0, 0, 0 }, this);
-    private volatile ColorSpace awtColorSpace;
+public final class PDDeviceRGB extends PDDeviceColorSpace {
+  /** This is the single instance of this class. */
+  public static final PDDeviceRGB INSTANCE = new PDDeviceRGB();
 
-    private PDDeviceRGB()
-    {
+  private final PDColor initialColor = new PDColor(new float[] { 0, 0, 0 }, this);
+  private volatile ColorSpace awtColorSpace;
+
+  private PDDeviceRGB() {
+  }
+
+  /**
+   * Lazy setting of the AWT color space due to JDK race condition.
+   */
+  private void init() {
+    // no need to synchronize this check as it is atomic
+    if (awtColorSpace != null)
+      return;
+
+    synchronized (this) {
+      // we might have been waiting for another thread, so check again
+      if (awtColorSpace != null)
+        return;
+      awtColorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+
+      // there is a JVM bug which results in a CMMException which appears to be a race
+      // condition caused by lazy initialization of the color transform, so we perform
+      // an initial color conversion while we're still synchronized, see PDFBOX-2184
+      awtColorSpace.toRGB(new float[] { 0, 0, 0, 0 });
     }
+  }
 
-    /**
-     * Lazy setting of the AWT color space due to JDK race condition.
-     */
-    private void init()
-    {
-        // no need to synchronize this check as it is atomic
-        if (awtColorSpace != null)
-        {
-            return;
-        }
+  @Override
+  public String getName() {
+    return COSName.DEVICERGB.getName();
+  }
 
-        synchronized (this)
-        {
-            // we might have been waiting for another thread, so check again
-            if (awtColorSpace != null)
-            {
-                return;
-            }
-            awtColorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-            
-            // there is a JVM bug which results in a CMMException which appears to be a race
-            // condition caused by lazy initialization of the color transform, so we perform
-            // an initial color conversion while we're still synchronized, see PDFBOX-2184
-            awtColorSpace.toRGB(new float[] { 0, 0, 0, 0 });
-        }
-    }
-    
-    @Override
-    public String getName()
-    {
-        return COSName.DEVICERGB.getName();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getNumberOfComponents() {
+    return 3;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNumberOfComponents()
-    {
-        return 3;
-    }
+  @Override
+  public float[] getDefaultDecode(final int bitsPerComponent) {
+    return new float[] { 0, 1, 0, 1, 0, 1 };
+  }
 
-    @Override
-    public float[] getDefaultDecode(int bitsPerComponent)
-    {
-        return new float[] { 0, 1, 0, 1, 0, 1 };
-    }
+  @Override
+  public PDColor getInitialColor() {
+    return initialColor;
+  }
 
-    @Override
-    public PDColor getInitialColor()
-    {
-        return initialColor;
-    }
+  @Override
+  public float[] toRGB(final float[] value) {
+    return value;
+  }
 
-    @Override
-    public float[] toRGB(float[] value)
-    {
-        return value;
-    }
+  @Override
+  public BufferedImage toRGBImage(final WritableRaster raster) throws IOException {
+    init();
 
-    @Override
-    public BufferedImage toRGBImage(WritableRaster raster) throws IOException
-    {
-        init();
-
-        //
-        // WARNING: this method is performance sensitive, modify with care!
-        //
-        // Please read PDFBOX-3854 and PDFBOX-2092 and look at the related commits first.
-        // The current code returns TYPE_INT_RGB images which prevents slowness due to threads
-        // blocking each other when TYPE_CUSTOM images are used.
-        BufferedImage image = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_INT_RGB);
-        image.setData(raster);
-        return image;
-    }
+    //
+    // WARNING: this method is performance sensitive, modify with care!
+    //
+    // Please read PDFBOX-3854 and PDFBOX-2092 and look at the related commits
+    // first.
+    // The current code returns TYPE_INT_RGB images which prevents slowness due to
+    // threads
+    // blocking each other when TYPE_CUSTOM images are used.
+    final BufferedImage image = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_INT_RGB);
+    image.setData(raster);
+    return image;
+  }
 }
