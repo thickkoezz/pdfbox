@@ -26,28 +26,21 @@ import org.apache.pdfbox.cos.COSBase;
 
 /**
  * Q: Restore the graphics state.
- * 
+ *
  * @author Laurent Huault
  */
-public class Restore extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (context.getGraphicsStackSize() > 1)
-        {
-            context.restoreGraphicsState();
-        }
-        else
-        {
-            // this shouldn't happen but it does, see PDFBOX-161
-            throw new EmptyGraphicsStackException();
-        }
-    }
+public class Restore extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (context.getGraphicsStackSize() > 1) {
+      context.restoreGraphicsState();
+    } else
+      // this shouldn't happen but it does, see PDFBOX-161
+      throw new EmptyGraphicsStackException();
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.RESTORE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.RESTORE;
+  }
 }
