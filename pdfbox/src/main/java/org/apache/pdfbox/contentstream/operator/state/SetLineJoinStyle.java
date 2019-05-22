@@ -16,37 +16,31 @@
  */
 package org.apache.pdfbox.contentstream.operator.state;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSNumber;
+import org.apache.pdfbox.contentstream.operator.MissingOperandException;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
-
-import java.io.IOException;
-import org.apache.pdfbox.contentstream.operator.MissingOperandException;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSNumber;
 
 /**
  * j: Set the line join style.
  *
  */
-public class SetLineJoinStyle extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (arguments.isEmpty())
-        {
-            throw new MissingOperandException(operator, arguments);
-        }
-        int lineJoinStyle = ((COSNumber)arguments.get( 0 )).intValue();
-        context.getGraphicsState().setLineJoin( lineJoinStyle );
-    }
+public class SetLineJoinStyle extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (arguments.isEmpty())
+      throw new MissingOperandException(operator, arguments);
+    final int lineJoinStyle = ((COSNumber) arguments.get(0)).intValue();
+    context.getGraphicsState().setLineJoin(lineJoinStyle);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.SET_LINE_JOINSTYLE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.SET_LINE_JOINSTYLE;
+  }
 }
