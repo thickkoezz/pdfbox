@@ -21,125 +21,115 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class PageModeTest
-{
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+public class PageModeTest {
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull()
-    {
-        // Arrange
-        final String value = "FullScreen";
+  @Test
+  public void fromStringInputNotNullOutputNotNull() {
+    // Arrange
+    final String value = "FullScreen";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.FULL_SCREEN, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.FULL_SCREEN, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull2()
-    {
-        // Arrange
-        final String value = "UseThumbs";
+  @Test
+  public void fromStringInputNotNullOutputNotNull2() {
+    // Arrange
+    final String value = "UseThumbs";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.USE_THUMBS, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.USE_THUMBS, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull3()
-    {
-        // Arrange
-        final String value = "UseOC";
+  @Test
+  public void fromStringInputNotNullOutputNotNull3() {
+    // Arrange
+    final String value = "UseOC";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.USE_OPTIONAL_CONTENT, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.USE_OPTIONAL_CONTENT, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull4()
-    {
-        // Arrange
-        final String value = "UseNone";
+  @Test
+  public void fromStringInputNotNullOutputNotNull4() {
+    // Arrange
+    final String value = "UseNone";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.USE_NONE, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.USE_NONE, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull5()
-    {
-        // Arrange
-        final String value = "UseAttachments";
+  @Test
+  public void fromStringInputNotNullOutputNotNull5() {
+    // Arrange
+    final String value = "UseAttachments";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.USE_ATTACHMENTS, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.USE_ATTACHMENTS, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputNotNull6()
-    {
-        // Arrange
-        final String value = "UseOutlines";
+  @Test
+  public void fromStringInputNotNullOutputNotNull6() {
+    // Arrange
+    final String value = "UseOutlines";
 
-        // Act
-        final PageMode retval = PageMode.fromString(value);
+    // Act
+    final PageMode retval = PageMode.fromString(value);
 
-        // Assert result
-        Assert.assertEquals(PageMode.USE_OUTLINES, retval);
-    }
+    // Assert result
+    Assert.assertEquals(PageMode.USE_OUTLINES, retval);
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputIllegalArgumentException()
-    {
-        // Arrange
-        final String value = "";
+  @Test
+  public void fromStringInputNotNullOutputIllegalArgumentException() {
+    // Arrange
+    final String value = "";
 
-        // Act
-        thrown.expect(IllegalArgumentException.class);
-        PageMode.fromString(value);
+    // Act
+    thrown.expect(IllegalArgumentException.class);
+    PageMode.fromString(value);
 
-        // Method is not expected to return due to exception thrown
-    }
+    // Method is not expected to return due to exception thrown
+  }
 
-    @Test
-    public void fromStringInputNotNullOutputIllegalArgumentException2()
-    {
-        // Arrange
-        final String value = "Dulacb`ecj";
+  @Test
+  public void fromStringInputNotNullOutputIllegalArgumentException2() {
+    // Arrange
+    final String value = "Dulacb`ecj";
 
-        // Act
-        thrown.expect(IllegalArgumentException.class);
-        PageMode.fromString(value);
+    // Act
+    thrown.expect(IllegalArgumentException.class);
+    PageMode.fromString(value);
 
-        // Method is not expected to return due to exception thrown
-    }
+    // Method is not expected to return due to exception thrown
+  }
 
-    @Test
-    public void stringValueOutputNotNull()
-    {
-        // Arrange
-        final PageMode objectUnderTest = PageMode.USE_OPTIONAL_CONTENT;
+  @Test
+  public void stringValueOutputNotNull() {
+    // Arrange
+    final PageMode objectUnderTest = PageMode.USE_OPTIONAL_CONTENT;
 
-        // Act
-        final String retval = objectUnderTest.stringValue();
+    // Act
+    final String retval = objectUnderTest.stringValue();
 
-        // Assert result
-        Assert.assertEquals("UseOC", retval);
-    }
+    // Assert result
+    Assert.assertEquals("UseOC", retval);
+  }
 }
