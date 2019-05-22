@@ -24,40 +24,34 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 
 /**
- * Decrypts data encrypted by a security handler, reproducing the data as it was before encryption.
+ * Decrypts data encrypted by a security handler, reproducing the data as it was
+ * before encryption.
+ *
  * @author Adam Nichols
  */
-final class CryptFilter extends Filter
-{
-    @Override
-    public DecodeResult decode(InputStream encoded, OutputStream decoded,
-                                         COSDictionary parameters, int index) throws IOException
-    {
-        COSName encryptionName = (COSName) parameters.getDictionaryObject(COSName.NAME);
-        if(encryptionName == null || encryptionName.equals(COSName.IDENTITY)) 
-        {
-            // currently the only supported implementation is the Identity crypt filter
-            Filter identityFilter = new IdentityFilter();
-            identityFilter.decode(encoded, decoded, parameters, index);
-            return new DecodeResult(parameters);
-        }
-        throw new IOException("Unsupported crypt filter " + encryptionName.getName());
+final class CryptFilter extends Filter {
+  @Override
+  public DecodeResult decode(final InputStream encoded, final OutputStream decoded, final COSDictionary parameters,
+      final int index) throws IOException {
+    final COSName encryptionName = (COSName) parameters.getDictionaryObject(COSName.NAME);
+    if (encryptionName == null || encryptionName.equals(COSName.IDENTITY)) {
+      // currently the only supported implementation is the Identity crypt filter
+      final Filter identityFilter = new IdentityFilter();
+      identityFilter.decode(encoded, decoded, parameters, index);
+      return new DecodeResult(parameters);
     }
+    throw new IOException("Unsupported crypt filter " + encryptionName.getName());
+  }
 
-    @Override
-    protected void encode(InputStream input, OutputStream encoded, COSDictionary parameters)
-            throws IOException
-    {
-        COSName encryptionName = (COSName) parameters.getDictionaryObject(COSName.NAME);
-        if(encryptionName == null || encryptionName.equals(COSName.IDENTITY))
-        {
-            // currently the only supported implementation is the Identity crypt filter
-            Filter identityFilter = new IdentityFilter();
-            identityFilter.encode(input, encoded, parameters);
-        }
-        else
-        {
-            throw new IOException("Unsupported crypt filter " + encryptionName.getName());
-        }
-    }
+  @Override
+  protected void encode(final InputStream input, final OutputStream encoded, final COSDictionary parameters)
+      throws IOException {
+    final COSName encryptionName = (COSName) parameters.getDictionaryObject(COSName.NAME);
+    if (encryptionName == null || encryptionName.equals(COSName.IDENTITY)) {
+      // currently the only supported implementation is the Identity crypt filter
+      final Filter identityFilter = new IdentityFilter();
+      identityFilter.encode(input, encoded, parameters);
+    } else
+      throw new IOException("Unsupported crypt filter " + encryptionName.getName());
+  }
 }
