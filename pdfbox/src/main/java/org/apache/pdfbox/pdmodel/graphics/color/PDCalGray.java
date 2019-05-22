@@ -18,6 +18,7 @@ package org.apache.pdfbox.pdmodel.graphics.color;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.cos.COSName;
@@ -30,105 +31,88 @@ import org.apache.pdfbox.cos.COSNumber;
  * @author John Hewson
  * @author Ben Litchfield
  */
-public final class PDCalGray extends PDCIEDictionaryBasedColorSpace
-{
-    private final PDColor initialColor = new PDColor(new float[] { 0 }, this);
-    
-    // PDFBOX-4119: cache the results for much improved performance
-    // cached values MUST be cloned, because they are modified by the caller.
-    // this can be observed in rendering of PDFBOX-1724
-    private final Map<Float, float[]> map1 = new HashMap<>();
+public final class PDCalGray extends PDCIEDictionaryBasedColorSpace {
+  private final PDColor initialColor = new PDColor(new float[] { 0 }, this);
 
-    /**
-     * Create a new CalGray color space.
-     */
-    public PDCalGray()
-    {
-        super(COSName.CALGRAY);
-    }
+  // PDFBOX-4119: cache the results for much improved performance
+  // cached values MUST be cloned, because they are modified by the caller.
+  // this can be observed in rendering of PDFBOX-1724
+  private final Map<Float, float[]> map1 = new HashMap<>();
 
-    /**
-     * Creates a new CalGray color space using the given COS array.
-     *
-     * @param array the COS array which represents this color space
-     */
-    public PDCalGray(COSArray array)
-    {
-        super(array);
-    }
+  /**
+   * Create a new CalGray color space.
+   */
+  public PDCalGray() {
+    super(COSName.CALGRAY);
+  }
 
-    @Override
-    public String getName()
-    {
-        return COSName.CALGRAY.getName();
-    }
+  /**
+   * Creates a new CalGray color space using the given COS array.
+   *
+   * @param array the COS array which represents this color space
+   */
+  public PDCalGray(final COSArray array) {
+    super(array);
+  }
 
-    @Override
-    public int getNumberOfComponents()
-    {
-        return 1;
-    }
+  @Override
+  public String getName() {
+    return COSName.CALGRAY.getName();
+  }
 
-    @Override
-    public float[] getDefaultDecode(int bitsPerComponent)
-    {
-        return new float[] { 0, 1 };
-    }
+  @Override
+  public int getNumberOfComponents() {
+    return 1;
+  }
 
-    @Override
-    public PDColor getInitialColor()
-    {
-        return initialColor;
-    }
+  @Override
+  public float[] getDefaultDecode(final int bitsPerComponent) {
+    return new float[] { 0, 1 };
+  }
 
-    @Override
-    public float[] toRGB(float[] value)
-    {
-        // see implementation of toRGB in PDCalRGB, and PDFBOX-2971
-        if (isWhitePoint())
-        {
-            float a = value[0];
-            float[] result = map1.get(a);
-            if (result != null)
-            {
-                return result.clone();
-            }
-            float gamma = getGamma();
-            float powAG = (float) Math.pow(a, gamma);
-            result = convXYZtoRGB(powAG, powAG, powAG);
-            map1.put(a, result.clone());
-            return result;
-        }
-        else
-        {
-            return new float[] { value[0], value[0], value[0] };
-        }
-    }
+  @Override
+  public PDColor getInitialColor() {
+    return initialColor;
+  }
 
-    /**
-     * This will get the gamma value. If none is present then the default of 1
-     * will be returned.
-     *
-     * @return The gamma value.
-     */
-    public float getGamma()
-    {
-        float retval = 1.0f;
-        COSNumber gamma = (COSNumber) dictionary.getDictionaryObject(COSName.GAMMA);
-        if (gamma != null)
-        {
-            retval = gamma.floatValue();
-        }
-        return retval;
-    }
+  @Override
+  public float[] toRGB(final float[] value) {
+    // see implementation of toRGB in PDCalRGB, and PDFBOX-2971
+    if (isWhitePoint()) {
+      final float a = value[0];
+      float[] result = map1.get(a);
+      if (result != null)
+        return result.clone();
+      final float gamma = getGamma();
+      final float powAG = (float) Math.pow(a, gamma);
+      result = convXYZtoRGB(powAG, powAG, powAG);
+      map1.put(a, result.clone());
+      return result;
+    } else
+      return new float[] { value[0], value[0], value[0] };
+  }
 
-    /**
-     * Set the gamma value.
-     *
-     * @param value The new gamma value.
-     */
-    public void setGamma(float value)
-    {
-        dictionary.setItem(COSName.GAMMA, new COSFloat(value));
+  /**
+   * This will get the gamma value. If none is present then the default of 1 will
+   * be returned.
+   *
+   * @return The gamma value.
+   */
+  public float getGamma() {
+    float retval = 1.0f;
+    final COSNumber gamma = (COSNumber) dictionary.getDictionaryObject(COSName.GAMMA);
+    if (gamma != null) {
+      retval = gamma.floatValue();
     }
+    return retval;
+  }
+
+  /**
+   * Set the gamma value.
+   *
+   * @param value The new gamma value.
+   */
+  public void setGamma(final float value) {
+    dictionary.setItem(COSName.GAMMA, new COSFloat(value));
+  }
 }
