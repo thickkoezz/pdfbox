@@ -22,163 +22,148 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
-
 import org.apache.pdfbox.filter.Filter;
 import org.apache.pdfbox.filter.FilterFactory;
 import org.apache.pdfbox.io.IOUtils;
 
-public class TestCOSStream extends TestCase
-{
-    /**
-     * Tests encoding of a stream without any filter applied.
-     *
-     * @throws IOException
-     */
-    public void testUncompressedStreamEncode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        COSStream stream = createStream(testString, null);
-        validateEncoded(stream, testString);
+import junit.framework.TestCase;
+
+public class TestCOSStream extends TestCase {
+  /**
+   * Tests encoding of a stream without any filter applied.
+   *
+   * @throws IOException
+   */
+  public void testUncompressedStreamEncode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    final COSStream stream = createStream(testString, null);
+    validateEncoded(stream, testString);
+  }
+
+  /**
+   * Tests decoding of a stream without any filter applied.
+   *
+   * @throws IOException
+   */
+  public void testUncompressedStreamDecode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    final COSStream stream = createStream(testString, null);
+    validateDecoded(stream, testString);
+  }
+
+  /**
+   * Tests encoding of a stream with one filter applied.
+   *
+   * @throws IOException
+   */
+  public void testCompressedStream1Encode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    final byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
+    final COSStream stream = createStream(testString, COSName.FLATE_DECODE);
+    validateEncoded(stream, testStringEncoded);
+  }
+
+  /**
+   * Tests decoding of a stream with one filter applied.
+   *
+   * @throws IOException
+   */
+  public void testCompressedStream1Decode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    final byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
+    final COSStream stream = new COSStream();
+
+    try (OutputStream output = stream.createRawOutputStream()) {
+      output.write(testStringEncoded);
     }
 
-    /**
-     * Tests decoding of a stream without any filter applied.
-     *
-     * @throws IOException
-     */
-    public void testUncompressedStreamDecode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        COSStream stream = createStream(testString, null);
-        validateDecoded(stream, testString);
+    stream.setItem(COSName.FILTER, COSName.FLATE_DECODE);
+    validateDecoded(stream, testString);
+  }
+
+  /**
+   * Tests encoding of a stream with 2 filters applied.
+   *
+   * @throws IOException
+   */
+  public void testCompressedStream2Encode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
+    testStringEncoded = encodeData(testStringEncoded, COSName.ASCII85_DECODE);
+
+    final COSArray filters = new COSArray();
+    filters.add(COSName.ASCII85_DECODE);
+    filters.add(COSName.FLATE_DECODE);
+
+    final COSStream stream = createStream(testString, filters);
+    validateEncoded(stream, testStringEncoded);
+  }
+
+  /**
+   * Tests decoding of a stream with 2 filters applied.
+   *
+   * @throws IOException
+   */
+  public void testCompressedStream2Decode() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
+    testStringEncoded = encodeData(testStringEncoded, COSName.ASCII85_DECODE);
+    final COSStream stream = new COSStream();
+
+    final COSArray filters = new COSArray();
+    filters.add(COSName.ASCII85_DECODE);
+    filters.add(COSName.FLATE_DECODE);
+    stream.setItem(COSName.FILTER, filters);
+
+    try (OutputStream output = stream.createRawOutputStream()) {
+      output.write(testStringEncoded);
     }
 
-    /**
-     * Tests encoding of a stream with one filter applied.
-     *
-     * @throws IOException
-     */
-    public void testCompressedStream1Encode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
-        COSStream stream = createStream(testString, COSName.FLATE_DECODE);
-        validateEncoded(stream, testStringEncoded);
-    }
+    validateDecoded(stream, testString);
+  }
 
-    /**
-     * Tests decoding of a stream with one filter applied.
-     *
-     * @throws IOException
-     */
-    public void testCompressedStream1Decode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
-        COSStream stream = new COSStream();
-        
-        try (OutputStream output = stream.createRawOutputStream())
-        {
-            output.write(testStringEncoded);
-        }
+  /**
+   * Tests tests that encoding is done correctly even if the the stream is closed
+   * twice. Closeable.close() allows streams to be closed multiple times. The
+   * second and subsequent close() calls should have no effect.
+   *
+   * @throws IOException
+   */
+  public void testCompressedStreamDoubleClose() throws IOException {
+    final byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
+    final byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
+    final COSStream stream = new COSStream();
+    final OutputStream output = stream.createOutputStream(COSName.FLATE_DECODE);
+    output.write(testString);
+    output.close();
+    output.close();
+    validateEncoded(stream, testStringEncoded);
+  }
 
-        stream.setItem(COSName.FILTER, COSName.FLATE_DECODE);
-        validateDecoded(stream, testString);
-    }
+  private byte[] encodeData(final byte[] original, final COSName filter) throws IOException {
+    final Filter encodingFilter = FilterFactory.INSTANCE.getFilter(filter);
+    final ByteArrayOutputStream encoded = new ByteArrayOutputStream();
+    encodingFilter.encode(new ByteArrayInputStream(original), encoded, new COSDictionary(), 0);
+    return encoded.toByteArray();
+  }
 
-    /**
-     * Tests encoding of a stream with 2 filters applied.
-     *
-     * @throws IOException
-     */
-    public void testCompressedStream2Encode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
-        testStringEncoded = encodeData(testStringEncoded, COSName.ASCII85_DECODE);
-        
-        COSArray filters = new COSArray();
-        filters.add(COSName.ASCII85_DECODE);
-        filters.add(COSName.FLATE_DECODE);
-        
-        COSStream stream = createStream(testString, filters);
-        validateEncoded(stream, testStringEncoded);
+  private COSStream createStream(final byte[] testString, final COSBase filters) throws IOException {
+    final COSStream stream = new COSStream();
+    try (OutputStream output = stream.createOutputStream(filters)) {
+      output.write(testString);
     }
+    return stream;
+  }
 
-    /**
-     * Tests decoding of a stream with 2 filters applied.
-     *
-     * @throws IOException
-     */
-    public void testCompressedStream2Decode() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
-        testStringEncoded = encodeData(testStringEncoded, COSName.ASCII85_DECODE);
-        COSStream stream = new COSStream();
-        
-        COSArray filters = new COSArray();
-        filters.add(COSName.ASCII85_DECODE);
-        filters.add(COSName.FLATE_DECODE);
-        stream.setItem(COSName.FILTER, filters);
-        
-        try (OutputStream output = stream.createRawOutputStream())
-        {
-            output.write(testStringEncoded);
-        }
-        
-        validateDecoded(stream, testString);
-    }
+  private void validateEncoded(final COSStream stream, final byte[] expected) throws IOException {
+    final byte[] decoded = IOUtils.toByteArray(stream.createRawInputStream());
+    stream.close();
+    TestCase.assertTrue("Encoded data doesn't match input", Arrays.equals(expected, decoded));
+  }
 
-    /**
-     * Tests tests that encoding is done correctly even if the the stream is closed twice.
-     * Closeable.close() allows streams to be closed multiple times. The second and subsequent
-     * close() calls should have no effect.
-     *
-     * @throws IOException
-     */
-    public void testCompressedStreamDoubleClose() throws IOException
-    {
-        byte[] testString = "This is a test string to be used as input for TestCOSStream".getBytes("ASCII");
-        byte[] testStringEncoded = encodeData(testString, COSName.FLATE_DECODE);
-        COSStream stream = new COSStream();
-        OutputStream output = stream.createOutputStream(COSName.FLATE_DECODE);
-        output.write(testString);
-        output.close();
-        output.close();
-        validateEncoded(stream, testStringEncoded);
-    }
-
-    private byte[] encodeData(byte[] original, COSName filter) throws IOException
-    {
-        Filter encodingFilter = FilterFactory.INSTANCE.getFilter(filter);
-        ByteArrayOutputStream encoded = new ByteArrayOutputStream();
-        encodingFilter.encode(new ByteArrayInputStream(original), encoded, new COSDictionary(), 0);
-        return encoded.toByteArray();
-    }
-
-    private COSStream createStream(byte[] testString, COSBase filters) throws IOException
-    {
-        COSStream stream = new COSStream();
-        try (OutputStream output = stream.createOutputStream(filters))
-        {
-            output.write(testString);
-        }
-        return stream;
-    }
-
-    private void validateEncoded(COSStream stream, byte[] expected) throws IOException
-    {
-        byte[] decoded = IOUtils.toByteArray(stream.createRawInputStream());
-        stream.close();
-        assertTrue("Encoded data doesn't match input", Arrays.equals(expected, decoded));
-    }
-
-    private void validateDecoded(COSStream stream, byte[] expected) throws IOException
-    {
-        byte[] encoded = IOUtils.toByteArray(stream.createInputStream());
-        stream.close();
-        assertTrue("Decoded data doesn't match input", Arrays.equals(expected, encoded));
-    }
+  private void validateDecoded(final COSStream stream, final byte[] expected) throws IOException {
+    final byte[] encoded = IOUtils.toByteArray(stream.createInputStream());
+    stream.close();
+    TestCase.assertTrue("Decoded data doesn't match input", Arrays.equals(expected, encoded));
+  }
 }
