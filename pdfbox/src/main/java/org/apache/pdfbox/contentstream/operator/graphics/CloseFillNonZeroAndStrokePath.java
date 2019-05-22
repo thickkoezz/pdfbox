@@ -16,31 +16,27 @@
  */
 package org.apache.pdfbox.contentstream.operator.graphics;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
-
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
  * b Close, fill and stroke the path with non-zero winding rule.
  *
  * @author Ben Litchfield
  */
-public final class CloseFillNonZeroAndStrokePath extends GraphicsOperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> operands) throws IOException
-    {
-        context.processOperator(OperatorName.CLOSE_PATH, operands);
-        context.processOperator(OperatorName.FILL_NON_ZERO_AND_STROKE, operands);
-    }
+public final class CloseFillNonZeroAndStrokePath extends GraphicsOperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> operands) throws IOException {
+    context.processOperator(OperatorName.CLOSE_PATH, operands);
+    context.processOperator(OperatorName.FILL_NON_ZERO_AND_STROKE, operands);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.CLOSE_FILL_NON_ZERO_AND_STROKE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.CLOSE_FILL_NON_ZERO_AND_STROKE;
+  }
 }
