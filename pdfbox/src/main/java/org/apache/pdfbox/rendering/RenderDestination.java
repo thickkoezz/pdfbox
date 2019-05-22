@@ -20,12 +20,11 @@ package org.apache.pdfbox.rendering;
 /**
  * Optional content groups are visible depending on the render purpose.
  */
-public enum RenderDestination 
-{
-    /** graphics export  */
-    EXPORT,
-    /** viewing */
-    VIEW,
-    /** printing */
-    PRINT
+public enum RenderDestination {
+  /** graphics export */
+  EXPORT,
+  /** viewing */
+  VIEW,
+  /** printing */
+  PRINT
 }
