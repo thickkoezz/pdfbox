@@ -24,43 +24,39 @@ import org.apache.pdfbox.cos.COSName;
  *
  * @author Ben Litchfield
  */
-public final class PDDocumentOutline extends PDOutlineNode
-{
+public final class PDDocumentOutline extends PDOutlineNode {
 
-    /**
-     * Default Constructor.
-     */
-    public PDDocumentOutline()
-    {
-        getCOSObject().setName(COSName.TYPE, COSName.OUTLINES.getName());
-    }
+  /**
+   * Default Constructor.
+   */
+  public PDDocumentOutline() {
+    getCOSObject().setName(COSName.TYPE, COSName.OUTLINES.getName());
+  }
 
-    /**
-     * Constructor for an existing document outline.
-     *
-     * @param dic The storage dictionary.
-     */
-    public PDDocumentOutline( COSDictionary dic )
-    {
-        super( dic );
-        getCOSObject().setName(COSName.TYPE, COSName.OUTLINES.getName());
-    }
+  /**
+   * Constructor for an existing document outline.
+   *
+   * @param dic The storage dictionary.
+   */
+  public PDDocumentOutline(final COSDictionary dic) {
+    super(dic);
+    getCOSObject().setName(COSName.TYPE, COSName.OUTLINES.getName());
+  }
 
-    @Override
-    public boolean isNodeOpen()
-    {
-        return true;
-    }
+  @Override
+  public boolean isNodeOpen() {
+    return true;
+  }
 
-    @Override
-    public void openNode()
-    {
-        // The root of the outline hierarchy is not an OutlineItem and cannot be opened or closed
-    }
+  @Override
+  public void openNode() {
+    // The root of the outline hierarchy is not an OutlineItem and cannot be opened
+    // or closed
+  }
 
-    @Override
-    public void closeNode()
-    {
-        // The root of the outline hierarchy is not an OutlineItem and cannot be opened or closed
-    }
+  @Override
+  public void closeNode() {
+    // The root of the outline hierarchy is not an OutlineItem and cannot be opened
+    // or closed
+  }
 }
