@@ -16,13 +16,14 @@
 package org.apache.pdfbox.pdmodel.interactive.annotation.handlers;
 
 import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDAppearanceContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationCaret;
-import org.apache.pdfbox.pdmodel.PDAppearanceContentStream;
 import org.apache.pdfbox.util.Matrix;
 
 /**
@@ -30,85 +31,72 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author Tilman Hausherr
  */
-public class PDCaretAppearanceHandler extends PDAbstractAppearanceHandler
-{
-    private static final Log LOG = LogFactory.getLog(PDCaretAppearanceHandler.class);
+public class PDCaretAppearanceHandler extends PDAbstractAppearanceHandler {
+  private static final Log LOG = LogFactory.getLog(PDCaretAppearanceHandler.class);
 
-    public PDCaretAppearanceHandler(PDAnnotation annotation)
-    {
-        super(annotation);
+  public PDCaretAppearanceHandler(final PDAnnotation annotation) {
+    super(annotation);
+  }
+
+  @Override
+  public void generateAppearanceStreams() {
+    generateNormalAppearance();
+    generateRolloverAppearance();
+    generateDownAppearance();
+  }
+
+  @Override
+  public void generateNormalAppearance() {
+    final PDAnnotationCaret annotation = (PDAnnotationCaret) getAnnotation();
+    try (PDAppearanceContentStream contentStream = getNormalAppearanceAsContentStream()) {
+      contentStream.setStrokingColor(getColor());
+      contentStream.setNonStrokingColor(getColor());
+
+      setOpacity(contentStream, annotation.getConstantOpacity());
+
+      final PDRectangle rect = getRectangle();
+      PDRectangle bbox = new PDRectangle(rect.getWidth(), rect.getHeight());
+      if (!annotation.getCOSObject().containsKey(COSName.RD)) {
+        // Adobe creates the /RD entry with a number that is decided
+        // by dividing the height by 10, with a maximum result of 5.
+        // That number is then used to enlarge the bbox and the rectangle and added to
+        // the
+        // translation values in the matrix and also used for the line width
+        // (not here because it has no effect, see comment near fill() ).
+        // The curves are based on the original rectangle.
+        final float rd = Math.min(rect.getHeight() / 10, 5);
+        annotation.setRectDifferences(rd);
+        bbox = new PDRectangle(-rd, -rd, rect.getWidth() + 2 * rd, rect.getHeight() + 2 * rd);
+        final Matrix matrix = annotation.getNormalAppearanceStream().getMatrix();
+        matrix.transformPoint(rd, rd);
+        annotation.getNormalAppearanceStream().setMatrix(matrix.createAffineTransform());
+        final PDRectangle rect2 = new PDRectangle(rect.getLowerLeftX() - rd, rect.getLowerLeftY() - rd,
+            rect.getWidth() + 2 * rd, rect.getHeight() + 2 * rd);
+        annotation.setRectangle(rect2);
+      }
+      annotation.getNormalAppearanceStream().setBBox(bbox);
+
+      final float halfX = rect.getWidth() / 2;
+      final float halfY = rect.getHeight() / 2;
+      contentStream.moveTo(0, 0);
+      contentStream.curveTo(halfX, 0, halfX, halfY, halfX, rect.getHeight());
+      contentStream.curveTo(halfX, halfY, halfX, 0, rect.getWidth(), 0);
+      contentStream.closePath();
+      contentStream.fill();
+      // Adobe has an additional stroke, but it has no effect
+      // because fill "consumes" the path.
+    } catch (final IOException e) {
+      PDCaretAppearanceHandler.LOG.error(e);
     }
+  }
 
-    @Override
-    public void generateAppearanceStreams()
-    {
-        generateNormalAppearance();
-        generateRolloverAppearance();
-        generateDownAppearance();
-    }
+  @Override
+  public void generateRolloverAppearance() {
+    // TODO to be implemented
+  }
 
-    @Override
-    public void generateNormalAppearance()
-    {
-        PDAnnotationCaret annotation = (PDAnnotationCaret) getAnnotation();
-        try (PDAppearanceContentStream contentStream = getNormalAppearanceAsContentStream())
-        {
-            contentStream.setStrokingColor(getColor());
-            contentStream.setNonStrokingColor(getColor());
-
-            setOpacity(contentStream, annotation.getConstantOpacity());
-
-            PDRectangle rect = getRectangle();
-            PDRectangle bbox = new PDRectangle(rect.getWidth(), rect.getHeight());
-            if (!annotation.getCOSObject().containsKey(COSName.RD))
-            {
-                // Adobe creates the /RD entry with a number that is decided
-                // by dividing the height by 10, with a maximum result of 5.
-                // That number is then used to enlarge the bbox and the rectangle and added to the
-                // translation values in the matrix and also used for the line width
-                // (not here because it has no effect, see comment near fill() ).
-                // The curves are based on the original rectangle.
-                float rd = Math.min(rect.getHeight() / 10, 5);
-                annotation.setRectDifferences(rd);
-                bbox = new PDRectangle(-rd, -rd, rect.getWidth() + 2 * rd, rect.getHeight() + 2 * rd);
-                Matrix matrix = annotation.getNormalAppearanceStream().getMatrix();
-                matrix.transformPoint(rd, rd);
-                annotation.getNormalAppearanceStream().setMatrix(matrix.createAffineTransform());
-                PDRectangle rect2 = new PDRectangle(rect.getLowerLeftX() - rd, rect.getLowerLeftY() - rd,
-                                                    rect.getWidth() + 2 * rd, rect.getHeight() + 2 * rd);
-                annotation.setRectangle(rect2);
-            }
-            annotation.getNormalAppearanceStream().setBBox(bbox);
-
-            float halfX = rect.getWidth() / 2;
-            float halfY = rect.getHeight() / 2;
-            contentStream.moveTo(0, 0);
-            contentStream.curveTo(halfX, 0,
-                                  halfX, halfY, 
-                                  halfX, rect.getHeight());
-            contentStream.curveTo(halfX, halfY, 
-                                  halfX, 0,
-                                  rect.getWidth(), 0);
-            contentStream.closePath();
-            contentStream.fill();
-            // Adobe has an additional stroke, but it has no effect
-            // because fill "consumes" the path.
-        }
-        catch (IOException e)
-        {
-            LOG.error(e);
-        }
-    }
-
-    @Override
-    public void generateRolloverAppearance()
-    {
-        // TODO to be implemented
-    }
-
-    @Override
-    public void generateDownAppearance()
-    {
-        // TODO to be implemented
-    }
+  @Override
+  public void generateDownAppearance() {
+    // TODO to be implemented
+  }
 }
