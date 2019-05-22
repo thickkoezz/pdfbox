@@ -17,12 +17,6 @@
 
 package org.apache.pdfbox.rendering;
 
-import org.apache.pdfbox.ParallelParameterized;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized.Parameters;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -30,59 +24,55 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.pdfbox.ParallelParameterized;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized.Parameters;
+
 /**
- * Functional test for PDF rendering. This test simply tries to render
- * a series of PDFs using PDFBox to make sure that no exceptions are thrown.
+ * Functional test for PDF rendering. This test simply tries to render a series
+ * of PDFs using PDFBox to make sure that no exceptions are thrown.
  *
- * It does not attempt to detect if rendering is correct, see {@link org.apache.pdfbox.rendering.TestPDFToImage}.
+ * It does not attempt to detect if rendering is correct, see
+ * {@link org.apache.pdfbox.rendering.TestPDFToImage}.
  *
  * @author John Hewson
  */
 @RunWith(ParallelParameterized.class)
-public class TestRendering
-{
-    private static final String INPUT_DIR = "src/test/resources/input/rendering";
+public class TestRendering {
+  private static final String INPUT_DIR = "src/test/resources/input/rendering";
 
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data()
-    {
-        File[] testFiles = new File(INPUT_DIR).listFiles(new FilenameFilter()
-        {
-            @Override
-            public boolean accept(File dir, String name)
-            {
-                return (name.endsWith(".pdf") || name.endsWith(".ai"));
-            }
-        });
+  @Parameters(name = "{0}")
+  public static Collection<Object[]> data() {
+    final File[] testFiles = new File(TestRendering.INPUT_DIR)
+        .listFiles((FilenameFilter) (dir, name) -> name.endsWith(".pdf") || name.endsWith(".ai"));
 
-        List<Object[]> params = new ArrayList<>();
-        for (File file : testFiles)
-        {
-            params.add(new Object[] { file.getName() });
-        }
-        return params;
+    final List<Object[]> params = new ArrayList<>();
+    for (final File file : testFiles) {
+      params.add(new Object[] { file.getName() });
     }
+    return params;
+  }
 
-    private final String fileName;
+  private final String fileName;
 
-    public TestRendering(String fileName)
-    {
-        this.fileName = fileName;
-    }
+  public TestRendering(final String fileName) {
+    this.fileName = fileName;
+  }
 
-    @Test
-    public void render() throws IOException
-    {
-        File file = new File(INPUT_DIR, fileName);
-        PDDocument document = PDDocument.load(file);
-        PDFRenderer renderer = new PDFRenderer(document);
-        renderer.renderImage(0);
+  @Test
+  public void render() throws IOException {
+    final File file = new File(TestRendering.INPUT_DIR, fileName);
+    final PDDocument document = PDDocument.load(file);
+    final PDFRenderer renderer = new PDFRenderer(document);
+    renderer.renderImage(0);
 
-        // We don't actually do anything with the image for the same reason that
-        // TestPDFToImage is disabled - different JVMs produce different results
-        // but at least we can make sure that PDFBox did not throw any exceptions
-        // during the rendering process.
+    // We don't actually do anything with the image for the same reason that
+    // TestPDFToImage is disabled - different JVMs produce different results
+    // but at least we can make sure that PDFBox did not throw any exceptions
+    // during the rendering process.
 
-        document.close();
-    }
+    document.close();
+  }
 }
