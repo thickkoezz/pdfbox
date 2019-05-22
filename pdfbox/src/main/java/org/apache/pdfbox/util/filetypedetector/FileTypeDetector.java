@@ -24,96 +24,94 @@ import org.apache.pdfbox.util.Charsets;
 /**
  * @author Drew Noakes
  *
- * code taken from https://github.com/drewnoakes/metadata-extractor
+ *         code taken from https://github.com/drewnoakes/metadata-extractor
  *
- * 2016-01-04
+ *         2016-01-04
  *
- * latest commit number 73f1a48
+ *         latest commit number 73f1a48
  *
- * Examines the a file's first bytes and estimates the file's type.
+ *         Examines the a file's first bytes and estimates the file's type.
  */
-public final class FileTypeDetector
-{
-    private static final ByteTrie<FileType> root;
+public final class FileTypeDetector {
+  private static final ByteTrie<FileType> root;
 
-    static
-    {
-        root = new ByteTrie<>();
-        root.setDefaultValue(FileType.UNKNOWN);
+  static {
+    root = new ByteTrie<>();
+    FileTypeDetector.root.setDefaultValue(FileType.UNKNOWN);
 
-        // https://en.wikipedia.org/wiki/List_of_file_signatures
+    // https://en.wikipedia.org/wiki/List_of_file_signatures
 
-        root.addPath(FileType.JPEG, new byte[]{(byte)0xff, (byte)0xd8});
-        root.addPath(FileType.TIFF, "II".getBytes(Charsets.ISO_8859_1), new byte[]{0x2a, 0x00});
-        root.addPath(FileType.TIFF, "MM".getBytes(Charsets.ISO_8859_1), new byte[]{0x00, 0x2a});
-        root.addPath(FileType.PSD, "8BPS".getBytes(Charsets.ISO_8859_1));
-        root.addPath(FileType.PNG, new byte[]{(byte)0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52});
-        // TODO technically there are other very rare magic numbers for OS/2 BMP files...
-        root.addPath(FileType.BMP, "BM".getBytes(Charsets.ISO_8859_1)); 
-        root.addPath(FileType.GIF, "GIF87a".getBytes(Charsets.ISO_8859_1));
-        root.addPath(FileType.GIF, "GIF89a".getBytes(Charsets.ISO_8859_1));
-        root.addPath(FileType.ICO, new byte[]{0x00, 0x00, 0x01, 0x00});
-        // multiple PCX versions, explicitly listed
-        root.addPath(FileType.PCX, new byte[]{0x0A, 0x00, 0x01}); 
-        root.addPath(FileType.PCX, new byte[]{0x0A, 0x02, 0x01});
-        root.addPath(FileType.PCX, new byte[]{0x0A, 0x03, 0x01});
-        root.addPath(FileType.PCX, new byte[]{0x0A, 0x05, 0x01});
-        root.addPath(FileType.RIFF, "RIFF".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.JPEG, new byte[] { (byte) 0xff, (byte) 0xd8 });
+    FileTypeDetector.root.addPath(FileType.TIFF, "II".getBytes(Charsets.ISO_8859_1), new byte[] { 0x2a, 0x00 });
+    FileTypeDetector.root.addPath(FileType.TIFF, "MM".getBytes(Charsets.ISO_8859_1), new byte[] { 0x00, 0x2a });
+    FileTypeDetector.root.addPath(FileType.PSD, "8BPS".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.PNG, new byte[] { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+        0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52 });
+    // TODO technically there are other very rare magic numbers for OS/2 BMP
+    // files...
+    FileTypeDetector.root.addPath(FileType.BMP, "BM".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.GIF, "GIF87a".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.GIF, "GIF89a".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.ICO, new byte[] { 0x00, 0x00, 0x01, 0x00 });
+    // multiple PCX versions, explicitly listed
+    FileTypeDetector.root.addPath(FileType.PCX, new byte[] { 0x0A, 0x00, 0x01 });
+    FileTypeDetector.root.addPath(FileType.PCX, new byte[] { 0x0A, 0x02, 0x01 });
+    FileTypeDetector.root.addPath(FileType.PCX, new byte[] { 0x0A, 0x03, 0x01 });
+    FileTypeDetector.root.addPath(FileType.PCX, new byte[] { 0x0A, 0x05, 0x01 });
+    FileTypeDetector.root.addPath(FileType.RIFF, "RIFF".getBytes(Charsets.ISO_8859_1));
 
-        // https://github.com/drewnoakes/metadata-extractor/issues/217
-        // root.addPath(FileType.ARW, "II".getBytes(Charsets.ISO_8859_1), new byte[]{0x2a, 0x00, 0x08, 0x00})
-        root.addPath(FileType.CRW, "II".getBytes(Charsets.ISO_8859_1), new byte[]{0x1a, 0x00, 0x00, 0x00}, "HEAPCCDR".getBytes(Charsets.ISO_8859_1));
-        root.addPath(FileType.CR2, "II".getBytes(Charsets.ISO_8859_1), new byte[]{0x2a, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52});
-        root.addPath(FileType.NEF, "MM".getBytes(Charsets.ISO_8859_1), new byte[]{0x00, 0x2a, 0x00, 0x00, 0x00, (byte)0x80, 0x00});
-        root.addPath(FileType.ORF, "IIRO".getBytes(Charsets.ISO_8859_1), new byte[]{(byte)0x08, 0x00});
-        root.addPath(FileType.ORF, "IIRS".getBytes(Charsets.ISO_8859_1), new byte[]{(byte)0x08, 0x00});
-        root.addPath(FileType.RAF, "FUJIFILMCCD-RAW".getBytes(Charsets.ISO_8859_1));
-        root.addPath(FileType.RW2, "II".getBytes(Charsets.ISO_8859_1), new byte[]{0x55, 0x00});
-    }
+    // https://github.com/drewnoakes/metadata-extractor/issues/217
+    // root.addPath(FileType.ARW, "II".getBytes(Charsets.ISO_8859_1), new
+    // byte[]{0x2a, 0x00, 0x08, 0x00})
+    FileTypeDetector.root.addPath(FileType.CRW, "II".getBytes(Charsets.ISO_8859_1),
+        new byte[] { 0x1a, 0x00, 0x00, 0x00 }, "HEAPCCDR".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.CR2, "II".getBytes(Charsets.ISO_8859_1),
+        new byte[] { 0x2a, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52 });
+    FileTypeDetector.root.addPath(FileType.NEF, "MM".getBytes(Charsets.ISO_8859_1),
+        new byte[] { 0x00, 0x2a, 0x00, 0x00, 0x00, (byte) 0x80, 0x00 });
+    FileTypeDetector.root.addPath(FileType.ORF, "IIRO".getBytes(Charsets.ISO_8859_1), new byte[] { (byte) 0x08, 0x00 });
+    FileTypeDetector.root.addPath(FileType.ORF, "IIRS".getBytes(Charsets.ISO_8859_1), new byte[] { (byte) 0x08, 0x00 });
+    FileTypeDetector.root.addPath(FileType.RAF, "FUJIFILMCCD-RAW".getBytes(Charsets.ISO_8859_1));
+    FileTypeDetector.root.addPath(FileType.RW2, "II".getBytes(Charsets.ISO_8859_1), new byte[] { 0x55, 0x00 });
+  }
 
-    private FileTypeDetector() throws Exception
-    {
-    }
+  private FileTypeDetector() throws Exception {
+  }
 
-    /**
-     * Examines the a file's first bytes and estimates the file's type.
-     * <p>
-     * Requires a {@link BufferedInputStream} in order to mark and reset the stream to the position
-     * at which it was provided to this method once completed.
-     * <p>
-     * Requires the stream to contain at least eight bytes.
-     *
-     * @param inputStream a buffered input stream of the file to examine.
-     * @return the file type.
-     * @throws IOException if an IO error occurred or the input stream ended unexpectedly.
-     */
-    public static FileType detectFileType(final BufferedInputStream inputStream) throws IOException
-    {
-        if (!inputStream.markSupported())
-        {
-            throw new IOException("Stream must support mark/reset");
-        }
+  /**
+   * Examines the a file's first bytes and estimates the file's type.
+   * <p>
+   * Requires a {@link BufferedInputStream} in order to mark and reset the stream
+   * to the position at which it was provided to this method once completed.
+   * <p>
+   * Requires the stream to contain at least eight bytes.
+   *
+   * @param inputStream a buffered input stream of the file to examine.
+   * @return the file type.
+   * @throws IOException if an IO error occurred or the input stream ended
+   *                     unexpectedly.
+   */
+  public static FileType detectFileType(final BufferedInputStream inputStream) throws IOException {
+    if (!inputStream.markSupported())
+      throw new IOException("Stream must support mark/reset");
 
-        int maxByteCount = root.getMaxDepth();
+    final int maxByteCount = FileTypeDetector.root.getMaxDepth();
 
-        inputStream.mark(maxByteCount);
+    inputStream.mark(maxByteCount);
 
-        byte[] bytes = new byte[maxByteCount];
-        int bytesRead = inputStream.read(bytes);
+    final byte[] bytes = new byte[maxByteCount];
+    final int bytesRead = inputStream.read(bytes);
 
-        if (bytesRead == -1)
-        {
-            throw new IOException("Stream ended before file's magic number could be determined.");
-        }
+    if (bytesRead == -1)
+      throw new IOException("Stream ended before file's magic number could be determined.");
 
-        inputStream.reset();
+    inputStream.reset();
 
-        //noinspection ConstantConditions
-        return root.find(bytes);
-    }
+    // noinspection ConstantConditions
+    return FileTypeDetector.root.find(bytes);
+  }
 
-    public static FileType detectFileType(final byte[] fileBytes) throws IOException
-    {
-        return root.find(fileBytes);
-    }
+  public static FileType detectFileType(final byte[] fileBytes) throws IOException {
+    return FileTypeDetector.root.find(fileBytes);
+  }
 }
