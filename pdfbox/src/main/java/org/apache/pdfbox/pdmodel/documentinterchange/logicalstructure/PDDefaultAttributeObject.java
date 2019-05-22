@@ -27,106 +27,90 @@ import org.apache.pdfbox.cos.COSName;
 
 /**
  * A default attribute object.
- * 
+ *
  * @author Johannes Koch
  */
-public class PDDefaultAttributeObject extends PDAttributeObject
-{
+public class PDDefaultAttributeObject extends PDAttributeObject {
 
-    /**
-     * Default constructor.
-     */
-    public PDDefaultAttributeObject()
-    {
+  /**
+   * Default constructor.
+   */
+  public PDDefaultAttributeObject() {
+  }
+
+  /**
+   * Creates a default attribute object with a given dictionary.
+   *
+   * @param dictionary the dictionary
+   */
+  public PDDefaultAttributeObject(final COSDictionary dictionary) {
+    super(dictionary);
+  }
+
+  /**
+   * Gets the attribute names.
+   *
+   * @return the attribute names
+   */
+  public List<String> getAttributeNames() {
+    final List<String> attrNames = new ArrayList<>();
+    for (final Entry<COSName, COSBase> entry : getCOSObject().entrySet()) {
+      final COSName key = entry.getKey();
+      if (!COSName.O.equals(key)) {
+        attrNames.add(key.getName());
+      }
     }
+    return attrNames;
+  }
 
-    /**
-     * Creates a default attribute object with a given dictionary.
-     * 
-     * @param dictionary the dictionary
-     */
-    public PDDefaultAttributeObject(COSDictionary dictionary)
-    {
-        super(dictionary);
+  /**
+   * Gets the attribute value for a given name.
+   *
+   * @param attrName the given attribute name
+   * @return the attribute value for a given name
+   */
+  public COSBase getAttributeValue(final String attrName) {
+    return getCOSObject().getDictionaryObject(attrName);
+  }
+
+  /**
+   * Gets the attribute value for a given name.
+   *
+   * @param attrName     the given attribute name
+   * @param defaultValue the default value
+   * @return the attribute value for a given name
+   */
+  protected COSBase getAttributeValue(final String attrName, final COSBase defaultValue) {
+    final COSBase value = getCOSObject().getDictionaryObject(attrName);
+    if (value == null)
+      return defaultValue;
+    return value;
+  }
+
+  /**
+   * Sets an attribute.
+   *
+   * @param attrName  the attribute name
+   * @param attrValue the attribute value
+   */
+  public void setAttribute(final String attrName, final COSBase attrValue) {
+    final COSBase old = this.getAttributeValue(attrName);
+    getCOSObject().setItem(COSName.getPDFName(attrName), attrValue);
+    potentiallyNotifyChanged(old, attrValue);
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder().append(super.toString()).append(", attributes={");
+    final Iterator<String> it = getAttributeNames().iterator();
+    while (it.hasNext()) {
+      final String name = it.next();
+      sb.append(name).append('=').append(this.getAttributeValue(name));
+      if (it.hasNext()) {
+        sb.append(", ");
+      }
     }
-
-
-    /**
-     * Gets the attribute names.
-     * 
-     * @return the attribute names
-     */
-    public List<String> getAttributeNames()
-    {
-        List<String> attrNames = new ArrayList<>();
-        for (Entry<COSName, COSBase> entry : this.getCOSObject().entrySet())
-        {
-            COSName key = entry.getKey();
-            if (!COSName.O.equals(key))
-            {
-                attrNames.add(key.getName());
-            }
-        }
-        return attrNames;
-    }
-
-    /**
-     * Gets the attribute value for a given name.
-     * 
-     * @param attrName the given attribute name
-     * @return the attribute value for a given name
-     */
-    public COSBase getAttributeValue(String attrName)
-    {
-        return this.getCOSObject().getDictionaryObject(attrName);
-    }
-
-    /**
-     * Gets the attribute value for a given name.
-     * 
-     * @param attrName the given attribute name
-     * @param defaultValue the default value
-     * @return the attribute value for a given name
-     */
-    protected COSBase getAttributeValue(String attrName, COSBase defaultValue)
-    {
-        COSBase value = this.getCOSObject().getDictionaryObject(attrName);
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        return value;
-    }
-
-    /**
-     * Sets an attribute.
-     * 
-     * @param attrName the attribute name
-     * @param attrValue the attribute value
-     */
-    public void setAttribute(String attrName, COSBase attrValue)
-    {
-        COSBase old = this.getAttributeValue(attrName);
-        this.getCOSObject().setItem(COSName.getPDFName(attrName), attrValue);
-        this.potentiallyNotifyChanged(old, attrValue);
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder().append(super.toString())
-            .append(", attributes={");
-        Iterator<String> it = this.getAttributeNames().iterator();
-        while (it.hasNext())
-        {
-            String name = it.next();
-            sb.append(name).append('=').append(this.getAttributeValue(name));
-            if (it.hasNext())
-            {
-                sb.append(", ");
-            }
-        }
-        return sb.append('}').toString();
-    }
+    return sb.append('}').toString();
+  }
 
 }
