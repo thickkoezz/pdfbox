@@ -18,7 +18,6 @@ package org.apache.pdfbox.pdmodel.interactive.action;
 
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
-
 import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
@@ -26,131 +25,119 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
  *
  * @author Ben Litchfield
  */
-public class PDWindowsLaunchParams implements COSObjectable
-{
-    /**
-     * The open operation for the launch.
-     */
-    public static final String OPERATION_OPEN = "open";
-    /**
-     * The print operation for the launch.
-     */
-    public static final String OPERATION_PRINT = "print";
+public class PDWindowsLaunchParams implements COSObjectable {
+  /**
+   * The open operation for the launch.
+   */
+  public static final String OPERATION_OPEN = "open";
+  /**
+   * The print operation for the launch.
+   */
+  public static final String OPERATION_PRINT = "print";
 
-    /**
-     * The params dictionary.
-     */
-    protected COSDictionary params;
+  /**
+   * The params dictionary.
+   */
+  protected COSDictionary params;
 
-    /**
-     * Default constructor.
-     */
-    public PDWindowsLaunchParams()
-    {
-        params = new COSDictionary();
-    }
+  /**
+   * Default constructor.
+   */
+  public PDWindowsLaunchParams() {
+    params = new COSDictionary();
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param p The params dictionary.
-     */
-    public PDWindowsLaunchParams( COSDictionary p )
-    {
-        params = p;
-    }
+  /**
+   * Constructor.
+   *
+   * @param p The params dictionary.
+   */
+  public PDWindowsLaunchParams(final COSDictionary p) {
+    params = p;
+  }
 
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return params;
-    }
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return params;
+  }
 
-    /**
-     * The file to launch.
-     *
-     * @return The executable/document to launch.
-     */
-    public String getFilename()
-    {
-        return params.getString( COSName.F );
-    }
+  /**
+   * The file to launch.
+   *
+   * @return The executable/document to launch.
+   */
+  public String getFilename() {
+    return params.getString(COSName.F);
+  }
 
-    /**
-     * Set the file to launch.
-     *
-     * @param file The executable/document to launch.
-     */
-    public void setFilename( String file )
-    {
-        params.setString( COSName.F, file );
-    }
+  /**
+   * Set the file to launch.
+   *
+   * @param file The executable/document to launch.
+   */
+  public void setFilename(final String file) {
+    params.setString(COSName.F, file);
+  }
 
-    /**
-     * The dir to launch from.
-     *
-     * @return The dir of the executable/document to launch.
-     */
-    public String getDirectory()
-    {
-        return params.getString( COSName.D );
-    }
+  /**
+   * The dir to launch from.
+   *
+   * @return The dir of the executable/document to launch.
+   */
+  public String getDirectory() {
+    return params.getString(COSName.D);
+  }
 
-    /**
-     * Set the dir to launch from.
-     *
-     * @param dir The dir of the executable/document to launch.
-     */
-    public void setDirectory( String dir )
-    {
-        params.setString( COSName.D, dir );
-    }
+  /**
+   * Set the dir to launch from.
+   *
+   * @param dir The dir of the executable/document to launch.
+   */
+  public void setDirectory(final String dir) {
+    params.setString(COSName.D, dir);
+  }
 
-    /**
-     * Get the operation to perform on the file.  This method will not return null,
-     * OPERATION_OPEN is the default.
-     *
-     * @return The operation to perform for the file.
-     * @see PDWindowsLaunchParams#OPERATION_OPEN
-     * @see PDWindowsLaunchParams#OPERATION_PRINT
-     */
-    public String getOperation()
-    {
-        return params.getString(COSName.O, OPERATION_OPEN);
-    }
+  /**
+   * Get the operation to perform on the file. This method will not return null,
+   * OPERATION_OPEN is the default.
+   *
+   * @return The operation to perform for the file.
+   * @see PDWindowsLaunchParams#OPERATION_OPEN
+   * @see PDWindowsLaunchParams#OPERATION_PRINT
+   */
+  public String getOperation() {
+    return params.getString(COSName.O, PDWindowsLaunchParams.OPERATION_OPEN);
+  }
 
-    /**
-     * Set the operation to perform..
-     *
-     * @param op The operation to perform on the file.
-     */
-    public void setOperation( String op )
-    {
-        params.setString( COSName.D, op );
-    }
+  /**
+   * Set the operation to perform..
+   *
+   * @param op The operation to perform on the file.
+   */
+  public void setOperation(final String op) {
+    params.setString(COSName.D, op);
+  }
 
-    /**
-     * A parameter to pass the executable.
-     *
-     * @return The parameter to pass the executable.
-     */
-    public String getExecuteParam()
-    {
-        return params.getString( COSName.P );
-    }
+  /**
+   * A parameter to pass the executable.
+   *
+   * @return The parameter to pass the executable.
+   */
+  public String getExecuteParam() {
+    return params.getString(COSName.P);
+  }
 
-    /**
-     * Set the parameter to pass the executable.
-     *
-     * @param param The parameter for the executable.
-     */
-    public void setExecuteParam( String param )
-    {
-        params.setString( COSName.P, param );
-    }
+  /**
+   * Set the parameter to pass the executable.
+   *
+   * @param param The parameter for the executable.
+   */
+  public void setExecuteParam(final String param) {
+    params.setString(COSName.P, param);
+  }
 }
