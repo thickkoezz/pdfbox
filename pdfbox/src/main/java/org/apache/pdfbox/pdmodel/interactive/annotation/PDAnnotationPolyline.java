@@ -27,182 +27,161 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDPolylineAppea
  *
  * @author Paul King
  */
-public class PDAnnotationPolyline extends PDAnnotationMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "PolyLine";
+public class PDAnnotationPolyline extends PDAnnotationMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "PolyLine";
 
-    private PDAppearanceHandler customAppearanceHandler;
-    
-    /**
-     * Constructor.
-     */
-    public PDAnnotationPolyline()
-    {
-        getCOSObject().setName(COSName.SUBTYPE, SUB_TYPE);
-    }
+  private PDAppearanceHandler customAppearanceHandler;
 
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationPolyline(COSDictionary dict)
-    {
-        super(dict);
-    }
+  /**
+   * Constructor.
+   */
+  public PDAnnotationPolyline() {
+    getCOSObject().setName(COSName.SUBTYPE, PDAnnotationPolyline.SUB_TYPE);
+  }
 
-    /**
-     * This will set the line ending style for the start point, see the LE_ constants for the possible values.
-     *
-     * @param style The new style.
-     */
-    public void setStartPointEndingStyle(String style)
-    {
-        String actualStyle = style == null ? PDAnnotationLine.LE_NONE : style;
-        COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
-        COSArray array;
-        if (!(base instanceof COSArray) || ((COSArray) base).size() == 0)
-        {
-            array = new COSArray();
-            array.add(COSName.getPDFName(actualStyle));
-            array.add(COSName.getPDFName(PDAnnotationLine.LE_NONE));
-            getCOSObject().setItem(COSName.LE, array);
-        }
-        else
-        {
-            array = (COSArray) base;
-            array.setName(0, actualStyle);
-        }
-    }
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationPolyline(final COSDictionary dict) {
+    super(dict);
+  }
 
-    /**
-     * This will retrieve the line ending style for the start point, possible values shown in the LE_ constants section.
-     *
-     * @return The ending style for the start point, LE_NONE if missing, never null.
-     */
-    public String getStartPointEndingStyle()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
-        if (base instanceof COSArray && ((COSArray) base).size() >= 2)
-        {
-            return ((COSArray) base).getName(0, PDAnnotationLine.LE_NONE);
-        }
-        return PDAnnotationLine.LE_NONE;
+  /**
+   * This will set the line ending style for the start point, see the LE_
+   * constants for the possible values.
+   *
+   * @param style The new style.
+   */
+  public void setStartPointEndingStyle(final String style) {
+    final String actualStyle = style == null ? PDAnnotationLine.LE_NONE : style;
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
+    COSArray array;
+    if (!(base instanceof COSArray) || ((COSArray) base).size() == 0) {
+      array = new COSArray();
+      array.add(COSName.getPDFName(actualStyle));
+      array.add(COSName.getPDFName(PDAnnotationLine.LE_NONE));
+      getCOSObject().setItem(COSName.LE, array);
+    } else {
+      array = (COSArray) base;
+      array.setName(0, actualStyle);
     }
+  }
 
-    /**
-     * This will set the line ending style for the end point, see the LE_ constants for the possible values.
-     *
-     * @param style The new style.
-     */
-    public void setEndPointEndingStyle(String style)
-    {
-        String actualStyle = style == null ? PDAnnotationLine.LE_NONE : style;
-        COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
-        COSArray array;
-        if (!(base instanceof COSArray) || ((COSArray) base).size() < 2)
-        {
-            array = new COSArray();
-            array.add(COSName.getPDFName(PDAnnotationLine.LE_NONE));
-            array.add(COSName.getPDFName(actualStyle));
-            getCOSObject().setItem(COSName.LE, array);
-        }
-        else
-        {
-            array = (COSArray) base;
-            array.setName(1, actualStyle);
-        }
-    }
+  /**
+   * This will retrieve the line ending style for the start point, possible values
+   * shown in the LE_ constants section.
+   *
+   * @return The ending style for the start point, LE_NONE if missing, never null.
+   */
+  public String getStartPointEndingStyle() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
+    if (base instanceof COSArray && ((COSArray) base).size() >= 2)
+      return ((COSArray) base).getName(0, PDAnnotationLine.LE_NONE);
+    return PDAnnotationLine.LE_NONE;
+  }
 
-    /**
-     * This will retrieve the line ending style for the end point, possible values shown in the LE_ constants section.
-     *
-     * @return The ending style for the end point, LE_NONE if missing, never null.
-     */
-    public String getEndPointEndingStyle()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
-        if (base instanceof COSArray && ((COSArray) base).size() >= 2)
-        {
-            return ((COSArray) base).getName(1, PDAnnotationLine.LE_NONE);
-        }
-        return PDAnnotationLine.LE_NONE;
+  /**
+   * This will set the line ending style for the end point, see the LE_ constants
+   * for the possible values.
+   *
+   * @param style The new style.
+   */
+  public void setEndPointEndingStyle(final String style) {
+    final String actualStyle = style == null ? PDAnnotationLine.LE_NONE : style;
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
+    COSArray array;
+    if (!(base instanceof COSArray) || ((COSArray) base).size() < 2) {
+      array = new COSArray();
+      array.add(COSName.getPDFName(PDAnnotationLine.LE_NONE));
+      array.add(COSName.getPDFName(actualStyle));
+      getCOSObject().setItem(COSName.LE, array);
+    } else {
+      array = (COSArray) base;
+      array.setName(1, actualStyle);
     }
+  }
 
-    /**
-     * This will set interior color of the line endings defined in the LE entry.
-     *
-     * @param ic color.
-     */
-    public void setInteriorColor(PDColor ic)
-    {
-        getCOSObject().setItem(COSName.IC, ic.toCOSArray());
-    }
+  /**
+   * This will retrieve the line ending style for the end point, possible values
+   * shown in the LE_ constants section.
+   *
+   * @return The ending style for the end point, LE_NONE if missing, never null.
+   */
+  public String getEndPointEndingStyle() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.LE);
+    if (base instanceof COSArray && ((COSArray) base).size() >= 2)
+      return ((COSArray) base).getName(1, PDAnnotationLine.LE_NONE);
+    return PDAnnotationLine.LE_NONE;
+  }
 
-    /**
-     * This will retrieve the interior color with which to fill the annotation’s line endings.
-     *
-     * @return object representing the color.
-     */
-    public PDColor getInteriorColor()
-    {
-        return getColor(COSName.IC);
-    }
+  /**
+   * This will set interior color of the line endings defined in the LE entry.
+   *
+   * @param ic color.
+   */
+  public void setInteriorColor(final PDColor ic) {
+    getCOSObject().setItem(COSName.IC, ic.toCOSArray());
+  }
 
-    /**
-     * This will retrieve the numbers that shall represent the alternating horizontal and vertical
-     * coordinates.
-     *
-     * @return An array of floats representing the alternating horizontal and vertical coordinates.
-     */
-    public float[] getVertices()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.VERTICES);
-        if (base instanceof COSArray)
-        {
-            return ((COSArray) base).toFloatArray();
-        }
-        return null;
-    }
+  /**
+   * This will retrieve the interior color with which to fill the annotation’s
+   * line endings.
+   *
+   * @return object representing the color.
+   */
+  public PDColor getInteriorColor() {
+    return getColor(COSName.IC);
+  }
 
-    /**
-     * This will set the numbers that shall represent the alternating horizontal and vertical
-     * coordinates.
-     *
-     * @param points an array with the numbers that shall represent the alternating horizontal and
-     * vertical coordinates.
-     */
-    public void setVertices(float[] points)
-    {
-        COSArray ar = new COSArray();
-        ar.setFloatArray(points);
-        getCOSObject().setItem(COSName.VERTICES, ar);
-    }
+  /**
+   * This will retrieve the numbers that shall represent the alternating
+   * horizontal and vertical coordinates.
+   *
+   * @return An array of floats representing the alternating horizontal and
+   *         vertical coordinates.
+   */
+  public float[] getVertices() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.VERTICES);
+    if (base instanceof COSArray)
+      return ((COSArray) base).toFloatArray();
+    return null;
+  }
 
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
+  /**
+   * This will set the numbers that shall represent the alternating horizontal and
+   * vertical coordinates.
+   *
+   * @param points an array with the numbers that shall represent the alternating
+   *               horizontal and vertical coordinates.
+   */
+  public void setVertices(final float[] points) {
+    final COSArray ar = new COSArray();
+    ar.setFloatArray(points);
+    getCOSObject().setItem(COSName.VERTICES, ar);
+  }
 
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDPolylineAppearanceHandler appearanceHandler = new PDPolylineAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDPolylineAppearanceHandler appearanceHandler = new PDPolylineAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
+  }
 }
