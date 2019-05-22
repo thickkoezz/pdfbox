@@ -21,22 +21,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class COSWriterXRefEntryTest
-{
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+public class COSWriterXRefEntryTest {
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void compareToInputNullOutputNegative()
-    {
-        // Arrange
-        final COSWriterXRefEntry objectUnderTest = new COSWriterXRefEntry(0L, null, null);
-        final COSWriterXRefEntry obj = null;
+  @Test
+  public void compareToInputNullOutputNegative() {
+    // Arrange
+    final COSWriterXRefEntry objectUnderTest = new COSWriterXRefEntry(0L, null, null);
+    final COSWriterXRefEntry obj = null;
 
-        // Act
-        final int retval = objectUnderTest.compareTo(obj);
+    // Act
+    final int retval = objectUnderTest.compareTo(obj);
 
-        // Assert result
-        Assert.assertEquals(-1, retval);
-    }
+    // Assert result
+    Assert.assertEquals(-1, retval);
+  }
 }
