@@ -22,54 +22,47 @@ package org.apache.pdfbox.pdmodel.graphics.state;
  *
  * @author John Hewson
  */
-public enum RenderingIntent
-{
-    /**
-     * Absolute Colorimetric.
-     */
-    ABSOLUTE_COLORIMETRIC("AbsoluteColorimetric"),
+public enum RenderingIntent {
+  /**
+   * Absolute Colorimetric.
+   */
+  ABSOLUTE_COLORIMETRIC("AbsoluteColorimetric"),
 
-    /**
-     * Relative Colorimetric.
-     */
-    RELATIVE_COLORIMETRIC("RelativeColorimetric"),
+  /**
+   * Relative Colorimetric.
+   */
+  RELATIVE_COLORIMETRIC("RelativeColorimetric"),
 
-    /**
-     * Saturation.
-     */
-    SATURATION("Saturation"),
+  /**
+   * Saturation.
+   */
+  SATURATION("Saturation"),
 
-    /**
-     * Perceptual.
-     */
-    PERCEPTUAL("Perceptual");
+  /**
+   * Perceptual.
+   */
+  PERCEPTUAL("Perceptual");
 
-    public static RenderingIntent fromString(String value)
-    {
-        for (RenderingIntent instance : RenderingIntent.values())
-        {
-            if (instance.value.equals(value))
-            {
-                return instance;
-            }
-        }
-        // "If a conforming reader does not recognize the specified name,
-        // it shall use the RelativeColorimetric intent by default."
-        return RELATIVE_COLORIMETRIC;
+  public static RenderingIntent fromString(final String value) {
+    for (final RenderingIntent instance : RenderingIntent.values()) {
+      if (instance.value.equals(value))
+        return instance;
     }
+    // "If a conforming reader does not recognize the specified name,
+    // it shall use the RelativeColorimetric intent by default."
+    return RELATIVE_COLORIMETRIC;
+  }
 
-    private final String value;
+  private final String value;
 
-    RenderingIntent(String value)
-    {
-        this.value = value;
-    }
+  RenderingIntent(final String value) {
+    this.value = value;
+  }
 
-    /**
-     * Returns the string value, as used in a PDF file.
-     */
-    public String stringValue()
-    {
-        return value;
-    }
+  /**
+   * Returns the string value, as used in a PDF file.
+   */
+  public String stringValue() {
+    return value;
+  }
 }
