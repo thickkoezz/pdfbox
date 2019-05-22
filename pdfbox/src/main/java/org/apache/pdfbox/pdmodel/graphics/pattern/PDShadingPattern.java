@@ -17,97 +17,91 @@
 package org.apache.pdfbox.pdmodel.graphics.pattern;
 
 import java.io.IOException;
-import org.apache.pdfbox.cos.COSBase;
 
+import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.pdmodel.graphics.shading.PDShading;
+import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 
 /**
  * A shading pattern dictionary.
  *
  */
-public class PDShadingPattern extends PDAbstractPattern
-{
-    private PDExtendedGraphicsState extendedGraphicsState;
-    private PDShading shading;
+public class PDShadingPattern extends PDAbstractPattern {
+  private PDExtendedGraphicsState extendedGraphicsState;
+  private PDShading shading;
 
-    /**
-     * Creates a new shading pattern.
-     */
-    public PDShadingPattern()
-    {
-        getCOSObject().setInt(COSName.PATTERN_TYPE, PDAbstractPattern.TYPE_SHADING_PATTERN);
-    }
+  /**
+   * Creates a new shading pattern.
+   */
+  public PDShadingPattern() {
+    getCOSObject().setInt(COSName.PATTERN_TYPE, PDAbstractPattern.TYPE_SHADING_PATTERN);
+  }
 
-    /**
-     * Creates a new shading pattern from the given COS dictionary.
-     * @param resourceDictionary The COSDictionary for this pattern resource.
-     */
-    public PDShadingPattern(COSDictionary resourceDictionary)
-    {
-        super(resourceDictionary);
-    }
+  /**
+   * Creates a new shading pattern from the given COS dictionary.
+   *
+   * @param resourceDictionary The COSDictionary for this pattern resource.
+   */
+  public PDShadingPattern(final COSDictionary resourceDictionary) {
+    super(resourceDictionary);
+  }
 
-    @Override
-    public int getPatternType()
-    {
-        return PDAbstractPattern.TYPE_SHADING_PATTERN;
-    }
+  @Override
+  public int getPatternType() {
+    return PDAbstractPattern.TYPE_SHADING_PATTERN;
+  }
 
-    /**
-     * This will get the external graphics state for this pattern.
-     * @return The extended graphics state for this pattern.
-     */
-    public PDExtendedGraphicsState getExtendedGraphicsState()
-    {
-        if (extendedGraphicsState == null)
-        {
-            COSBase base = getCOSObject().getDictionaryObject(COSName.EXT_G_STATE);
-            if (base instanceof COSDictionary)
-            {
-                extendedGraphicsState = new PDExtendedGraphicsState((COSDictionary) base);
-            }
-        }
-        return extendedGraphicsState;
+  /**
+   * This will get the external graphics state for this pattern.
+   *
+   * @return The extended graphics state for this pattern.
+   */
+  public PDExtendedGraphicsState getExtendedGraphicsState() {
+    if (extendedGraphicsState == null) {
+      final COSBase base = getCOSObject().getDictionaryObject(COSName.EXT_G_STATE);
+      if (base instanceof COSDictionary) {
+        extendedGraphicsState = new PDExtendedGraphicsState((COSDictionary) base);
+      }
     }
+    return extendedGraphicsState;
+  }
 
-    /**
-     * This will set the external graphics state for this pattern.
-     * @param extendedGraphicsState The new extended graphics state for this pattern.
-     */
-    public void setExtendedGraphicsState(PDExtendedGraphicsState extendedGraphicsState)
-    {
-        this.extendedGraphicsState = extendedGraphicsState;
-        getCOSObject().setItem(COSName.EXT_G_STATE, extendedGraphicsState);
-    }
+  /**
+   * This will set the external graphics state for this pattern.
+   *
+   * @param extendedGraphicsState The new extended graphics state for this
+   *                              pattern.
+   */
+  public void setExtendedGraphicsState(final PDExtendedGraphicsState extendedGraphicsState) {
+    this.extendedGraphicsState = extendedGraphicsState;
+    getCOSObject().setItem(COSName.EXT_G_STATE, extendedGraphicsState);
+  }
 
-    /**
-     * This will get the shading resources for this pattern.
-     * @return The shading resources for this pattern.
-     * @throws IOException if something went wrong
-     */
-    public PDShading getShading() throws IOException
-    {
-        if (shading == null)
-        {
-            COSBase base = getCOSObject().getDictionaryObject(COSName.SHADING);
-            if (base instanceof COSDictionary)
-            {
-                shading = PDShading.create((COSDictionary) base);
-            }
-        }
-        return shading;
+  /**
+   * This will get the shading resources for this pattern.
+   *
+   * @return The shading resources for this pattern.
+   * @throws IOException if something went wrong
+   */
+  public PDShading getShading() throws IOException {
+    if (shading == null) {
+      final COSBase base = getCOSObject().getDictionaryObject(COSName.SHADING);
+      if (base instanceof COSDictionary) {
+        shading = PDShading.create((COSDictionary) base);
+      }
     }
+    return shading;
+  }
 
-    /**
-     * This will set the shading resources for this pattern.
-     * @param shadingResources The new shading resources for this pattern.
-     */
-    public void setShading( PDShading shadingResources )
-    {
-        shading = shadingResources;
-        getCOSObject().setItem(COSName.SHADING, shadingResources);
-    }
+  /**
+   * This will set the shading resources for this pattern.
+   *
+   * @param shadingResources The new shading resources for this pattern.
+   */
+  public void setShading(final PDShading shadingResources) {
+    shading = shadingResources;
+    getCOSObject().setItem(COSName.SHADING, shadingResources);
+  }
 }
