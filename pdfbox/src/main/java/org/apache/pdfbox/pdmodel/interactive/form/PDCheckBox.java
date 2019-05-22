@@ -31,93 +31,83 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceEntry;
  * @author Ben Litchfield
  * @author sug
  */
-public final class PDCheckBox extends PDButton
-{
-    /**
-     * @see PDField#PDField(PDAcroForm)
-     *
-     * @param acroForm The acroform.
-     */
-    public PDCheckBox(PDAcroForm acroForm)
-    {
-        super(acroForm);
-    }
-    
-    /**
-     * Constructor.
-     * 
-     * @param acroForm The form that this field is part of.
-     * @param field the PDF object to represent as a field.
-     * @param parent the parent node of the node
-     */
-    PDCheckBox(PDAcroForm acroForm, COSDictionary field, PDNonTerminalField parent)
-    {
-        super(acroForm, field, parent);
-    }
+public final class PDCheckBox extends PDButton {
+  /**
+   * @see PDField#PDField(PDAcroForm)
+   *
+   * @param acroForm The acroform.
+   */
+  public PDCheckBox(final PDAcroForm acroForm) {
+    super(acroForm);
+  }
 
-    /**
-     * This will tell if this radio button is currently checked or not.
-     * This is equivalent to calling {@link #getValue()}.
-     *
-     * @return true If this field is checked.
-     */
-    public boolean isChecked()
-    {
-        return getValue().compareTo(getOnValue()) == 0;
-    }
+  /**
+   * Constructor.
+   *
+   * @param acroForm The form that this field is part of.
+   * @param field    the PDF object to represent as a field.
+   * @param parent   the parent node of the node
+   */
+  PDCheckBox(final PDAcroForm acroForm, final COSDictionary field, final PDNonTerminalField parent) {
+    super(acroForm, field, parent);
+  }
 
-    /**
-     * Checks the check box.
-     * 
-     * @throws IOException if the appearance couldn't be generated.
-     */
-    public void check() throws IOException
-    {
-        setValue(getOnValue());
-    }
+  /**
+   * This will tell if this radio button is currently checked or not. This is
+   * equivalent to calling {@link #getValue()}.
+   *
+   * @return true If this field is checked.
+   */
+  public boolean isChecked() {
+    return getValue().compareTo(getOnValue()) == 0;
+  }
 
-    /**
-     * Unchecks the check box.
-     * 
-     * @throws IOException if the appearance couldn't be generated.
-     */
-    public void unCheck() throws IOException
-    {
-        setValue(COSName.Off.getName());
-    }
+  /**
+   * Checks the check box.
+   *
+   * @throws IOException if the appearance couldn't be generated.
+   */
+  public void check() throws IOException {
+    setValue(getOnValue());
+  }
 
-    /**
-     * Get the value which sets the check box to the On state.
-     * 
-     * <p>The On value should be 'Yes' but other values are possible
-     * so we need to look for that. On the other hand the Off value shall
-     * always be 'Off'. If not set or not part of the normal appearance keys
-     * 'Off' is the default</p>
-     *
-     * @return the value setting the check box to the On state. 
-     *          If an empty string is returned there is no appearance definition.
-     */
-    public String getOnValue()
-    {
-        PDAnnotationWidget widget = this.getWidgets().get(0);
-        PDAppearanceDictionary apDictionary = widget.getAppearance();
-        
-        String onValue = "";
-        if (apDictionary != null) 
-        {
-            PDAppearanceEntry normalAppearance = apDictionary.getNormalAppearance();
-            if (normalAppearance != null)
-            {
-                Set<COSName> entries = normalAppearance.getSubDictionary().keySet();
-                for (COSName entry : entries)
-                {
-                    if (COSName.Off.compareTo(entry) != 0)
-                    {
-                        onValue = entry.getName();
-                    }
-                }
-            }
+  /**
+   * Unchecks the check box.
+   *
+   * @throws IOException if the appearance couldn't be generated.
+   */
+  public void unCheck() throws IOException {
+    setValue(COSName.Off.getName());
+  }
+
+  /**
+   * Get the value which sets the check box to the On state.
+   *
+   * <p>
+   * The On value should be 'Yes' but other values are possible so we need to look
+   * for that. On the other hand the Off value shall always be 'Off'. If not set
+   * or not part of the normal appearance keys 'Off' is the default
+   * </p>
+   *
+   * @return the value setting the check box to the On state. If an empty string
+   *         is returned there is no appearance definition.
+   */
+  public String getOnValue() {
+    final PDAnnotationWidget widget = getWidgets().get(0);
+    final PDAppearanceDictionary apDictionary = widget.getAppearance();
+
+    String onValue = "";
+    if (apDictionary != null) {
+      final PDAppearanceEntry normalAppearance = apDictionary.getNormalAppearance();
+      if (normalAppearance != null) {
+        final Set<COSName> entries = normalAppearance.getSubDictionary().keySet();
+        for (final COSName entry : entries) {
+          if (COSName.Off.compareTo(entry) != 0) {
+            onValue = entry.getName();
+          }
         }
-        return onValue;
+      }
     }
+    return onValue;
+  }
 }
