@@ -16,49 +16,43 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Andrea Vacondio
  *
  */
-public class PDDocumentOutlineTest
-{
-    /**
-     * see PDF 32000-1:2008 table 152
-     */
-    @Test
-    public void outlinesCountShouldNotBeNegative()
-    {
-        PDDocumentOutline outline = new PDDocumentOutline();
-        PDOutlineItem firstLevelChild = new PDOutlineItem();
-        outline.addLast(firstLevelChild);
-        PDOutlineItem secondLevelChild = new PDOutlineItem();
-        firstLevelChild.addLast(secondLevelChild);
-        assertEquals(0, secondLevelChild.getOpenCount());
-        assertEquals(-1, firstLevelChild.getOpenCount());
-        assertFalse("Outlines count cannot be " + outline.getOpenCount(),
-                outline.getOpenCount() < 0);
-    }
+public class PDDocumentOutlineTest {
+  /**
+   * see PDF 32000-1:2008 table 152
+   */
+  @Test
+  public void outlinesCountShouldNotBeNegative() {
+    final PDDocumentOutline outline = new PDDocumentOutline();
+    final PDOutlineItem firstLevelChild = new PDOutlineItem();
+    outline.addLast(firstLevelChild);
+    final PDOutlineItem secondLevelChild = new PDOutlineItem();
+    firstLevelChild.addLast(secondLevelChild);
+    Assert.assertEquals(0, secondLevelChild.getOpenCount());
+    Assert.assertEquals(-1, firstLevelChild.getOpenCount());
+    Assert.assertFalse("Outlines count cannot be " + outline.getOpenCount(), outline.getOpenCount() < 0);
+  }
 
-    @Test
-    public void outlinesCount()
-    {
-        PDDocumentOutline outline = new PDDocumentOutline();
-        PDOutlineItem root = new PDOutlineItem();
-        outline.addLast(root);
-        assertEquals(1, outline.getOpenCount());
-        root.addLast(new PDOutlineItem());
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(1, outline.getOpenCount());
-        root.addLast(new PDOutlineItem());
-        assertEquals(-2, root.getOpenCount());
-        assertEquals(1, outline.getOpenCount());
-        root.openNode();
-        assertEquals(2, root.getOpenCount());
-        assertEquals(3, outline.getOpenCount());
-    }
+  @Test
+  public void outlinesCount() {
+    final PDDocumentOutline outline = new PDDocumentOutline();
+    final PDOutlineItem root = new PDOutlineItem();
+    outline.addLast(root);
+    Assert.assertEquals(1, outline.getOpenCount());
+    root.addLast(new PDOutlineItem());
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(1, outline.getOpenCount());
+    root.addLast(new PDOutlineItem());
+    Assert.assertEquals(-2, root.getOpenCount());
+    Assert.assertEquals(1, outline.getOpenCount());
+    root.openNode();
+    Assert.assertEquals(2, root.getOpenCount());
+    Assert.assertEquals(3, outline.getOpenCount());
+  }
 }
