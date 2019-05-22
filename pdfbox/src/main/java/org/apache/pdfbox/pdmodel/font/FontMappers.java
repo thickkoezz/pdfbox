@@ -22,37 +22,31 @@ package org.apache.pdfbox.pdmodel.font;
  *
  * @author John Hewson
  */
-public final class FontMappers
-{
-    private static FontMapper instance;
+public final class FontMappers {
+  private static FontMapper instance;
 
-    private FontMappers()
-    {
+  private FontMappers() {
+  }
+
+  // lazy thread safe singleton
+  private static class DefaultFontMapper {
+    private static final FontMapper INSTANCE = new FontMapperImpl();
+  }
+
+  /**
+   * Returns the singleton FontMapper instance.
+   */
+  public static FontMapper instance() {
+    if (FontMappers.instance == null) {
+      FontMappers.instance = DefaultFontMapper.INSTANCE;
     }
-    
-    // lazy thread safe singleton
-    private static class DefaultFontMapper
-    {
-        private static final FontMapper INSTANCE = new FontMapperImpl();
-    }
-    
-    /**
-     * Returns the singleton FontMapper instance.
-     */
-    public static FontMapper instance()
-    {
-        if (instance == null)
-        {
-            instance = DefaultFontMapper.INSTANCE;
-        }
-        return instance;
-    }
-    
-    /**
-     * Sets the singleton FontMapper instance.
-     */
-    public static synchronized void set(FontMapper fontMapper)
-    {
-        instance = fontMapper;
-    }
+    return FontMappers.instance;
+  }
+
+  /**
+   * Sets the singleton FontMapper instance.
+   */
+  public static synchronized void set(final FontMapper fontMapper) {
+    FontMappers.instance = fontMapper;
+  }
 }
