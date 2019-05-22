@@ -16,42 +16,34 @@
  */
 package org.apache.pdfbox.contentstream.operator.text;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
-
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSNumber;
 
 /**
  * Ts: Set text rise.
  *
  * @author Ben Litchfield
  */
-public class SetTextRise extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (arguments.isEmpty())
-        {
-            return;
-        }
-        COSBase base = arguments.get(0);
-        if (!(base instanceof COSNumber))
-        {
-            return;
-        }
-        COSNumber rise = (COSNumber) base;
-        context.getGraphicsState().getTextState().setRise( rise.floatValue() );
-    }
+public class SetTextRise extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (arguments.isEmpty())
+      return;
+    final COSBase base = arguments.get(0);
+    if (!(base instanceof COSNumber))
+      return;
+    final COSNumber rise = (COSNumber) base;
+    context.getGraphicsState().getTextState().setRise(rise.floatValue());
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.SET_TEXT_RISE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.SET_TEXT_RISE;
+  }
 }
