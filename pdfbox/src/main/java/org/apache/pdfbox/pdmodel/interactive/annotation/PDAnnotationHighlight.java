@@ -16,62 +16,55 @@
 
 package org.apache.pdfbox.pdmodel.interactive.annotation;
 
-import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDHighlightAppearanceHandler;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDAppearanceHandler;
+import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDHighlightAppearanceHandler;
 
 /**
  *
  * @author Paul King
  */
-public class PDAnnotationHighlight extends PDAnnotationTextMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Highlight";
+public class PDAnnotationHighlight extends PDAnnotationTextMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Highlight";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-     /**
-     * Constructor.
-     */
-    public PDAnnotationHighlight()
-    {
-        super(SUB_TYPE);
+  /**
+   * Constructor.
+   */
+  public PDAnnotationHighlight() {
+    super(PDAnnotationHighlight.SUB_TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationHighlight(final COSDictionary dict) {
+    super(dict);
+  }
+
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDHighlightAppearanceHandler appearanceHandler = new PDHighlightAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationHighlight(COSDictionary dict)
-    {
-        super(dict);
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDHighlightAppearanceHandler appearanceHandler = new PDHighlightAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
