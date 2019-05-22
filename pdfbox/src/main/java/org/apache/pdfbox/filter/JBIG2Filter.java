@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.cos.COSBase;
@@ -44,112 +46,91 @@ import org.apache.pdfbox.cos.COSStream;
  *
  * @author Timo Boehme
  */
-final class JBIG2Filter extends Filter
-{
-    private static final Log LOG = LogFactory.getLog(JBIG2Filter.class);
+final class JBIG2Filter extends Filter {
+  private static final Log LOG = LogFactory.getLog(JBIG2Filter.class);
 
-    private static boolean levigoLogged = false;
+  private static boolean levigoLogged = false;
 
-    private static synchronized void logLevigoDonated()
-    {
-        if (!levigoLogged)
-        {
-            LOG.info("The Levigo JBIG2 plugin has been donated to the Apache Foundation");
-            LOG.info("and an improved version is available for download at "
-                    + "https://pdfbox.apache.org/download.cgi");
-            levigoLogged = true;
-        }
+  private static synchronized void logLevigoDonated() {
+    if (!JBIG2Filter.levigoLogged) {
+      JBIG2Filter.LOG.info("The Levigo JBIG2 plugin has been donated to the Apache Foundation");
+      JBIG2Filter.LOG
+          .info("and an improved version is available for download at " + "https://pdfbox.apache.org/download.cgi");
+      JBIG2Filter.levigoLogged = true;
+    }
+  }
+
+  @Override
+  public DecodeResult decode(final InputStream encoded, final OutputStream decoded, final COSDictionary parameters,
+      final int index, final DecodeOptions options) throws IOException {
+    final ImageReader reader = Filter.findImageReader("JBIG2", "jbig2-imageio is not installed");
+    if (reader.getClass().getName().contains("levigo")) {
+      JBIG2Filter.logLevigoDonated();
     }
 
-    @Override
-    public DecodeResult decode(InputStream encoded, OutputStream decoded, COSDictionary
-            parameters, int index, DecodeOptions options) throws IOException
-    {
-        ImageReader reader = findImageReader("JBIG2", "jbig2-imageio is not installed");
-        if (reader.getClass().getName().contains("levigo"))
-        {
-            logLevigoDonated();
-        }
+    final int bits = parameters.getInt(COSName.BITS_PER_COMPONENT, 1);
+    final COSDictionary params = getDecodeParams(parameters, index);
 
-        int bits = parameters.getInt(COSName.BITS_PER_COMPONENT, 1);
-        COSDictionary params = getDecodeParams(parameters, index);
+    final ImageReadParam irp = reader.getDefaultReadParam();
+    irp.setSourceSubsampling(options.getSubsamplingX(), options.getSubsamplingY(), options.getSubsamplingOffsetX(),
+        options.getSubsamplingOffsetY());
+    irp.setSourceRegion(options.getSourceRegion());
+    options.setFilterSubsampled(true);
 
-        ImageReadParam irp = reader.getDefaultReadParam();
-        irp.setSourceSubsampling(options.getSubsamplingX(), options.getSubsamplingY(),
-                options.getSubsamplingOffsetX(), options.getSubsamplingOffsetY());
-        irp.setSourceRegion(options.getSourceRegion());
-        options.setFilterSubsampled(true);
-
-        InputStream source = encoded;
-        if (params != null)
-        {
-            COSBase globals = params.getDictionaryObject(COSName.JBIG2_GLOBALS);
-            if (globals instanceof COSStream)
-            {
-                source = new SequenceInputStream(((COSStream) globals).createInputStream(), encoded);
-            }
-        }
-
-        try (ImageInputStream iis = ImageIO.createImageInputStream(source))
-        {
-            reader.setInput(iis);
-
-            BufferedImage image;
-            try
-            {
-                image = reader.read(0, irp);
-            }
-            catch (Exception e)
-            {
-                // wrap and rethrow any exceptions
-                throw new IOException("Could not read JBIG2 image", e);
-            }
-
-            // I am assuming since JBIG2 is always black and white
-            // depending on your renderer this might or might be needed
-            if (image.getColorModel().getPixelSize() != bits)
-            {
-                if (bits != 1)
-                {
-                    LOG.warn("Attempting to handle a JBIG2 with more than 1-bit depth");
-                }
-                BufferedImage packedImage = new BufferedImage(image.getWidth(), image.getHeight(),
-                        BufferedImage.TYPE_BYTE_BINARY);
-                Graphics graphics = packedImage.getGraphics();
-                graphics.drawImage(image, 0, 0, null);
-                graphics.dispose();
-                image = packedImage;
-            }
-
-            DataBuffer dBuf = image.getData().getDataBuffer();
-            if (dBuf.getDataType() == DataBuffer.TYPE_BYTE)
-            {
-                decoded.write(((DataBufferByte) dBuf).getData());
-            }
-            else
-            {
-                throw new IOException("Unexpected image buffer type");
-            }
-        }
-        finally
-        {
-            reader.dispose();
-        }
-
-        return new DecodeResult(parameters);
+    InputStream source = encoded;
+    if (params != null) {
+      final COSBase globals = params.getDictionaryObject(COSName.JBIG2_GLOBALS);
+      if (globals instanceof COSStream) {
+        source = new SequenceInputStream(((COSStream) globals).createInputStream(), encoded);
+      }
     }
 
-    @Override
-    public DecodeResult decode(InputStream encoded, OutputStream decoded,
-                               COSDictionary parameters, int index) throws IOException
-    {
-        return decode(encoded, decoded, parameters, index, DecodeOptions.DEFAULT);
+    try (ImageInputStream iis = ImageIO.createImageInputStream(source)) {
+      reader.setInput(iis);
+
+      BufferedImage image;
+      try {
+        image = reader.read(0, irp);
+      } catch (final Exception e) {
+        // wrap and rethrow any exceptions
+        throw new IOException("Could not read JBIG2 image", e);
+      }
+
+      // I am assuming since JBIG2 is always black and white
+      // depending on your renderer this might or might be needed
+      if (image.getColorModel().getPixelSize() != bits) {
+        if (bits != 1) {
+          JBIG2Filter.LOG.warn("Attempting to handle a JBIG2 with more than 1-bit depth");
+        }
+        final BufferedImage packedImage = new BufferedImage(image.getWidth(), image.getHeight(),
+            BufferedImage.TYPE_BYTE_BINARY);
+        final Graphics graphics = packedImage.getGraphics();
+        graphics.drawImage(image, 0, 0, null);
+        graphics.dispose();
+        image = packedImage;
+      }
+
+      final DataBuffer dBuf = image.getData().getDataBuffer();
+      if (dBuf.getDataType() == DataBuffer.TYPE_BYTE) {
+        decoded.write(((DataBufferByte) dBuf).getData());
+      } else
+        throw new IOException("Unexpected image buffer type");
+    } finally {
+      reader.dispose();
     }
 
-    @Override
-    protected void encode(InputStream input, OutputStream encoded, COSDictionary parameters)
-            throws IOException
-    {
-        throw new UnsupportedOperationException("JBIG2 encoding not implemented");
-    }
+    return new DecodeResult(parameters);
+  }
+
+  @Override
+  public DecodeResult decode(final InputStream encoded, final OutputStream decoded, final COSDictionary parameters,
+      final int index) throws IOException {
+    return decode(encoded, decoded, parameters, index, DecodeOptions.DEFAULT);
+  }
+
+  @Override
+  protected void encode(final InputStream input, final OutputStream encoded, final COSDictionary parameters)
+      throws IOException {
+    throw new UnsupportedOperationException("JBIG2 encoding not implemented");
+  }
 }
