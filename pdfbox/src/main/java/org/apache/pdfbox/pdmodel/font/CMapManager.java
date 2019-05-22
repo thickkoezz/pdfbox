@@ -16,64 +16,56 @@
  */
 package org.apache.pdfbox.pdmodel.font;
 
-import org.apache.fontbox.cmap.CMap;
-import org.apache.fontbox.cmap.CMapParser;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.fontbox.cmap.CMap;
+import org.apache.fontbox.cmap.CMapParser;
+
 /**
  * CMap resource loader and cache.
  */
-final class CMapManager
-{
-    static Map<String, CMap> cMapCache =
-            Collections.synchronizedMap(new HashMap<String, CMap>());
+final class CMapManager {
+  static Map<String, CMap> cMapCache = Collections.synchronizedMap(new HashMap<String, CMap>());
 
-    private CMapManager()
-    {
+  private CMapManager() {
+  }
+
+  /**
+   * Fetches the predefined CMap from disk (or cache).
+   *
+   * @param cMapName CMap name
+   * @return The predefined CMap, never null.
+   * @throws IOException
+   */
+  public static CMap getPredefinedCMap(final String cMapName) throws IOException {
+    final CMap cmap = CMapManager.cMapCache.get(cMapName);
+    if (cmap != null)
+      return cmap;
+
+    final CMapParser parser = new CMapParser();
+    final CMap targetCmap = parser.parsePredefined(cMapName);
+
+    // limit the cache to predefined CMaps
+    CMapManager.cMapCache.put(targetCmap.getName(), targetCmap);
+    return targetCmap;
+  }
+
+  /**
+   * Parse the given CMap.
+   *
+   * @param cMapStream the CMap to be read
+   * @return the parsed CMap
+   */
+  public static CMap parseCMap(final InputStream cMapStream) throws IOException {
+    CMap targetCmap = null;
+    if (cMapStream != null) {
+      final CMapParser parser = new CMapParser();
+      targetCmap = parser.parse(cMapStream);
     }
-
-    /**
-     * Fetches the predefined CMap from disk (or cache).
-     *
-     * @param cMapName CMap name
-     * @return The predefined CMap, never null.
-     * @throws IOException 
-     */
-    public static CMap getPredefinedCMap(String cMapName) throws IOException
-    {
-        CMap cmap = cMapCache.get(cMapName);
-        if (cmap != null)
-        {
-            return cmap;
-        }
-
-        CMapParser parser = new CMapParser();
-        CMap targetCmap = parser.parsePredefined(cMapName);
-
-        // limit the cache to predefined CMaps
-        cMapCache.put(targetCmap.getName(), targetCmap);
-        return targetCmap;
-    }
-
-    /**
-     * Parse the given CMap.
-     *
-     * @param cMapStream the CMap to be read
-     * @return the parsed CMap
-     */
-    public static CMap parseCMap(InputStream cMapStream) throws IOException
-    {
-        CMap targetCmap = null;
-        if (cMapStream != null)
-        {
-            CMapParser parser = new CMapParser();
-            targetCmap = parser.parse(cMapStream);
-        }
-        return targetCmap;
-    }
+    return targetCmap;
+  }
 }
