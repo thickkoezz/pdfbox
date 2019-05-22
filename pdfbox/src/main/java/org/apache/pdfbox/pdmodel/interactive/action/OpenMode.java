@@ -21,20 +21,20 @@ package org.apache.pdfbox.pdmodel.interactive.action;
  *
  * @author Tilman Hausherr
  */
-public enum OpenMode
-{
-    /**
-     * The viewer application should behave in accordance with the current user preference.
-     */
-    USER_PREFERENCE,
+public enum OpenMode {
+  /**
+   * The viewer application should behave in accordance with the current user
+   * preference.
+   */
+  USER_PREFERENCE,
 
-    /**
-     * Destination document will replace the current document in the same window.
-     */
-    SAME_WINDOW,
+  /**
+   * Destination document will replace the current document in the same window.
+   */
+  SAME_WINDOW,
 
-    /**
-     * Open the destination document in a new window.
-     */
-    NEW_WINDOW
+  /**
+   * Open the destination document in a new window.
+   */
+  NEW_WINDOW
 }
