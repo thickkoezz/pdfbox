@@ -16,6 +16,7 @@
 package org.apache.pdfbox.pdmodel.graphics.color;
 
 import java.awt.color.ColorSpace;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -28,154 +29,132 @@ import org.apache.pdfbox.cos.COSName;
  * @author Ben Litchfield
  * @author John Hewson
  */
-public abstract class PDCIEDictionaryBasedColorSpace extends PDCIEBasedColorSpace
-{
-    protected COSDictionary dictionary;
+public abstract class PDCIEDictionaryBasedColorSpace extends PDCIEBasedColorSpace {
+  protected COSDictionary dictionary;
 
-    private static final ColorSpace CIEXYZ = ColorSpace.getInstance(ColorSpace.CS_CIEXYZ);
+  private static final ColorSpace CIEXYZ = ColorSpace.getInstance(ColorSpace.CS_CIEXYZ);
 
-    // we need to cache whitepoint values, because using getWhitePoint()
-    // would create a new default object for each pixel conversion if the original
-    // PDF didn't have a whitepoint array
-    protected float wpX = 1;
-    protected float wpY = 1;
-    protected float wpZ = 1;
+  // we need to cache whitepoint values, because using getWhitePoint()
+  // would create a new default object for each pixel conversion if the original
+  // PDF didn't have a whitepoint array
+  protected float wpX = 1;
+  protected float wpY = 1;
+  protected float wpZ = 1;
 
-    protected PDCIEDictionaryBasedColorSpace(COSName cosName)
-    {
-        array = new COSArray();
-        dictionary = new COSDictionary();
-        array.add(cosName);
-        array.add(dictionary);
+  protected PDCIEDictionaryBasedColorSpace(final COSName cosName) {
+    array = new COSArray();
+    dictionary = new COSDictionary();
+    array.add(cosName);
+    array.add(dictionary);
 
-        fillWhitepointCache(getWhitepoint());
+    fillWhitepointCache(getWhitepoint());
+  }
+
+  /**
+   * Creates a new CalRGB color space using the given COS array.
+   *
+   * @param rgb the cos array which represents this color space
+   */
+  protected PDCIEDictionaryBasedColorSpace(final COSArray rgb) {
+    array = rgb;
+    dictionary = (COSDictionary) array.getObject(1);
+
+    fillWhitepointCache(getWhitepoint());
+  }
+
+  /**
+   * Tests if the current point is the white point.
+   *
+   * @return true if the current point is the white point.
+   */
+  protected boolean isWhitePoint() {
+    return Float.compare(wpX, 1) == 0 && Float.compare(wpY, 1) == 0 && Float.compare(wpZ, 1) == 0;
+  }
+
+  private void fillWhitepointCache(final PDTristimulus whitepoint) {
+    wpX = whitepoint.getX();
+    wpY = whitepoint.getY();
+    wpZ = whitepoint.getZ();
+  }
+
+  protected float[] convXYZtoRGB(float x, float y, float z) {
+    // toRGB() malfunctions with negative values
+    // XYZ must be non-negative anyway:
+    // http://ninedegreesbelow.com/photography/icc-profile-negative-tristimulus.html
+    if (x < 0) {
+      x = 0;
     }
-
-    /**
-     * Creates a new CalRGB color space using the given COS array.
-     *
-     * @param rgb the cos array which represents this color space
-     */
-    protected PDCIEDictionaryBasedColorSpace(COSArray rgb)
-    {
-        array = rgb;
-        dictionary = (COSDictionary) array.getObject(1);
-
-        fillWhitepointCache(getWhitepoint());
+    if (y < 0) {
+      y = 0;
     }
-
-    /**
-     * Tests if the current point is the white point.
-     *
-     * @return true if the current point is the white point.
-     */
-    protected boolean isWhitePoint()
-    {
-        return  Float.compare(wpX, 1) == 0 &&
-                Float.compare(wpY, 1) == 0 && 
-                Float.compare(wpZ, 1)  == 0;
+    if (z < 0) {
+      z = 0;
     }
+    return PDCIEDictionaryBasedColorSpace.CIEXYZ.toRGB(new float[] { x, y, z });
+  }
 
-    private void fillWhitepointCache(PDTristimulus whitepoint)
-    {
-        wpX = whitepoint.getX();
-        wpY = whitepoint.getY();
-        wpZ = whitepoint.getZ();
+  /**
+   * This will return the whitepoint tristimulus. As this is a required field this
+   * will never return null. A default of 1,1,1 will be returned if the pdf does
+   * not have any values yet.
+   *
+   * @return the whitepoint tristimulus
+   */
+  public final PDTristimulus getWhitepoint() {
+    COSArray wp = (COSArray) dictionary.getDictionaryObject(COSName.WHITE_POINT);
+    if (wp == null) {
+      wp = new COSArray();
+      wp.add(new COSFloat(1.0f));
+      wp.add(new COSFloat(1.0f));
+      wp.add(new COSFloat(1.0f));
     }
+    return new PDTristimulus(wp);
+  }
 
-    protected float[] convXYZtoRGB(float x, float y, float z)
-    {
-        // toRGB() malfunctions with negative values
-        // XYZ must be non-negative anyway:
-        // http://ninedegreesbelow.com/photography/icc-profile-negative-tristimulus.html
-        if (x < 0)
-        {
-            x = 0;
-        }
-        if (y < 0)
-        {
-            y = 0;
-        }
-        if (z < 0)
-        {
-            z = 0;
-        }
-        return CIEXYZ.toRGB(new float[]
-        {
-            x, y, z
-        });
+  /**
+   * This will return the BlackPoint tristimulus. This is an optional field but
+   * has defaults so this will never return null. A default of 0,0,0 will be
+   * returned if the pdf does not have any values yet.
+   *
+   * @return the blackpoint tristimulus
+   */
+  public final PDTristimulus getBlackPoint() {
+    COSArray bp = (COSArray) dictionary.getDictionaryObject(COSName.BLACK_POINT);
+    if (bp == null) {
+      bp = new COSArray();
+      bp.add(new COSFloat(0.0f));
+      bp.add(new COSFloat(0.0f));
+      bp.add(new COSFloat(0.0f));
     }
+    return new PDTristimulus(bp);
+  }
 
-    /**
-     * This will return the whitepoint tristimulus. As this is a required field
-     * this will never return null. A default of 1,1,1 will be returned if the
-     * pdf does not have any values yet.
-     *
-     * @return the whitepoint tristimulus
-     */
-    public final PDTristimulus getWhitepoint()
-    {
-        COSArray wp = (COSArray) dictionary.getDictionaryObject(COSName.WHITE_POINT);
-        if (wp == null)
-        {
-            wp = new COSArray();
-            wp.add(new COSFloat(1.0f));
-            wp.add(new COSFloat(1.0f));
-            wp.add(new COSFloat(1.0f));
-        }
-        return new PDTristimulus(wp);
+  /**
+   * This will set the whitepoint tristimulus. As this is a required field this
+   * null should not be passed into this function.
+   *
+   * @param whitepoint the whitepoint tristimulus
+   */
+  public void setWhitePoint(final PDTristimulus whitepoint) {
+    final COSBase wpArray = whitepoint.getCOSObject();
+    if (wpArray != null) {
+      dictionary.setItem(COSName.WHITE_POINT, wpArray);
     }
+    fillWhitepointCache(whitepoint);
+  }
 
-    /**
-     * This will return the BlackPoint tristimulus. This is an optional field
-     * but has defaults so this will never return null. A default of 0,0,0 will
-     * be returned if the pdf does not have any values yet.
-     *
-     * @return the blackpoint tristimulus
-     */
-    public final PDTristimulus getBlackPoint()
-    {
-        COSArray bp = (COSArray) dictionary.getDictionaryObject(COSName.BLACK_POINT);
-        if (bp == null)
-        {
-            bp = new COSArray();
-            bp.add(new COSFloat(0.0f));
-            bp.add(new COSFloat(0.0f));
-            bp.add(new COSFloat(0.0f));
-        }
-        return new PDTristimulus(bp);
+  /**
+   * This will set the BlackPoint tristimulus. As this is a required field this
+   * null should not be passed into this function.
+   *
+   * @param blackpoint the BlackPoint tristimulus
+   */
+  public void setBlackPoint(final PDTristimulus blackpoint) {
+    COSBase bpArray = null;
+    if (blackpoint != null) {
+      bpArray = blackpoint.getCOSObject();
     }
-
-    /**
-     * This will set the whitepoint tristimulus. As this is a required field
-     * this null should not be passed into this function.
-     *
-     * @param whitepoint the whitepoint tristimulus
-     */
-    public void setWhitePoint(PDTristimulus whitepoint)
-    {
-        COSBase wpArray = whitepoint.getCOSObject();
-        if (wpArray != null)
-        {
-            dictionary.setItem(COSName.WHITE_POINT, wpArray);
-        }
-        fillWhitepointCache(whitepoint);
-    }
-
-    /**
-     * This will set the BlackPoint tristimulus. As this is a required field
-     * this null should not be passed into this function.
-     *
-     * @param blackpoint the BlackPoint tristimulus
-     */
-    public void setBlackPoint(PDTristimulus blackpoint)
-    {
-        COSBase bpArray = null;
-        if (blackpoint != null)
-        {
-            bpArray = blackpoint.getCOSObject();
-        }
-        dictionary.setItem(COSName.BLACK_POINT, bpArray);
-    }
+    dictionary.setItem(COSName.BLACK_POINT, bpArray);
+  }
 
 }
