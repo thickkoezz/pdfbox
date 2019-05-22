@@ -30,93 +30,83 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
  *
  * @author Ben Litchfield
  */
-public class FDFPage implements COSObjectable
-{
-    private final COSDictionary page;
+public class FDFPage implements COSObjectable {
+  private final COSDictionary page;
 
-    /**
-     * Default constructor.
-     */
-    public FDFPage()
-    {
-        page = new COSDictionary();
-    }
+  /**
+   * Default constructor.
+   */
+  public FDFPage() {
+    page = new COSDictionary();
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param p The FDF page.
-     */
-    public FDFPage(COSDictionary p)
-    {
-        page = p;
-    }
+  /**
+   * Constructor.
+   *
+   * @param p The FDF page.
+   */
+  public FDFPage(final COSDictionary p) {
+    page = p;
+  }
 
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return page;
-    }
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return page;
+  }
 
-    /**
-     * This will get a list of FDFTemplage objects that describe the named pages that serve as templates.
-     *
-     * @return A list of templates.
-     */
-    public List<FDFTemplate> getTemplates()
-    {
-        List<FDFTemplate> retval = null;
-        COSArray array = (COSArray) page.getDictionaryObject(COSName.TEMPLATES);
-        if (array != null)
-        {
-            List<FDFTemplate> objects = new ArrayList<>();
-            for (int i = 0; i < array.size(); i++)
-            {
-                objects.add(new FDFTemplate((COSDictionary) array.getObject(i)));
-            }
-            retval = new COSArrayList<>(objects, array);
-        }
-        return retval;
+  /**
+   * This will get a list of FDFTemplage objects that describe the named pages
+   * that serve as templates.
+   *
+   * @return A list of templates.
+   */
+  public List<FDFTemplate> getTemplates() {
+    List<FDFTemplate> retval = null;
+    final COSArray array = (COSArray) page.getDictionaryObject(COSName.TEMPLATES);
+    if (array != null) {
+      final List<FDFTemplate> objects = new ArrayList<>();
+      for (int i = 0; i < array.size(); i++) {
+        objects.add(new FDFTemplate((COSDictionary) array.getObject(i)));
+      }
+      retval = new COSArrayList<>(objects, array);
     }
+    return retval;
+  }
 
-    /**
-     * A list of FDFTemplate objects.
-     *
-     * @param templates A list of templates for this Page.
-     */
-    public void setTemplates(List<FDFTemplate> templates)
-    {
-        page.setItem(COSName.TEMPLATES, COSArrayList.converterToCOSArray(templates));
-    }
+  /**
+   * A list of FDFTemplate objects.
+   *
+   * @param templates A list of templates for this Page.
+   */
+  public void setTemplates(final List<FDFTemplate> templates) {
+    page.setItem(COSName.TEMPLATES, COSArrayList.converterToCOSArray(templates));
+  }
 
-    /**
-     * This will get the FDF page info object.
-     *
-     * @return The Page info.
-     */
-    public FDFPageInfo getPageInfo()
-    {
-        FDFPageInfo retval = null;
-        COSDictionary dict = page.getCOSDictionary(COSName.INFO);
-        if (dict != null)
-        {
-            retval = new FDFPageInfo(dict);
-        }
-        return retval;
+  /**
+   * This will get the FDF page info object.
+   *
+   * @return The Page info.
+   */
+  public FDFPageInfo getPageInfo() {
+    FDFPageInfo retval = null;
+    final COSDictionary dict = page.getCOSDictionary(COSName.INFO);
+    if (dict != null) {
+      retval = new FDFPageInfo(dict);
     }
+    return retval;
+  }
 
-    /**
-     * This will set the page info.
-     *
-     * @param info The new page info dictionary.
-     */
-    public void setPageInfo(FDFPageInfo info)
-    {
-        page.setItem(COSName.INFO, info);
-    }
+  /**
+   * This will set the page info.
+   *
+   * @param info The new page info dictionary.
+   */
+  public void setPageInfo(final FDFPageInfo info) {
+    page.setItem(COSName.INFO, info);
+  }
 }
