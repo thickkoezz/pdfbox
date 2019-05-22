@@ -16,31 +16,27 @@
 package org.apache.pdfbox.pdmodel.graphics.color;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  *
  * @author Tilman Hausherr
  */
-public class PDICCBasedTest
-{
+public class PDICCBasedTest {
 
-    public PDICCBasedTest()
-    {
-    }
+  public PDICCBasedTest() {
+  }
 
-    /**
-     * Test of Constructor for PDFBOX-2812.
-     */
-    @Test
-    public void testConstructor()
-    {
-        PDDocument doc = new PDDocument();
-        PDICCBased iccBased = new PDICCBased(doc);
-        assertEquals("ICCBased", iccBased.getName());
-        assertNotNull(iccBased.getPDStream());
-    }
+  /**
+   * Test of Constructor for PDFBOX-2812.
+   */
+  @Test
+  public void testConstructor() {
+    final PDDocument doc = new PDDocument();
+    final PDICCBased iccBased = new PDICCBased(doc);
+    Assert.assertEquals("ICCBased", iccBased.getName());
+    Assert.assertNotNull(iccBased.getPDStream());
+  }
 
 }
