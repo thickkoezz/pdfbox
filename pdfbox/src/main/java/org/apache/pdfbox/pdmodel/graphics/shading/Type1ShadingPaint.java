@@ -24,6 +24,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.util.Matrix;
@@ -31,39 +32,33 @@ import org.apache.pdfbox.util.Matrix;
 /**
  * AWT PaintContext for function-based (Type 1) shading.
  */
-class Type1ShadingPaint extends ShadingPaint<PDShadingType1>
-{
-    private static final Log LOG = LogFactory.getLog(Type1ShadingPaint.class);
+class Type1ShadingPaint extends ShadingPaint<PDShadingType1> {
+  private static final Log LOG = LogFactory.getLog(Type1ShadingPaint.class);
 
-    /**
-     * Constructor.
-     *
-     * @param shading the shading resources
-     * @param matrix the pattern matrix concatenated with that of the parent content stream
-     */
-    Type1ShadingPaint(PDShadingType1 shading, Matrix matrix)
-    {
-        super(shading, matrix);
-    }
+  /**
+   * Constructor.
+   *
+   * @param shading the shading resources
+   * @param matrix  the pattern matrix concatenated with that of the parent
+   *                content stream
+   */
+  Type1ShadingPaint(final PDShadingType1 shading, final Matrix matrix) {
+    super(shading, matrix);
+  }
 
-    @Override
-    public int getTransparency()
-    {
-        return 0;
-    }
+  @Override
+  public int getTransparency() {
+    return 0;
+  }
 
-    @Override
-    public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds,
-                                      AffineTransform xform, RenderingHints hints)
-    {
-        try
-        {
-            return new Type1ShadingContext(shading, cm, xform, matrix);
-        }
-        catch (IOException e)
-        {
-            LOG.error("An error occurred while painting", e);
-            return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
-        }
+  @Override
+  public PaintContext createContext(final ColorModel cm, final Rectangle deviceBounds, final Rectangle2D userBounds,
+      final AffineTransform xform, final RenderingHints hints) {
+    try {
+      return new Type1ShadingContext(shading, cm, xform, matrix);
+    } catch (final IOException e) {
+      Type1ShadingPaint.LOG.error("An error occurred while painting", e);
+      return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
     }
+  }
 }
