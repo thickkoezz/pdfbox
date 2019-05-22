@@ -27,108 +27,93 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDInkAppearance
  *
  * @author Paul King
  */
-public class PDAnnotationInk extends PDAnnotationMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Ink";
+public class PDAnnotationInk extends PDAnnotationMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Ink";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-    /**
-     * Constructor.
-     */
-    public PDAnnotationInk()
-    {
-        getCOSObject().setName(COSName.SUBTYPE, SUB_TYPE);
+  /**
+   * Constructor.
+   */
+  public PDAnnotationInk() {
+    getCOSObject().setName(COSName.SUBTYPE, PDAnnotationInk.SUB_TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationInk(final COSDictionary dict) {
+    super(dict);
+  }
+
+  /**
+   * Sets the paths that make this annotation.
+   *
+   * @param inkList An array of arrays, each representing a stroked path. Each
+   *                array shall be a series of alternating horizontal and vertical
+   *                coordinates. If the parameter is null the entry will be
+   *                removed.
+   */
+  public void setInkList(final float[][] inkList) {
+    if (inkList == null) {
+      getCOSObject().removeItem(COSName.INKLIST);
+      return;
     }
-
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationInk(COSDictionary dict)
-    {
-        super(dict);
+    final COSArray array = new COSArray();
+    for (final float[] path : inkList) {
+      final COSArray innerArray = new COSArray();
+      innerArray.setFloatArray(path);
+      array.add(innerArray);
     }
+    getCOSObject().setItem(COSName.INKLIST, array);
+  }
 
-    /**
-     * Sets the paths that make this annotation.
-     *
-     * @param inkList An array of arrays, each representing a stroked path. Each array shall be a
-     * series of alternating horizontal and vertical coordinates. If the parameter is null the entry
-     * will be removed.
-     */
-    public void setInkList(float[][] inkList)
-    {
-        if (inkList == null)
-        {
-            getCOSObject().removeItem(COSName.INKLIST);
-            return;
+  /**
+   * Get one or more disjoint paths that make this annotation.
+   *
+   * @return An array of arrays, each representing a stroked path. Each array
+   *         shall be a series of alternating horizontal and vertical coordinates.
+   */
+  public float[][] getInkList() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.INKLIST);
+    if (base instanceof COSArray) {
+      final COSArray array = (COSArray) base;
+      final float[][] inkList = new float[array.size()][];
+      for (int i = 0; i < array.size(); ++i) {
+        final COSBase base2 = array.getObject(i);
+        if (base2 instanceof COSArray) {
+          inkList[i] = ((COSArray) array.getObject(i)).toFloatArray();
+        } else {
+          inkList[i] = new float[0];
         }
-        COSArray array = new COSArray();
-        for (float[] path : inkList)
-        {
-            COSArray innerArray = new COSArray();
-            innerArray.setFloatArray(path);
-            array.add(innerArray);
-        }
-        getCOSObject().setItem(COSName.INKLIST, array);
+      }
+      return inkList;
     }
+    return new float[0][0];
+  }
 
-    /**
-     * Get one or more disjoint paths that make this annotation.
-     *
-     * @return An array of arrays, each representing a stroked path. Each array shall be a series of
-     * alternating horizontal and vertical coordinates.
-     */
-    public float[][] getInkList()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.INKLIST);
-        if (base instanceof COSArray)
-        {
-            COSArray array = (COSArray) base;
-            float[][] inkList = new float[array.size()][];
-            for (int i = 0; i < array.size(); ++i)
-            {
-                COSBase base2 = array.getObject(i);
-                if (base2 instanceof COSArray)
-                {
-                    inkList[i] = ((COSArray) array.getObject(i)).toFloatArray();
-                }
-                else
-                {
-                    inkList[i] = new float[0];
-                }
-            }
-            return inkList;
-        }
-        return new float[0][0];
-    }
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
 
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDInkAppearanceHandler appearanceHandler = new PDInkAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDInkAppearanceHandler appearanceHandler = new PDInkAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
