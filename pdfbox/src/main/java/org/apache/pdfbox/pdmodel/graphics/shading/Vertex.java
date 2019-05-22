@@ -23,29 +23,24 @@ import java.awt.geom.Point2D;
  *
  * @author Tilman Hausherr
  */
-class Vertex
-{
-    public Point2D point;
-    public float[] color;
+class Vertex {
+  public Point2D point;
+  public float[] color;
 
-    Vertex(Point2D p, float[] c)
-    {
-        point = p;
-        color = c.clone();
-    }
+  Vertex(final Point2D p, final float[] c) {
+    point = p;
+    color = c.clone();
+  }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (float f : color)
-        {
-            if (sb.length() > 0)
-            {
-                sb.append(' ');
-            }
-            sb.append(String.format("%3.2f", f));
-        }
-        return "Vertex{ " + point + ", colors=[" + sb + "] }";
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    for (final float f : color) {
+      if (sb.length() > 0) {
+        sb.append(' ');
+      }
+      sb.append(String.format("%3.2f", f));
     }
+    return "Vertex{ " + point + ", colors=[" + sb + "] }";
+  }
 }
