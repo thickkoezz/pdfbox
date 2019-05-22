@@ -16,53 +16,45 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Andrea Vacondio
  *
  */
-public class PDOutlineItemIteratorTest
-{
+public class PDOutlineItemIteratorTest {
 
-    @Test
-    public void singleItem()
-    {
-        PDOutlineItem first = new PDOutlineItem();
-        PDOutlineItemIterator iterator = new PDOutlineItemIterator(first);
-        assertTrue(iterator.hasNext());
-        assertEquals(first, iterator.next());
-        assertFalse(iterator.hasNext());
-    }
+  @Test
+  public void singleItem() {
+    final PDOutlineItem first = new PDOutlineItem();
+    final PDOutlineItemIterator iterator = new PDOutlineItemIterator(first);
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertEquals(first, iterator.next());
+    Assert.assertFalse(iterator.hasNext());
+  }
 
-    @Test
-    public void multipleItem()
-    {
-        PDOutlineItem first = new PDOutlineItem();
-        PDOutlineItem second = new PDOutlineItem();
-        first.setNextSibling(second);
-        PDOutlineItemIterator iterator = new PDOutlineItemIterator(first);
-        assertTrue(iterator.hasNext());
-        assertEquals(first, iterator.next());
-        assertTrue(iterator.hasNext());
-        assertEquals(second, iterator.next());
-        assertFalse(iterator.hasNext());
-    }
+  @Test
+  public void multipleItem() {
+    final PDOutlineItem first = new PDOutlineItem();
+    final PDOutlineItem second = new PDOutlineItem();
+    first.setNextSibling(second);
+    final PDOutlineItemIterator iterator = new PDOutlineItemIterator(first);
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertEquals(first, iterator.next());
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertEquals(second, iterator.next());
+    Assert.assertFalse(iterator.hasNext());
+  }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void removeUnsupported()
-    {
-        new PDOutlineItemIterator(new PDOutlineItem()).remove();
-    }
+  @Test(expected = UnsupportedOperationException.class)
+  public void removeUnsupported() {
+    new PDOutlineItemIterator(new PDOutlineItem()).remove();
+  }
 
-    @Test
-    public void noChildren()
-    {
-        PDOutlineItemIterator iterator = new PDOutlineItemIterator(null);
-        assertFalse(iterator.hasNext());
-    }
+  @Test
+  public void noChildren() {
+    final PDOutlineItemIterator iterator = new PDOutlineItemIterator(null);
+    Assert.assertFalse(iterator.hasNext());
+  }
 }
