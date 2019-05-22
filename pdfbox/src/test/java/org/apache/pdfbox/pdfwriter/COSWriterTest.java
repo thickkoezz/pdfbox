@@ -19,49 +19,42 @@ package org.apache.pdfbox.pdfwriter;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.Test;
 
-public class COSWriterTest
-{
-    /**
-     * PDFBOX-4241: check whether the output stream is closed twice.
-     * 
-     * @throws IOException 
-     */
-    @Test
-    public void testPDFBox4241() throws IOException
-    {
-        try (PDDocument doc = new PDDocument())
-        {
-            
-            PDPage page = new PDPage();
-            doc.addPage(page);
-            doc.save(new BufferedOutputStream(new ByteArrayOutputStream(1024)
-            {
-                private boolean open = true;
+public class COSWriterTest {
+  /**
+   * PDFBOX-4241: check whether the output stream is closed twice.
+   * 
+   * @throws IOException
+   */
+  @Test
+  public void testPDFBox4241() throws IOException {
+    try (PDDocument doc = new PDDocument()) {
 
-                @Override
-                public void close() throws IOException
-                {
-                    //Thread.dumpStack();
+      final PDPage page = new PDPage();
+      doc.addPage(page);
+      doc.save(new BufferedOutputStream(new ByteArrayOutputStream(1024) {
+        private boolean open = true;
 
-                    open = false;
-                    super.close();
-                }
+        @Override
+        public void close() throws IOException {
+          // Thread.dumpStack();
 
-                @Override
-                public void flush() throws IOException
-                {
-                    if (!open)
-                    {
-                        throw new IOException("Stream already closed");
-                    }
-
-                    //Thread.dumpStack();
-                }
-            }));
+          open = false;
+          super.close();
         }
+
+        @Override
+        public void flush() throws IOException {
+          if (!open)
+            throw new IOException("Stream already closed");
+
+          // Thread.dumpStack();
+        }
+      }));
     }
+  }
 }
