@@ -22,76 +22,69 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
  * This class represents a measure dictionary.
- * 
+ *
  */
-public class PDMeasureDictionary implements COSObjectable
-{
-    /**
-     * The type of the dictionary.
-     */
-    public static final String TYPE = "Measure";
+public class PDMeasureDictionary implements COSObjectable {
+  /**
+   * The type of the dictionary.
+   */
+  public static final String TYPE = "Measure";
 
-    private final COSDictionary measureDictionary;
+  private final COSDictionary measureDictionary;
 
-    /**
-     * Constructor.
-     */
-    protected PDMeasureDictionary()
-    {
-        this.measureDictionary = new COSDictionary();
-        this.getCOSObject().setName(COSName.TYPE, TYPE);
-    }
+  /**
+   * Constructor.
+   */
+  protected PDMeasureDictionary() {
+    measureDictionary = new COSDictionary();
+    getCOSObject().setName(COSName.TYPE, PDMeasureDictionary.TYPE);
+  }
 
-    /**
-     * Constructor.
-     * 
-     * @param dictionary the corresponding dictionary
-     */
-    public PDMeasureDictionary(COSDictionary dictionary)
-    {
-        this.measureDictionary = dictionary;
-    }
+  /**
+   * Constructor.
+   *
+   * @param dictionary the corresponding dictionary
+   */
+  public PDMeasureDictionary(final COSDictionary dictionary) {
+    measureDictionary = dictionary;
+  }
 
-    /**
-     * This will return the corresponding dictionary.
-     * 
-     * @return the measure dictionary
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return this.measureDictionary;
-    }
+  /**
+   * This will return the corresponding dictionary.
+   *
+   * @return the measure dictionary
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return measureDictionary;
+  }
 
-    /**
-     * This will return the type of the measure dictionary.
-     * It must be "Measure"
-     * 
-     * @return the type
-     */
-    public String getType()
-    {
-        return TYPE;
-    }
+  /**
+   * This will return the type of the measure dictionary. It must be "Measure"
+   *
+   * @return the type
+   */
+  public String getType() {
+    return PDMeasureDictionary.TYPE;
+  }
 
-    /**
-     * returns the subtype of the measure dictionary.
-     * @return the subtype of the measure data dictionary
-     */
+  /**
+   * returns the subtype of the measure dictionary.
+   *
+   * @return the subtype of the measure data dictionary
+   */
 
-    public String getSubtype()
-    {
-        return this.getCOSObject().getNameAsString(COSName.SUBTYPE,
-                PDRectlinearMeasureDictionary.SUBTYPE);
-    }
+  public String getSubtype() {
+    return getCOSObject().getNameAsString(COSName.SUBTYPE, PDRectlinearMeasureDictionary.SUBTYPE);
+  }
 
-    /**
-     * This will set the subtype of the measure dictionary.
-     * @param subtype the subtype of the measure dictionary
-     */
-    protected void setSubtype(String subtype)
-    {
-        this.getCOSObject().setName(COSName.SUBTYPE, subtype);
-    }
+  /**
+   * This will set the subtype of the measure dictionary.
+   *
+   * @param subtype the subtype of the measure dictionary
+   */
+  protected void setSubtype(final String subtype) {
+    getCOSObject().setName(COSName.SUBTYPE, subtype);
+  }
 
 }
