@@ -16,62 +16,55 @@
 
 package org.apache.pdfbox.pdmodel.interactive.annotation;
 
-import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDStrikeoutAppearanceHandler;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDAppearanceHandler;
+import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDStrikeoutAppearanceHandler;
 
 /**
  *
  * @author Paul King
  */
-public class PDAnnotationStrikeout extends PDAnnotationTextMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "StrikeOut";
+public class PDAnnotationStrikeout extends PDAnnotationTextMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "StrikeOut";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-     /**
-     * Constructor.
-     */
-    public PDAnnotationStrikeout()
-    {
-        super(SUB_TYPE);
+  /**
+   * Constructor.
+   */
+  public PDAnnotationStrikeout() {
+    super(PDAnnotationStrikeout.SUB_TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationStrikeout(final COSDictionary dict) {
+    super(dict);
+  }
+
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDStrikeoutAppearanceHandler appearanceHandler = new PDStrikeoutAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationStrikeout(COSDictionary dict)
-    {
-        super(dict);
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDStrikeoutAppearanceHandler appearanceHandler = new PDStrikeoutAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
