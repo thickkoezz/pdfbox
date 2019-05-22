@@ -21,11 +21,9 @@ package org.apache.pdfbox.pdmodel.graphics.blend;
  *
  * @author Kühn &amp; Weyh Software GmbH
  */
-public abstract class NonSeparableBlendMode extends BlendMode
-{
-    NonSeparableBlendMode()
-    {
-    }
+public abstract class NonSeparableBlendMode extends BlendMode {
+  NonSeparableBlendMode() {
+  }
 
-    public abstract void blend(float[] srcValues, float[] dstValues, float[] result);
+  public abstract void blend(float[] srcValues, float[] dstValues, float[] result);
 }
