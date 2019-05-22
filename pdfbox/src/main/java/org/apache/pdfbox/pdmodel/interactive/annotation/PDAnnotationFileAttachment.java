@@ -27,87 +27,83 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDFileSpecification;
  *
  * @author Ben Litchfield
  */
-public class PDAnnotationFileAttachment extends PDAnnotationMarkup
-{
-    /**
-     * See get/setAttachmentName.
-     */
-    public static final String ATTACHMENT_NAME_PUSH_PIN = "PushPin";
-    /**
-     * See get/setAttachmentName.
-     */
-    public static final String ATTACHMENT_NAME_GRAPH = "Graph";
-    /**
-     * See get/setAttachmentName.
-     */
-    public static final String ATTACHMENT_NAME_PAPERCLIP = "Paperclip";
-    /**
-     * See get/setAttachmentName.
-     */
-    public static final String ATTACHMENT_NAME_TAG = "Tag";
+public class PDAnnotationFileAttachment extends PDAnnotationMarkup {
+  /**
+   * See get/setAttachmentName.
+   */
+  public static final String ATTACHMENT_NAME_PUSH_PIN = "PushPin";
+  /**
+   * See get/setAttachmentName.
+   */
+  public static final String ATTACHMENT_NAME_GRAPH = "Graph";
+  /**
+   * See get/setAttachmentName.
+   */
+  public static final String ATTACHMENT_NAME_PAPERCLIP = "Paperclip";
+  /**
+   * See get/setAttachmentName.
+   */
+  public static final String ATTACHMENT_NAME_TAG = "Tag";
 
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "FileAttachment";
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "FileAttachment";
 
-    /**
-     * Constructor.
-     */
-    public PDAnnotationFileAttachment()
-    {
-        getCOSObject().setName(COSName.SUBTYPE, SUB_TYPE);
-    }
+  /**
+   * Constructor.
+   */
+  public PDAnnotationFileAttachment() {
+    getCOSObject().setName(COSName.SUBTYPE, PDAnnotationFileAttachment.SUB_TYPE);
+  }
 
-    /**
-     * Creates a Link annotation from a COSDictionary, expected to be a correct object definition.
-     *
-     * @param field the PDF object to represent as a field.
-     */
-    public PDAnnotationFileAttachment(COSDictionary field)
-    {
-        super(field);
-    }
+  /**
+   * Creates a Link annotation from a COSDictionary, expected to be a correct
+   * object definition.
+   *
+   * @param field the PDF object to represent as a field.
+   */
+  public PDAnnotationFileAttachment(final COSDictionary field) {
+    super(field);
+  }
 
-    /**
-     * Return the attached file.
-     *
-     * @return The attached file.
-     *
-     * @throws IOException If there is an error creating the file spec.
-     */
-    public PDFileSpecification getFile() throws IOException
-    {
-        return PDFileSpecification.createFS(getCOSObject().getDictionaryObject("FS"));
-    }
+  /**
+   * Return the attached file.
+   *
+   * @return The attached file.
+   *
+   * @throws IOException If there is an error creating the file spec.
+   */
+  public PDFileSpecification getFile() throws IOException {
+    return PDFileSpecification.createFS(getCOSObject().getDictionaryObject("FS"));
+  }
 
-    /**
-     * Set the attached file.
-     *
-     * @param file The file that is attached.
-     */
-    public void setFile(PDFileSpecification file)
-    {
-        getCOSObject().setItem("FS", file);
-    }
+  /**
+   * Set the attached file.
+   *
+   * @param file The file that is attached.
+   */
+  public void setFile(final PDFileSpecification file) {
+    getCOSObject().setItem("FS", file);
+  }
 
-    /**
-     * This is the name used to draw the type of attachment. See the ATTACHMENT_NAME_XXX constants.
-     *
-     * @return The name that describes the visual cue for the attachment.
-     */
-    public String getAttachmentName()
-    {
-        return getCOSObject().getNameAsString(COSName.NAME, ATTACHMENT_NAME_PUSH_PIN);
-    }
+  /**
+   * This is the name used to draw the type of attachment. See the
+   * ATTACHMENT_NAME_XXX constants.
+   *
+   * @return The name that describes the visual cue for the attachment.
+   */
+  public String getAttachmentName() {
+    return getCOSObject().getNameAsString(COSName.NAME, PDAnnotationFileAttachment.ATTACHMENT_NAME_PUSH_PIN);
+  }
 
-    /**
-     * Set the name used to draw the attachment icon. See the ATTACHMENT_NAME_XXX constants.
-     *
-     * @param name The name of the visual icon to draw.
-     */
-    public void setAttachmentName(String name)
-    {
-        getCOSObject().setName(COSName.NAME, name);
-    }
+  /**
+   * Set the name used to draw the attachment icon. See the ATTACHMENT_NAME_XXX
+   * constants.
+   *
+   * @param name The name of the visual icon to draw.
+   */
+  public void setAttachmentName(final String name) {
+    getCOSObject().setName(COSName.NAME, name);
+  }
 }
