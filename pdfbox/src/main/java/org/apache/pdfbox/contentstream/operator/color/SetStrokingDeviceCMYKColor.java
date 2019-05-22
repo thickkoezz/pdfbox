@@ -16,33 +16,31 @@
  */
 package org.apache.pdfbox.contentstream.operator.color;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
-import org.apache.pdfbox.contentstream.operator.Operator;
-import org.apache.pdfbox.contentstream.operator.OperatorName;
-
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.pdfbox.contentstream.operator.Operator;
+import org.apache.pdfbox.contentstream.operator.OperatorName;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
+
 /**
- * K: Set the stroking colour space to DeviceCMYK and set the colour to use for stroking operations.
+ * K: Set the stroking colour space to DeviceCMYK and set the colour to use for
+ * stroking operations.
  *
  * @author John Hewson
  */
-public class SetStrokingDeviceCMYKColor extends SetStrokingColor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        PDColorSpace cs = context.getResources().getColorSpace(COSName.DEVICECMYK);
-        context.getGraphicsState().setStrokingColorSpace(cs);
-        super.process(operator, arguments);
-    }
+public class SetStrokingDeviceCMYKColor extends SetStrokingColor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    final PDColorSpace cs = context.getResources().getColorSpace(COSName.DEVICECMYK);
+    context.getGraphicsState().setStrokingColorSpace(cs);
+    super.process(operator, arguments);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.STROKING_COLOR_CMYK;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.STROKING_COLOR_CMYK;
+  }
 }
