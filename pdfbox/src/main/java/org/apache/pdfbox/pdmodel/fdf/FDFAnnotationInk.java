@@ -40,119 +40,100 @@ import org.w3c.dom.NodeList;
  *
  * @author Ben Litchfield
  */
-public class FDFAnnotationInk extends FDFAnnotation
-{
-    private static final Log LOG = LogFactory.getLog(FDFAnnotationInk.class);
-    /**
-     * COS Model value for SubType entry.
-     */
-    public static final String SUBTYPE = "Ink";
+public class FDFAnnotationInk extends FDFAnnotation {
+  private static final Log LOG = LogFactory.getLog(FDFAnnotationInk.class);
+  /**
+   * COS Model value for SubType entry.
+   */
+  public static final String SUBTYPE = "Ink";
 
-    /**
-     * Default constructor.
-     */
-    public FDFAnnotationInk()
-    {
-        super();
-        annot.setName(COSName.SUBTYPE, SUBTYPE);
-    }
+  /**
+   * Default constructor.
+   */
+  public FDFAnnotationInk() {
+    super();
+    annot.setName(COSName.SUBTYPE, FDFAnnotationInk.SUBTYPE);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param a An existing FDF Annotation.
-     */
-    public FDFAnnotationInk(COSDictionary a)
-    {
-        super(a);
-    }
+  /**
+   * Constructor.
+   *
+   * @param a An existing FDF Annotation.
+   */
+  public FDFAnnotationInk(final COSDictionary a) {
+    super(a);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param element An XFDF element.
-     *
-     * @throws IOException If there is an error extracting information from the element.
-     */
-    public FDFAnnotationInk(Element element) throws IOException
-    {
-        super(element);
-        annot.setName(COSName.SUBTYPE, SUBTYPE);
+  /**
+   * Constructor.
+   *
+   * @param element An XFDF element.
+   *
+   * @throws IOException If there is an error extracting information from the
+   *                     element.
+   */
+  public FDFAnnotationInk(final Element element) throws IOException {
+    super(element);
+    annot.setName(COSName.SUBTYPE, FDFAnnotationInk.SUBTYPE);
 
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        try
-        {
-            NodeList gestures = (NodeList) xpath.evaluate("inklist/gesture", element,
-                    XPathConstants.NODESET);
-            if (gestures.getLength() == 0)
-            {
-                throw new IOException("Error: missing element 'gesture'");
-            }
-            List<float[]> inklist = new ArrayList<>();
-            for (int i = 0; i < gestures.getLength(); i++)
-            {
-                Node node = gestures.item(i);
-                if (node instanceof Element)
-                {
-                    String gesture = node.getFirstChild().getNodeValue();
-                    String[] gestureValues = gesture.split(",|;");
-                    float[] values = new float[gestureValues.length];
-                    for (int j = 0; j < gestureValues.length; j++)
-                    {
-                        values[j] = Float.parseFloat(gestureValues[j]);
-                    }
-                    inklist.add(values);
-                }
-            }
-            setInkList(inklist);
+    final XPath xpath = XPathFactory.newInstance().newXPath();
+    try {
+      final NodeList gestures = (NodeList) xpath.evaluate("inklist/gesture", element, XPathConstants.NODESET);
+      if (gestures.getLength() == 0)
+        throw new IOException("Error: missing element 'gesture'");
+      final List<float[]> inklist = new ArrayList<>();
+      for (int i = 0; i < gestures.getLength(); i++) {
+        final Node node = gestures.item(i);
+        if (node instanceof Element) {
+          final String gesture = node.getFirstChild().getNodeValue();
+          final String[] gestureValues = gesture.split(",|;");
+          final float[] values = new float[gestureValues.length];
+          for (int j = 0; j < gestureValues.length; j++) {
+            values[j] = Float.parseFloat(gestureValues[j]);
+          }
+          inklist.add(values);
         }
-        catch (XPathExpressionException e)
-        {
-            LOG.debug("Error while evaluating XPath expression for inklist gestures", e);
-        }
+      }
+      setInkList(inklist);
+    } catch (final XPathExpressionException e) {
+      FDFAnnotationInk.LOG.debug("Error while evaluating XPath expression for inklist gestures", e);
     }
+  }
 
-    /**
-     * Set the paths making up the freehand "scribble".
-     * 
-     * The ink annotation is made up of one ore more disjoint paths. Each array entry is an array representing a stroked
-     * path, being a series of alternating horizontal and vertical coordinates in default user space.
-     * 
-     * @param inklist the List of arrays representing the paths.
-     */
-    public final void setInkList(List<float[]> inklist)
-    {
-        COSArray newInklist = new COSArray();
-        for (float[] array : inklist)
-        {
-            COSArray newArray = new COSArray();
-            newArray.setFloatArray(array);
-            newInklist.add(newArray);
-        }
-        annot.setItem(COSName.INKLIST, newInklist);
+  /**
+   * Set the paths making up the freehand "scribble".
+   *
+   * The ink annotation is made up of one ore more disjoint paths. Each array
+   * entry is an array representing a stroked path, being a series of alternating
+   * horizontal and vertical coordinates in default user space.
+   *
+   * @param inklist the List of arrays representing the paths.
+   */
+  public final void setInkList(final List<float[]> inklist) {
+    final COSArray newInklist = new COSArray();
+    for (final float[] array : inklist) {
+      final COSArray newArray = new COSArray();
+      newArray.setFloatArray(array);
+      newInklist.add(newArray);
     }
+    annot.setItem(COSName.INKLIST, newInklist);
+  }
 
-    /**
-     * Get the paths making up the freehand "scribble".
-     *
-     * @see #setInkList(List)
-     * @return the List of arrays representing the paths.
-     */
-    public List<float[]> getInkList()
-    {
-        COSArray array = (COSArray) annot.getDictionaryObject(COSName.INKLIST);
-        if (array != null)
-        {
-            List<float[]> retval = new ArrayList<>();
-            for (COSBase entry : array)
-            {
-                retval.add(((COSArray) entry).toFloatArray());
-            }
-            return retval;
-        }
-        else
-        {
-            return null; // Should never happen as this is a required item
-        }
-    }
+  /**
+   * Get the paths making up the freehand "scribble".
+   *
+   * @see #setInkList(List)
+   * @return the List of arrays representing the paths.
+   */
+  public List<float[]> getInkList() {
+    final COSArray array = (COSArray) annot.getDictionaryObject(COSName.INKLIST);
+    if (array != null) {
+      final List<float[]> retval = new ArrayList<>();
+      for (final COSBase entry : array) {
+        retval.add(((COSArray) entry).toFloatArray());
+      }
+      return retval;
+    } else
+      return null; // Should never happen as this is a required item
+  }
 }
