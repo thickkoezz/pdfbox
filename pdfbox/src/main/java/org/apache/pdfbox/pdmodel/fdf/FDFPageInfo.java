@@ -17,7 +17,6 @@
 package org.apache.pdfbox.pdmodel.fdf;
 
 import org.apache.pdfbox.cos.COSDictionary;
-
 import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
@@ -25,36 +24,32 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
  *
  * @author Ben Litchfield
  */
-public class FDFPageInfo implements COSObjectable
-{
-    private final COSDictionary pageInfo;
+public class FDFPageInfo implements COSObjectable {
+  private final COSDictionary pageInfo;
 
-    /**
-     * Default constructor.
-     */
-    public FDFPageInfo()
-    {
-        pageInfo = new COSDictionary();
-    }
+  /**
+   * Default constructor.
+   */
+  public FDFPageInfo() {
+    pageInfo = new COSDictionary();
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param p The FDF page.
-     */
-    public FDFPageInfo(COSDictionary p)
-    {
-        pageInfo = p;
-    }
+  /**
+   * Constructor.
+   *
+   * @param p The FDF page.
+   */
+  public FDFPageInfo(final COSDictionary p) {
+    pageInfo = p;
+  }
 
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return pageInfo;
-    }
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return pageInfo;
+  }
 }
