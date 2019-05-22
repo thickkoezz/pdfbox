@@ -25,126 +25,111 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /**
  * This class represents a viewport dictionary.
- * 
+ *
  */
-public class PDViewportDictionary implements COSObjectable
-{
+public class PDViewportDictionary implements COSObjectable {
 
-    /**
-     * The type of this object.
-     */
-    public static final String TYPE = "Viewport";
-    
-    private final COSDictionary viewportDictionary;
+  /**
+   * The type of this object.
+   */
+  public static final String TYPE = "Viewport";
 
-    /**
-     * Constructor.
-     */
-    public PDViewportDictionary()
-    {
-        this.viewportDictionary = new COSDictionary();
-    }
+  private final COSDictionary viewportDictionary;
 
-    /**
-     * Constructor.
-     * 
-     * @param dictionary the dictionary
-     */
-    public PDViewportDictionary(COSDictionary dictionary)
-    {
-        this.viewportDictionary = dictionary;
-    }
+  /**
+   * Constructor.
+   */
+  public PDViewportDictionary() {
+    viewportDictionary = new COSDictionary();
+  }
 
-    /**
-     * This will return the corresponding dictionary.
-     * 
-     * @return the viewport dictionary
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return this.viewportDictionary;
-    }
+  /**
+   * Constructor.
+   *
+   * @param dictionary the dictionary
+   */
+  public PDViewportDictionary(final COSDictionary dictionary) {
+    viewportDictionary = dictionary;
+  }
 
-    /**
-     * Returns the type of the viewport dictionary.
-     * It must be "Viewport"
-     * @return the type of the external data dictionary
-     */
+  /**
+   * This will return the corresponding dictionary.
+   *
+   * @return the viewport dictionary
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return viewportDictionary;
+  }
 
-    public String getType()
-    {
-        return TYPE;
-    }
+  /**
+   * Returns the type of the viewport dictionary. It must be "Viewport"
+   *
+   * @return the type of the external data dictionary
+   */
 
-    /**
-     * This will retrieve the rectangle specifying the location of the viewport.
-     * 
-     * @return the location
-     */
-    public PDRectangle getBBox()
-    {
-        COSBase bbox = this.getCOSObject().getDictionaryObject(COSName.BBOX);
-        if (bbox instanceof COSArray)
-        {
-            return new PDRectangle((COSArray) bbox);
-        }
-        return null;
-    }
+  public String getType() {
+    return PDViewportDictionary.TYPE;
+  }
 
-    /**
-     * This will set the rectangle specifying the location of the viewport.
-     * 
-     * @param rectangle the rectangle specifying the location.
-     */
-    public void setBBox(PDRectangle rectangle)
-    {
-        this.getCOSObject().setItem(COSName.BBOX, rectangle);
-    }
+  /**
+   * This will retrieve the rectangle specifying the location of the viewport.
+   *
+   * @return the location
+   */
+  public PDRectangle getBBox() {
+    final COSBase bbox = getCOSObject().getDictionaryObject(COSName.BBOX);
+    if (bbox instanceof COSArray)
+      return new PDRectangle((COSArray) bbox);
+    return null;
+  }
 
-    /**
-     * This will retrieve the name of the viewport.
-     * 
-     * @return the name of the viewport
-     */
-    public String getName()
-    {
-        return this.getCOSObject().getNameAsString(COSName.NAME);
-    }
+  /**
+   * This will set the rectangle specifying the location of the viewport.
+   *
+   * @param rectangle the rectangle specifying the location.
+   */
+  public void setBBox(final PDRectangle rectangle) {
+    getCOSObject().setItem(COSName.BBOX, rectangle);
+  }
 
-   /**
-    * This will set the name of the viewport.
-    *  
-    * @param name the name of the viewport
-    */
-    public void setName(String name)
-    {
-        this.getCOSObject().setName(COSName.NAME, name);
-    }
+  /**
+   * This will retrieve the name of the viewport.
+   *
+   * @return the name of the viewport
+   */
+  public String getName() {
+    return getCOSObject().getNameAsString(COSName.NAME);
+  }
 
-    /**
-     * This will retrieve the measure dictionary.
-     * 
-     * @return the measure dictionary
-     */
-    public PDMeasureDictionary getMeasure()
-    {
-        COSBase base = this.getCOSObject().getDictionaryObject(COSName.MEASURE);
-        if (base instanceof COSDictionary)
-        {
-            return new PDMeasureDictionary((COSDictionary) base);
-        }
-        return null;
-    }
+  /**
+   * This will set the name of the viewport.
+   *
+   * @param name the name of the viewport
+   */
+  public void setName(final String name) {
+    getCOSObject().setName(COSName.NAME, name);
+  }
 
-    /**
-     * This will set the measure dictionary.
-     * 
-     * @param measure the measure dictionary
-     */
-    public void setMeasure(PDMeasureDictionary measure)
-    {
-        this.getCOSObject().setItem(COSName.MEASURE, measure);
-    }
+  /**
+   * This will retrieve the measure dictionary.
+   *
+   * @return the measure dictionary
+   */
+  public PDMeasureDictionary getMeasure() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.MEASURE);
+    if (base instanceof COSDictionary)
+      return new PDMeasureDictionary((COSDictionary) base);
+    return null;
+  }
+
+  /**
+   * This will set the measure dictionary.
+   *
+   * @param measure the measure dictionary
+   */
+  public void setMeasure(final PDMeasureDictionary measure) {
+    getCOSObject().setItem(COSName.MEASURE, measure);
+  }
 
 }
