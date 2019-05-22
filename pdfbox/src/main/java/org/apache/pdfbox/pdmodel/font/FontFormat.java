@@ -22,20 +22,19 @@ package org.apache.pdfbox.pdmodel.font;
  *
  * @author John Hewson
  */
-public enum FontFormat
-{
-    /**
-     * TrueType font.
-     */
-    TTF,
+public enum FontFormat {
+  /**
+   * TrueType font.
+   */
+  TTF,
 
-    /**
-     * OpenType font.
-     */
-    OTF,
+  /**
+   * OpenType font.
+   */
+  OTF,
 
-    /**
-     * Type 1 (binary) font.
-     */
-    PFB
+  /**
+   * Type 1 (binary) font.
+   */
+  PFB
 }
