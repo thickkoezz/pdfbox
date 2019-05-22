@@ -21,33 +21,29 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
  * h Close the path.
  *
  * @author Ben Litchfield
  */
-public final class ClosePath extends GraphicsOperatorProcessor
-{
-    private static final Log LOG = LogFactory.getLog(ClosePath.class);
-    
-    @Override
-    public void process(Operator operator, List<COSBase> operands) throws IOException
-    {
-        if (context.getCurrentPoint() == null)
-        {
-            LOG.warn("ClosePath without initial MoveTo");
-            return;
-        }
-        context.closePath();
-    }
+public final class ClosePath extends GraphicsOperatorProcessor {
+  private static final Log LOG = LogFactory.getLog(ClosePath.class);
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.CLOSE_PATH;
+  @Override
+  public void process(final Operator operator, final List<COSBase> operands) throws IOException {
+    if (context.getCurrentPoint() == null) {
+      ClosePath.LOG.warn("ClosePath without initial MoveTo");
+      return;
     }
+    context.closePath();
+  }
+
+  @Override
+  public String getName() {
+    return OperatorName.CLOSE_PATH;
+  }
 }
