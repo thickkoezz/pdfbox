@@ -24,51 +24,45 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDSquareAppeara
  *
  * @author Paul King
  */
-public class PDAnnotationSquare extends PDAnnotationSquareCircle
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Square";
+public class PDAnnotationSquare extends PDAnnotationSquareCircle {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Square";
 
-    private PDAppearanceHandler customAppearanceHandler;
-    
-    public PDAnnotationSquare()
-    {
-        super(SUB_TYPE);
-    }
+  private PDAppearanceHandler customAppearanceHandler;
 
-    /**
-     * Creates a square annotation from a COSDictionary, expected to be a correct object definition.
-     *
-     * @param field the PDF object to represent as a field.
-     */
-    public PDAnnotationSquare(COSDictionary field)
-    {
-        super(field);
-    }
+  public PDAnnotationSquare() {
+    super(PDAnnotationSquare.SUB_TYPE);
+  }
 
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
+  /**
+   * Creates a square annotation from a COSDictionary, expected to be a correct
+   * object definition.
+   *
+   * @param field the PDF object to represent as a field.
+   */
+  public PDAnnotationSquare(final COSDictionary field) {
+    super(field);
+  }
 
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDSquareAppearanceHandler appearanceHandler = new PDSquareAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDSquareAppearanceHandler appearanceHandler = new PDSquareAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
+  }
 }
