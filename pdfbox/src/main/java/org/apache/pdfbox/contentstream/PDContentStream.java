@@ -19,6 +19,7 @@ package org.apache.pdfbox.contentstream;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.util.Matrix;
@@ -28,28 +29,27 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author John Hewson
  */
-public interface PDContentStream
-{
-    /**
-     * Returns this stream's content, if any.
-     * 
-     * @return An InputStream or null.
-     * @throws IOException If the stream could not be read
-     */
-    InputStream getContents() throws IOException;
+public interface PDContentStream {
+  /**
+   * Returns this stream's content, if any.
+   *
+   * @return An InputStream or null.
+   * @throws IOException If the stream could not be read
+   */
+  InputStream getContents() throws IOException;
 
-    /**
-     * Returns this stream's resources, if any.
-     */
-    PDResources getResources();
+  /**
+   * Returns this stream's resources, if any.
+   */
+  PDResources getResources();
 
-    /**
-     * Returns the bounding box of the contents.
-     */
-    PDRectangle getBBox();
+  /**
+   * Returns the bounding box of the contents.
+   */
+  PDRectangle getBBox();
 
-    /**
-     * Returns the matrix which transforms from the stream's space to user space.
-     */
-    Matrix getMatrix();
+  /**
+   * Returns the matrix which transforms from the stream's space to user space.
+   */
+  Matrix getMatrix();
 }
