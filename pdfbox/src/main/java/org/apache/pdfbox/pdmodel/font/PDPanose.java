@@ -20,39 +20,38 @@ package org.apache.pdfbox.pdmodel.font;
 import java.util.Arrays;
 
 /**
- * Represents the "Panose" entry of a FontDescriptor's Style dictionary. This is a sequence of 12
- * bytes which contain both the TTF sFamilyClass and PANOSE classification bytes. 
+ * Represents the "Panose" entry of a FontDescriptor's Style dictionary. This is
+ * a sequence of 12 bytes which contain both the TTF sFamilyClass and PANOSE
+ * classification bytes.
  *
  * @author John Hewson
  */
-public class PDPanose
-{
-    private final byte[] bytes;
+public class PDPanose {
+  private final byte[] bytes;
 
-    public PDPanose(byte[] bytes)
-    {
-        this.bytes = bytes;
-    }
+  public PDPanose(final byte[] bytes) {
+    this.bytes = bytes;
+  }
 
-    /**
-     * The font family class and subclass ID bytes, given in the sFamilyClass field of the
-     * “OS/2” table in a TrueType font.
-     * 
-     * @see <a href="http://www.microsoft.com/typography/otspec/ibmfc.htm">http://www.microsoft.com/typography/otspec/ibmfc.htm</a>
-     */
-    public int getFamilyClass()
-    {
-        return bytes[0] << 8 | bytes[1]; 
-    }
+  /**
+   * The font family class and subclass ID bytes, given in the sFamilyClass field
+   * of the “OS/2” table in a TrueType font.
+   *
+   * @see <a href=
+   *      "http://www.microsoft.com/typography/otspec/ibmfc.htm">http://www.microsoft.com/typography/otspec/ibmfc.htm</a>
+   */
+  public int getFamilyClass() {
+    return bytes[0] << 8 | bytes[1];
+  }
 
-    /**
-     * Ten bytes for the PANOSE classification number for the font.
-     * 
-     * @see <a href="http://www.monotype.com/services/pan1">http://www.monotype.com/services/pan1</a>
-     */
-    public PDPanoseClassification getPanose()
-    {
-        byte[] panose = Arrays.copyOfRange(bytes, 2, 12);
-        return new PDPanoseClassification(panose);
-    }
+  /**
+   * Ten bytes for the PANOSE classification number for the font.
+   *
+   * @see <a href=
+   *      "http://www.monotype.com/services/pan1">http://www.monotype.com/services/pan1</a>
+   */
+  public PDPanoseClassification getPanose() {
+    final byte[] panose = Arrays.copyOfRange(bytes, 2, 12);
+    return new PDPanoseClassification(panose);
+  }
 }
