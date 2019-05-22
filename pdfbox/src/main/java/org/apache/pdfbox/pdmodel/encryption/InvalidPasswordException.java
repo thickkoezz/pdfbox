@@ -20,16 +20,21 @@ import java.io.IOException;
 
 /**
  * Indicates that an invalid password was supplied.
+ *
  * @author Ben Litchfield
  */
-public class InvalidPasswordException extends IOException
-{
-    /**
-     * Creates a new InvalidPasswordException.
-     * @param message A msg to go with this exception.
-     */
-    InvalidPasswordException( String message )
-    {
-        super( message );
-    }
+public class InvalidPasswordException extends IOException {
+  /**
+  *
+  */
+  private static final long serialVersionUID = 5380219515280569391L;
+
+  /**
+   * Creates a new InvalidPasswordException.
+   *
+   * @param message A msg to go with this exception.
+   */
+  InvalidPasswordException(final String message) {
+    super(message);
+  }
 }
