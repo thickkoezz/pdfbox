@@ -18,6 +18,7 @@ package org.apache.pdfbox.pdmodel.font;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.fontbox.ttf.CmapSubtable;
 import org.apache.fontbox.ttf.CmapTable;
 import org.apache.fontbox.ttf.NameRecord;
@@ -30,56 +31,52 @@ import org.junit.Test;
 /**
  * A test for correctly parsing TTF files.
  */
-public class TestTTFParser
-{
+public class TestTTFParser {
 
-    /**
-     * Test the post table parser.
-     * 
-     * @throws IOException if an error occurs.
-     */
-    @Test
-    public void testPostTable() throws IOException
-    {
-        InputStream input = PDFont.class.getResourceAsStream(
-                "/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf");
-        Assert.assertNotNull(input);
+  /**
+   * Test the post table parser.
+   * 
+   * @throws IOException if an error occurs.
+   */
+  @Test
+  public void testPostTable() throws IOException {
+    final InputStream input = PDFont.class
+        .getResourceAsStream("/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf");
+    Assert.assertNotNull(input);
 
-        TTFParser parser = new TTFParser();
-        TrueTypeFont font = parser.parse(input);
+    final TTFParser parser = new TTFParser();
+    final TrueTypeFont font = parser.parse(input);
 
-        CmapTable cmapTable = font.getCmap();
-        Assert.assertNotNull(cmapTable);
+    final CmapTable cmapTable = font.getCmap();
+    Assert.assertNotNull(cmapTable);
 
-        CmapSubtable[] cmaps = cmapTable.getCmaps();
-        Assert.assertNotNull(cmaps);
+    final CmapSubtable[] cmaps = cmapTable.getCmaps();
+    Assert.assertNotNull(cmaps);
 
-        CmapSubtable cmap = null;
+    CmapSubtable cmap = null;
 
-        for (CmapSubtable e : cmaps)
-        {
-            if (e.getPlatformId() == NameRecord.PLATFORM_WINDOWS
-                    && e.getPlatformEncodingId() == NameRecord.ENCODING_WINDOWS_UNICODE_BMP)
-            {
-                cmap = e;
-                break;
-            }
-        }
-
-        Assert.assertNotNull(cmap);
-
-        PostScriptTable post = font.getPostScript();
-        Assert.assertNotNull(post);
-
-        String[] glyphNames = font.getPostScript().getGlyphNames();
-        Assert.assertNotNull(glyphNames);
-
-        // test a WGL4 (Macintosh standard) name
-        int gid = cmap.getGlyphId(0x2122); // TRADE MARK SIGN
-        Assert.assertEquals("trademark", glyphNames[gid]);
-
-        // test an additional name
-        gid = cmap.getGlyphId(0x20AC); // EURO SIGN
-        Assert.assertEquals("Euro", glyphNames[gid]);
+    for (final CmapSubtable e : cmaps) {
+      if (e.getPlatformId() == NameRecord.PLATFORM_WINDOWS
+          && e.getPlatformEncodingId() == NameRecord.ENCODING_WINDOWS_UNICODE_BMP) {
+        cmap = e;
+        break;
+      }
     }
+
+    Assert.assertNotNull(cmap);
+
+    final PostScriptTable post = font.getPostScript();
+    Assert.assertNotNull(post);
+
+    final String[] glyphNames = font.getPostScript().getGlyphNames();
+    Assert.assertNotNull(glyphNames);
+
+    // test a WGL4 (Macintosh standard) name
+    int gid = cmap.getGlyphId(0x2122); // TRADE MARK SIGN
+    Assert.assertEquals("trademark", glyphNames[gid]);
+
+    // test an additional name
+    gid = cmap.getGlyphId(0x20AC); // EURO SIGN
+    Assert.assertEquals("Euro", glyphNames[gid]);
+  }
 }
