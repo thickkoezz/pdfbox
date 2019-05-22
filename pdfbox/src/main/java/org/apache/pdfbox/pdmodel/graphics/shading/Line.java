@@ -25,107 +25,88 @@ import java.util.Set;
  *
  * @author Shaola Ren
  */
-class Line
-{
-    private final Point point0;
-    private final Point point1;
-    private final float[] color0;
-    private final float[] color1;
+class Line {
+  private final Point point0;
+  private final Point point1;
+  private final float[] color0;
+  private final float[] color1;
 
-    protected final Set<Point> linePoints; // all the points in this rasterized line
+  protected final Set<Point> linePoints; // all the points in this rasterized line
 
-    /**
-     * Constructor of class Line.
-     *
-     * @param p0 one end of a line
-     * @param p1 the other end of the line
-     * @param c0 color of point p0
-     * @param c1 color of point p1
-     */
-    Line(Point p0, Point p1, float[] c0, float[] c1)
-    {
-        point0 = p0;
-        point1 = p1;
-        color0 = c0.clone();
-        color1 = c1.clone();
-        linePoints = calcLine(point0.x, point0.y, point1.x, point1.y);
+  /**
+   * Constructor of class Line.
+   *
+   * @param p0 one end of a line
+   * @param p1 the other end of the line
+   * @param c0 color of point p0
+   * @param c1 color of point p1
+   */
+  Line(final Point p0, final Point p1, final float[] c0, final float[] c1) {
+    point0 = p0;
+    point1 = p1;
+    color0 = c0.clone();
+    color1 = c1.clone();
+    linePoints = calcLine(point0.x, point0.y, point1.x, point1.y);
+  }
+
+  /**
+   * Calculate the points of a line with Bresenham's line algorithm
+   * <a href="http://en.wikipedia.org/wiki/Bresenham's_line_algorithm">Bresenham's
+   * line algorithm</a>
+   *
+   * @param x0 coordinate
+   * @param y0 coordinate
+   * @param x1 coordinate
+   * @param y1 coordinate
+   * @return all the points on the rasterized line from (x0, y0) to (x1, y1)
+   */
+  private Set<Point> calcLine(int x0, int y0, final int x1, final int y1) {
+    final Set<Point> points = new HashSet<>(3);
+    final int dx = Math.abs(x1 - x0);
+    final int dy = Math.abs(y1 - y0);
+    final int sx = x0 < x1 ? 1 : -1;
+    final int sy = y0 < y1 ? 1 : -1;
+    int err = dx - dy;
+    while (true) {
+      points.add(new IntPoint(x0, y0));
+      if (x0 == x1 && y0 == y1) {
+        break;
+      }
+      final int e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x0 += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y0 += sy;
+      }
     }
+    return points;
+  }
 
-    /**
-     * Calculate the points of a line with Bresenham's line algorithm
-     * <a
-     * href="http://en.wikipedia.org/wiki/Bresenham's_line_algorithm">Bresenham's
-     * line algorithm</a>
-     *
-     * @param x0 coordinate
-     * @param y0 coordinate
-     * @param x1 coordinate
-     * @param y1 coordinate
-     * @return all the points on the rasterized line from (x0, y0) to (x1, y1)
-     */
-    private Set<Point> calcLine(int x0, int y0, int x1, int y1)
-    {
-        Set<Point> points = new HashSet<>(3);
-        int dx = Math.abs(x1 - x0);
-        int dy = Math.abs(y1 - y0);
-        int sx = x0 < x1 ? 1 : -1;
-        int sy = y0 < y1 ? 1 : -1;
-        int err = dx - dy;
-        while (true)
-        {
-            points.add(new IntPoint(x0, y0));
-            if (x0 == x1 && y0 == y1)
-            {
-                break;
-            }
-            int e2 = 2 * err;
-            if (e2 > -dy)
-            {
-                err -= dy;
-                x0 += sx;
-            }
-            if (e2 < dx)
-            {
-                err += dx;
-                y0 += sy;
-            }
-        }
-        return points;
+  /**
+   * Calculate the color of a point on a rasterized line by linear interpolation.
+   *
+   * @param p target point, p should always be contained in linePoints
+   * @return color
+   */
+  protected float[] calcColor(final Point p) {
+    final int numberOfColorComponents = color0.length;
+    final float[] pc = new float[numberOfColorComponents];
+    if (point0.x == point1.x && point0.y == point1.y)
+      return color0;
+    else if (point0.x == point1.x) {
+      final float l = point1.y - point0.y;
+      for (int i = 0; i < numberOfColorComponents; i++) {
+        pc[i] = color0[i] * (point1.y - p.y) / l + color1[i] * (p.y - point0.y) / l;
+      }
+    } else {
+      final float l = point1.x - point0.x;
+      for (int i = 0; i < numberOfColorComponents; i++) {
+        pc[i] = color0[i] * (point1.x - p.x) / l + color1[i] * (p.x - point0.x) / l;
+      }
     }
-
-    /**
-     * Calculate the color of a point on a rasterized line by linear
-     * interpolation.
-     *
-     * @param p target point, p should always be contained in linePoints
-     * @return color
-     */
-    protected float[] calcColor(Point p)
-    {
-        int numberOfColorComponents = color0.length;
-        float[] pc = new float[numberOfColorComponents];
-        if (point0.x == point1.x && point0.y == point1.y)
-        {
-            return color0;
-        }
-        else if (point0.x == point1.x)
-        {
-            float l = point1.y - point0.y;
-            for (int i = 0; i < numberOfColorComponents; i++)
-            {
-                pc[i] = (color0[i] * (point1.y - p.y) / l
-                        + color1[i] * (p.y - point0.y) / l);
-            }
-        }
-        else
-        {
-            float l = point1.x - point0.x;
-            for (int i = 0; i < numberOfColorComponents; i++)
-            {
-                pc[i] = (color0[i] * (point1.x - p.x) / l
-                        + color1[i] * (p.x - point0.x) / l);
-            }
-        }
-        return pc;
-    }
+    return pc;
+  }
 }
