@@ -16,6 +16,8 @@
  */
 package org.apache.pdfbox.pdmodel.common.function;
 
+import java.io.IOException;
+
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.common.PDRange;
 import org.apache.pdfbox.pdmodel.common.function.type4.ExecutionContext;
@@ -23,81 +25,70 @@ import org.apache.pdfbox.pdmodel.common.function.type4.InstructionSequence;
 import org.apache.pdfbox.pdmodel.common.function.type4.InstructionSequenceBuilder;
 import org.apache.pdfbox.pdmodel.common.function.type4.Operators;
 
-import java.io.IOException;
-
 /**
- * This class represents a Type 4 (PostScript calculator) function in a PDF document.
+ * This class represents a Type 4 (PostScript calculator) function in a PDF
+ * document.
  * <p>
  * See section 3.9.4 of the PDF 1.4 Reference.
  *
  */
-public class PDFunctionType4 extends PDFunction
-{
+public class PDFunctionType4 extends PDFunction {
 
-    private static final Operators OPERATORS = new Operators();
+  private static final Operators OPERATORS = new Operators();
 
-    private final InstructionSequence instructions;
+  private final InstructionSequence instructions;
 
-    /**
-     * Constructor.
-     *
-     * @param functionStream The function stream.
-     * @throws IOException if an I/O error occurs while reading the function
-     */
-    public PDFunctionType4(COSBase functionStream) throws IOException
-    {
-        super( functionStream );
-        byte[] bytes = getPDStream().toByteArray();
-        String string =  new String(bytes, "ISO-8859-1");
-        this.instructions = InstructionSequenceBuilder.parse(string);
+  /**
+   * Constructor.
+   *
+   * @param functionStream The function stream.
+   * @throws IOException if an I/O error occurs while reading the function
+   */
+  public PDFunctionType4(final COSBase functionStream) throws IOException {
+    super(functionStream);
+    final byte[] bytes = getPDStream().toByteArray();
+    final String string = new String(bytes, "ISO-8859-1");
+    instructions = InstructionSequenceBuilder.parse(string);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getFunctionType() {
+    return 4;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public float[] eval(final float[] input) throws IOException {
+    // Setup the input values
+    final ExecutionContext context = new ExecutionContext(PDFunctionType4.OPERATORS);
+    for (int i = 0; i < input.length; i++) {
+      final PDRange domain = getDomainForInput(i);
+      final float value = clipToRange(input[i], domain.getMin(), domain.getMax());
+      context.getStack().push(value);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getFunctionType()
-    {
-        return 4;
+
+    // Execute the type 4 function.
+    instructions.execute(context);
+
+    // Extract the output values
+    final int numberOfOutputValues = getNumberOfOutputParameters();
+    final int numberOfActualOutputValues = context.getStack().size();
+    if (numberOfActualOutputValues < numberOfOutputValues)
+      throw new IllegalStateException("The type 4 function returned " + numberOfActualOutputValues
+          + " values but the Range entry indicates that " + numberOfOutputValues + " values be returned.");
+    final float[] outputValues = new float[numberOfOutputValues];
+    for (int i = numberOfOutputValues - 1; i >= 0; i--) {
+      final PDRange range = getRangeForOutput(i);
+      outputValues[i] = context.popReal();
+      outputValues[i] = clipToRange(outputValues[i], range.getMin(), range.getMax());
     }
 
-    /**
-    * {@inheritDoc}
-    */
-    @Override
-    public float[] eval(float[] input) throws IOException
-    {
-        //Setup the input values
-        ExecutionContext context = new ExecutionContext(OPERATORS);
-        for (int i = 0; i < input.length; i++)
-        {
-            PDRange domain = getDomainForInput(i);
-            float value = clipToRange(input[i], domain.getMin(), domain.getMax());
-            context.getStack().push(value);
-        }
-
-        //Execute the type 4 function.
-        instructions.execute(context);
-
-        //Extract the output values
-        int numberOfOutputValues = getNumberOfOutputParameters();
-        int numberOfActualOutputValues = context.getStack().size();
-        if (numberOfActualOutputValues < numberOfOutputValues)
-        {
-            throw new IllegalStateException("The type 4 function returned "
-                    + numberOfActualOutputValues
-                    + " values but the Range entry indicates that "
-                    + numberOfOutputValues + " values be returned.");
-        }
-        float[] outputValues = new float[numberOfOutputValues];
-        for (int i = numberOfOutputValues - 1; i >= 0; i--)
-        {
-            PDRange range = getRangeForOutput(i);
-            outputValues[i] = context.popReal();
-            outputValues[i] = clipToRange(outputValues[i], range.getMin(), range.getMax());
-        }
-
-        //Return the resulting array
-        return outputValues;
-    }
+    // Return the resulting array
+    return outputValues;
+  }
 }
