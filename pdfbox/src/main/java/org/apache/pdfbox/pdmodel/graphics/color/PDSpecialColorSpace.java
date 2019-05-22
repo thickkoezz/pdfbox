@@ -19,15 +19,14 @@ package org.apache.pdfbox.pdmodel.graphics.color;
 import org.apache.pdfbox.cos.COSBase;
 
 /**
- * Special colour spaces add features or properties to an underlying colour space.
+ * Special colour spaces add features or properties to an underlying colour
+ * space.
  *
  * @author John Hewson
  */
-public abstract class PDSpecialColorSpace extends PDColorSpace
-{
-    @Override
-    public COSBase getCOSObject()
-    {
-        return array;
-    }
+public abstract class PDSpecialColorSpace extends PDColorSpace {
+  @Override
+  public COSBase getCOSObject() {
+    return array;
+  }
 }
