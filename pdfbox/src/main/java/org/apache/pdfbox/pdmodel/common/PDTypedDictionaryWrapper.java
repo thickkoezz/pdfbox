@@ -25,41 +25,36 @@ import org.apache.pdfbox.cos.COSName;
  * @author Johannes Koch
  *
  */
-public class PDTypedDictionaryWrapper extends PDDictionaryWrapper
-{
+public class PDTypedDictionaryWrapper extends PDDictionaryWrapper {
 
-    /**
-     * Creates a new instance with a given type.
-     * 
-     * @param type the type (Type)
-     */
-    public PDTypedDictionaryWrapper(String type)
-    {
-        super();
-        this.getCOSObject().setName(COSName.TYPE, type);
-    }
+  /**
+   * Creates a new instance with a given type.
+   *
+   * @param type the type (Type)
+   */
+  public PDTypedDictionaryWrapper(final String type) {
+    super();
+    getCOSObject().setName(COSName.TYPE, type);
+  }
 
-    /**
-     * Creates a new instance with a given COS dictionary.
-     * 
-     * @param dictionary the dictionary
-     */
-    public PDTypedDictionaryWrapper(COSDictionary dictionary)
-    {
-        super(dictionary);
-    }
+  /**
+   * Creates a new instance with a given COS dictionary.
+   *
+   * @param dictionary the dictionary
+   */
+  public PDTypedDictionaryWrapper(final COSDictionary dictionary) {
+    super(dictionary);
+  }
 
+  /**
+   * Gets the type.
+   *
+   * @return the type
+   */
+  public String getType() {
+    return getCOSObject().getNameAsString(COSName.TYPE);
+  }
 
-    /**
-     * Gets the type.
-     * 
-     * @return the type
-     */
-    public String getType()
-    {
-        return this.getCOSObject().getNameAsString(COSName.TYPE);
-    }
-
-    // There is no setType(String) method because changing the Type would most
-    // probably also change the type of PD object.
+  // There is no setType(String) method because changing the Type would most
+  // probably also change the type of PD object.
 }
