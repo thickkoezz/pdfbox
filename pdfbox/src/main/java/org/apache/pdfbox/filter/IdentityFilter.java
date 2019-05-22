@@ -19,32 +19,30 @@ package org.apache.pdfbox.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.io.IOUtils;
 
 /**
  * The IdentityFilter filter passes the data through without any modifications.
- * It is defined in section 7.6.5 of the PDF 1.7 spec and also stated in table 26.
- * 
+ * It is defined in section 7.6.5 of the PDF 1.7 spec and also stated in table
+ * 26.
+ *
  * @author Adam Nichols
  */
-final class IdentityFilter extends Filter
-{
-    @Override
-    public DecodeResult decode(InputStream encoded, OutputStream decoded,
-                                         COSDictionary parameters, int index)
-        throws IOException
-    {
-        IOUtils.copy(encoded, decoded);
-        decoded.flush();
-        return new DecodeResult(parameters);
-    }
+final class IdentityFilter extends Filter {
+  @Override
+  public DecodeResult decode(final InputStream encoded, final OutputStream decoded, final COSDictionary parameters,
+      final int index) throws IOException {
+    IOUtils.copy(encoded, decoded);
+    decoded.flush();
+    return new DecodeResult(parameters);
+  }
 
-    @Override
-    protected void encode(InputStream input, OutputStream encoded, COSDictionary parameters)
-        throws IOException
-    {
-        IOUtils.copy(input, encoded);
-        encoded.flush();
-    }
+  @Override
+  protected void encode(final InputStream input, final OutputStream encoded, final COSDictionary parameters)
+      throws IOException {
+    IOUtils.copy(input, encoded);
+    encoded.flush();
+  }
 }
