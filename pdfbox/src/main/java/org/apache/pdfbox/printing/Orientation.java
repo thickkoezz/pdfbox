@@ -21,14 +21,15 @@ package org.apache.pdfbox.printing;
  *
  * @author John Hewson
  */
-public enum Orientation
-{
-    /** Automatically select the orientation of each page based on its aspect ratio.  */
-    AUTO,
+public enum Orientation {
+  /**
+   * Automatically select the orientation of each page based on its aspect ratio.
+   */
+  AUTO,
 
-    /** Print all pages as landscape. */
-    LANDSCAPE,
+  /** Print all pages as landscape. */
+  LANDSCAPE,
 
-    /** Print all pages as portrait. */
-    PORTRAIT
+  /** Print all pages as portrait. */
+  PORTRAIT
 }
