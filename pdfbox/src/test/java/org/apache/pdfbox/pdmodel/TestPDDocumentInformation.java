@@ -24,56 +24,49 @@ import junit.framework.TestCase;
 
 /**
  * This class tests the extraction of document-level metadata.
+ * 
  * @author Neil McErlean
  * @since 1.3.0
  */
-public class TestPDDocumentInformation extends TestCase
-{
+public class TestPDDocumentInformation extends TestCase {
 
-    public void testMetadataExtraction() throws Exception
-    {
-        // This document has been selected for this test as it contains custom metadata.
-        try (PDDocument doc = PDDocument.load( new File("src/test/resources/input/hello3.pdf")))
-        {
-           PDDocumentInformation info = doc.getDocumentInformation();
-           
-           assertEquals("Wrong author", "Brian Carrier", info.getAuthor());
-           assertNotNull("Wrong creationDate", info.getCreationDate());
-           assertEquals("Wrong creator", "Acrobat PDFMaker 8.1 for Word", info.getCreator());
-           assertNull("Wrong keywords", info.getKeywords());
-           assertNotNull("Wrong modificationDate", info.getModificationDate());
-           assertEquals("Wrong producer", "Acrobat Distiller 8.1.0 (Windows)", info.getProducer());
-           assertNull("Wrong subject", info.getSubject());
-           assertNull("Wrong trapped", info.getTrapped());
+  public void testMetadataExtraction() throws Exception {
+    // This document has been selected for this test as it contains custom metadata.
+    try (PDDocument doc = PDDocument.load(new File("src/test/resources/input/hello3.pdf"))) {
+      final PDDocumentInformation info = doc.getDocumentInformation();
 
-           List<String> expectedMetadataKeys = Arrays.asList("CreationDate", "Author", "Creator",
-                                                             "Producer", "ModDate", "Company",
-                                                             "SourceModified", "Title");
-           assertEquals("Wrong metadata key count", expectedMetadataKeys.size(),
-                                                    info.getMetadataKeys().size());
-           for (String key : expectedMetadataKeys)
-           {
-               assertTrue("Missing metadata key:" + key, info.getMetadataKeys().contains(key));
-           }
-           
-           // Custom metadata fields.
-           assertEquals("Wrong company", "Basis Technology Corp.", info.getCustomMetadataValue("Company"));
-           assertEquals("Wrong sourceModified", "D:20080819181502", info.getCustomMetadataValue("SourceModified"));
-        }
+      TestCase.assertEquals("Wrong author", "Brian Carrier", info.getAuthor());
+      TestCase.assertNotNull("Wrong creationDate", info.getCreationDate());
+      TestCase.assertEquals("Wrong creator", "Acrobat PDFMaker 8.1 for Word", info.getCreator());
+      TestCase.assertNull("Wrong keywords", info.getKeywords());
+      TestCase.assertNotNull("Wrong modificationDate", info.getModificationDate());
+      TestCase.assertEquals("Wrong producer", "Acrobat Distiller 8.1.0 (Windows)", info.getProducer());
+      TestCase.assertNull("Wrong subject", info.getSubject());
+      TestCase.assertNull("Wrong trapped", info.getTrapped());
+
+      final List<String> expectedMetadataKeys = Arrays.asList("CreationDate", "Author", "Creator", "Producer",
+          "ModDate", "Company", "SourceModified", "Title");
+      TestCase.assertEquals("Wrong metadata key count", expectedMetadataKeys.size(), info.getMetadataKeys().size());
+      for (final String key : expectedMetadataKeys) {
+        TestCase.assertTrue("Missing metadata key:" + key, info.getMetadataKeys().contains(key));
+      }
+
+      // Custom metadata fields.
+      TestCase.assertEquals("Wrong company", "Basis Technology Corp.", info.getCustomMetadataValue("Company"));
+      TestCase.assertEquals("Wrong sourceModified", "D:20080819181502", info.getCustomMetadataValue("SourceModified"));
     }
-    
-    /**
-     * PDFBOX-3068: test that indirect /Title element of /Info entry can be found.
-     * 
-     * @throws Exception 
-     */
-    public void testPDFBox3068() throws Exception
-    {
-        try (PDDocument doc = PDDocument.load(TestPDDocumentInformation.class.getResourceAsStream("PDFBOX-3068.pdf")))
-        {
-            PDDocumentInformation documentInformation = doc.getDocumentInformation();
-            assertEquals("Title", documentInformation.getTitle());
-        }
+  }
+
+  /**
+   * PDFBOX-3068: test that indirect /Title element of /Info entry can be found.
+   * 
+   * @throws Exception
+   */
+  public void testPDFBox3068() throws Exception {
+    try (PDDocument doc = PDDocument.load(TestPDDocumentInformation.class.getResourceAsStream("PDFBOX-3068.pdf"))) {
+      final PDDocumentInformation documentInformation = doc.getDocumentInformation();
+      TestCase.assertEquals("Title", documentInformation.getTitle());
     }
-    
+  }
+
 }
