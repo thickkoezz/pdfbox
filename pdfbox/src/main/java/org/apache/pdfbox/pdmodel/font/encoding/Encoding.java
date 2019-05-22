@@ -21,164 +21,143 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
  * A PostScript encoding vector, maps character codes to glyph names.
- * 
+ *
  * @author Ben Litchfield
  */
-public abstract class Encoding implements COSObjectable
-{
-    /**
-     * This will get an encoding by name. May return null.
-     *
-     * @param name The name of the encoding to get.
-     * @return The encoding that matches the name.
-     */
-    public static Encoding getInstance(COSName name)
-    {
-        if (COSName.STANDARD_ENCODING.equals(name))
-        {
-            return StandardEncoding.INSTANCE;
-        }
-        else if (COSName.WIN_ANSI_ENCODING.equals(name))
-        {
-            return WinAnsiEncoding.INSTANCE;
-        }
-        else if (COSName.MAC_ROMAN_ENCODING.equals(name))
-        {
-            return MacRomanEncoding.INSTANCE;
-        }
-        else if (COSName.MAC_EXPERT_ENCODING.equals(name))
-        {
-            return MacExpertEncoding.INSTANCE;
-        }
-        else
-        {
-            return null;
-        }
+public abstract class Encoding implements COSObjectable {
+  /**
+   * This will get an encoding by name. May return null.
+   *
+   * @param name The name of the encoding to get.
+   * @return The encoding that matches the name.
+   */
+  public static Encoding getInstance(final COSName name) {
+    if (COSName.STANDARD_ENCODING.equals(name))
+      return StandardEncoding.INSTANCE;
+    else if (COSName.WIN_ANSI_ENCODING.equals(name))
+      return WinAnsiEncoding.INSTANCE;
+    else if (COSName.MAC_ROMAN_ENCODING.equals(name))
+      return MacRomanEncoding.INSTANCE;
+    else if (COSName.MAC_EXPERT_ENCODING.equals(name))
+      return MacExpertEncoding.INSTANCE;
+    else
+      return null;
+  }
+
+  protected final Map<Integer, String> codeToName = new HashMap<>(250);
+  protected final Map<String, Integer> inverted = new HashMap<>(250);
+  private Set<String> names;
+
+  /**
+   * Returns an unmodifiable view of the code -&gt; name mapping.
+   *
+   * @return the code -&gt; name map
+   */
+  public Map<Integer, String> getCodeToNameMap() {
+    return Collections.unmodifiableMap(codeToName);
+  }
+
+  /**
+   * Returns an unmodifiable view of the name -&gt; code mapping. More than one
+   * name may map to the same code.
+   *
+   * @return the name -&gt; code map
+   */
+  public Map<String, Integer> getNameToCodeMap() {
+    return Collections.unmodifiableMap(inverted);
+  }
+
+  /**
+   * This will add a character encoding. An already existing mapping is
+   * preservered when creating the reverse mapping.
+   *
+   * @see #overwrite(int, String)
+   *
+   * @param code character code
+   * @param name PostScript glyph name
+   */
+  protected void add(final int code, final String name) {
+    codeToName.put(code, name);
+    if (!inverted.containsKey(name)) {
+      inverted.put(name, code);
     }
+  }
 
-    protected final Map<Integer, String> codeToName = new HashMap<>(250);
-    protected final Map<String, Integer> inverted = new HashMap<>(250);
-    private Set<String> names;
-
-    /**
-     * Returns an unmodifiable view of the code -&gt; name mapping.
-     * 
-     * @return the code -&gt; name map
-     */
-    public Map<Integer, String> getCodeToNameMap()
-    {
-        return Collections.unmodifiableMap(codeToName);
+  /**
+   * This will add a character encoding. An already existing mapping is
+   * overwritten when creating the reverse mapping.
+   *
+   * @see Encoding#add(int, String)
+   *
+   * @param code character code
+   * @param name PostScript glyph name
+   */
+  protected void overwrite(final int code, final String name) {
+    // remove existing reverse mapping first
+    final String oldName = codeToName.get(code);
+    if (oldName != null) {
+      final Integer oldCode = inverted.get(oldName);
+      if (oldCode != null && oldCode == code) {
+        inverted.remove(oldName);
+      }
     }
+    inverted.put(name, code);
+    codeToName.put(code, name);
+  }
 
-    /**
-     * Returns an unmodifiable view of the name -&gt; code mapping. More than one name may map to
-     * the same code.
-     *
-     * @return the name -&gt; code map
-     */
-    public Map<String, Integer> getNameToCodeMap()
-    {
-        return Collections.unmodifiableMap(inverted);
+  /**
+   * Determines if the encoding has a mapping for the given name value.
+   *
+   * @param name PostScript glyph name
+   */
+  public boolean contains(final String name) {
+    // we have to wait until all add() calls are done before building the name cache
+    // otherwise /Differences won't be accounted for
+    if (names == null) {
+      synchronized (this) {
+        // PDFBOX-3404: avoid possibility that one thread ends up with newly created
+        // empty map from other thread
+        final Set<String> tmpSet = new HashSet<>(codeToName.values());
+        // make sure that assignment is done after initialisation is complete
+        names = tmpSet;
+        // note that it might still happen that 'names' is initialized twice, but this
+        // is harmless
+      }
+      // at this point, names will never be null.
     }
+    return names.contains(name);
+  }
 
-    /**
-     * This will add a character encoding. An already existing mapping is preservered when creating the reverse mapping.
-     * 
-     * @see #overwrite(int, String)
-     * 
-     * @param code character code
-     * @param name PostScript glyph name
-     */
-    protected void add(int code, String name)
-    {
-        codeToName.put(code, name);
-        if (!inverted.containsKey(name))
-        {
-            inverted.put(name, code);
-        }
-    }
+  /**
+   * Determines if the encoding has a mapping for the given code value.
+   *
+   * @param code character code
+   */
+  public boolean contains(final int code) {
+    return codeToName.containsKey(code);
+  }
 
-    /**
-     * This will add a character encoding. An already existing mapping is overwritten when creating the reverse mapping.
-     * 
-     * @see Encoding#add(int, String)
-     *
-     * @param code character code
-     * @param name PostScript glyph name
-     */
-    protected void overwrite(int code, String name)
-    {
-        // remove existing reverse mapping first
-        String oldName = codeToName.get(code);
-        if (oldName != null)
-        {
-            Integer oldCode = inverted.get(oldName);
-            if (oldCode != null && oldCode == code)
-            {
-                inverted.remove(oldName);
-            }
-        }
-        inverted.put(name, code);
-        codeToName.put(code, name);
-    }
+  /**
+   * This will take a character code and get the name from the code.
+   *
+   * @param code character code
+   * @return PostScript glyph name
+   */
+  public String getName(final int code) {
+    final String name = codeToName.get(code);
+    if (name != null)
+      return name;
+    return ".notdef";
+  }
 
-    /**
-     * Determines if the encoding has a mapping for the given name value.
-     * 
-     * @param name PostScript glyph name
-     */
-    public boolean contains(String name)
-    {
-        // we have to wait until all add() calls are done before building the name cache
-        // otherwise /Differences won't be accounted for
-        if (names == null)
-        {
-            synchronized(this)
-            {
-                // PDFBOX-3404: avoid possibility that one thread ends up with newly created empty map from other thread
-                Set<String> tmpSet = new HashSet<>(codeToName.values());
-                // make sure that assignment is done after initialisation is complete
-                names = tmpSet;
-                // note that it might still happen that 'names' is initialized twice, but this is harmless
-            }
-            // at this point, names will never be null.
-        }
-        return names.contains(name);
-    }
-
-    /**
-     * Determines if the encoding has a mapping for the given code value.
-     * 
-     * @param code character code
-     */
-    public boolean contains(int code)
-    {
-        return codeToName.containsKey(code);
-    }
-
-    /**
-     * This will take a character code and get the name from the code.
-     * 
-     * @param code character code
-     * @return PostScript glyph name
-     */
-    public String getName(int code)
-    {
-       String name = codeToName.get(code);
-       if (name != null)
-       {
-          return name;
-       }
-       return ".notdef";
-    }
-
-    /**
-     * Returns the name of this encoding.
-     */
-    public abstract String getEncodingName();
+  /**
+   * Returns the name of this encoding.
+   */
+  public abstract String getEncodingName();
 }
