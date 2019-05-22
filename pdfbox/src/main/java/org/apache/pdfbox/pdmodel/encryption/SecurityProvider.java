@@ -22,51 +22,43 @@ import java.security.Provider;
 
 /**
  * Singleton which provides a security provider.
- * 
+ *
  */
-public class SecurityProvider
-{
-    private static Provider provider = null;
+public class SecurityProvider {
+  private static Provider provider = null;
 
-    private SecurityProvider()
-    {
-    }
+  private SecurityProvider() {
+  }
 
-    /**
-     * Returns the provider to be used for advanced encrypting/decrypting. Default is the BouncyCastleProvider.
-     * 
-     * @return the security provider
-     * 
-     * @throws IOException if the default provider can't be instantiated
-     */
-    public static Provider getProvider() throws IOException
-    {
-        // TODO synchronize access
-        if (provider == null)
-        {
-            try
-            {
-                Class<Provider> providerClass = (Class<Provider>) Class
-                        .forName("org.bouncycastle.jce.provider.BouncyCastleProvider");
-                provider = providerClass.getDeclaredConstructor().newInstance();
-            }
-            catch (ClassNotFoundException | InstantiationException | IllegalAccessException | 
-                   NoSuchMethodException | SecurityException | IllegalArgumentException | 
-                   InvocationTargetException ex)
-            {
-                throw new IOException(ex);
-            }
-        }
-        return provider;
+  /**
+   * Returns the provider to be used for advanced encrypting/decrypting. Default
+   * is the BouncyCastleProvider.
+   *
+   * @return the security provider
+   *
+   * @throws IOException if the default provider can't be instantiated
+   */
+  public static Provider getProvider() throws IOException {
+    // TODO synchronize access
+    if (SecurityProvider.provider == null) {
+      try {
+        final Class<Provider> providerClass = (Class<Provider>) Class
+            .forName("org.bouncycastle.jce.provider.BouncyCastleProvider");
+        SecurityProvider.provider = providerClass.getDeclaredConstructor().newInstance();
+      } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException
+          | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+        throw new IOException(ex);
+      }
     }
+    return SecurityProvider.provider;
+  }
 
-    /**
-     * Set the provider to be used for advanced encrypting/decrypting.
-     * 
-     * @param provider the security provider
-     */
-    public static void setProvider(Provider provider)
-    {
-        SecurityProvider.provider = provider;
-    }
+  /**
+   * Set the provider to be used for advanced encrypting/decrypting.
+   *
+   * @param provider the security provider
+   */
+  public static void setProvider(final Provider provider) {
+    SecurityProvider.provider = provider;
+  }
 }
