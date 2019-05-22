@@ -16,8 +16,6 @@
  */
 package org.apache.pdfbox.pdmodel;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -27,54 +25,48 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.interactive.pagenavigation.PDTransition;
 import org.apache.pdfbox.pdmodel.interactive.pagenavigation.PDTransitionDirection;
 import org.apache.pdfbox.pdmodel.interactive.pagenavigation.PDTransitionStyle;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Andrea Vacondio
  *
  */
-public class TestPDPageTransitions
-{
+public class TestPDPageTransitions {
 
-    @Test
-    public void readTransitions() throws IOException, URISyntaxException
-    {
-        try (PDDocument doc = PDDocument.load(new File(this.getClass().getResource(
-                "/org/apache/pdfbox/pdmodel/interactive/pagenavigation/transitions_test.pdf").toURI())))
-        {
-            PDTransition firstTransition = doc.getPages().get(0).getTransition();
-            assertEquals(PDTransitionStyle.Glitter.name(), firstTransition.getStyle());
-            assertEquals(2, firstTransition.getDuration(), 0);
-            assertEquals(PDTransitionDirection.TOP_LEFT_TO_BOTTOM_RIGHT.getCOSBase(),
-                    firstTransition.getDirection());
-        }
+  @Test
+  public void readTransitions() throws IOException, URISyntaxException {
+    try (PDDocument doc = PDDocument.load(new File(this.getClass()
+        .getResource("/org/apache/pdfbox/pdmodel/interactive/pagenavigation/transitions_test.pdf").toURI()))) {
+      final PDTransition firstTransition = doc.getPages().get(0).getTransition();
+      Assert.assertEquals(PDTransitionStyle.Glitter.name(), firstTransition.getStyle());
+      Assert.assertEquals(2, firstTransition.getDuration(), 0);
+      Assert.assertEquals(PDTransitionDirection.TOP_LEFT_TO_BOTTOM_RIGHT.getCOSBase(), firstTransition.getDirection());
+    }
+  }
+
+  @Test
+  public void saveAndReadTransitions() throws IOException {
+    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+    // save
+    try (PDDocument document = new PDDocument()) {
+      final PDPage page = new PDPage();
+      document.addPage(page);
+      final PDTransition transition = new PDTransition(PDTransitionStyle.Fly);
+      transition.setDirection(PDTransitionDirection.NONE);
+      transition.setFlyScale(0.5f);
+      page.setTransition(transition, 2);
+      document.save(baos);
     }
 
-    @Test
-    public void saveAndReadTransitions() throws IOException
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        // save
-        try (PDDocument document = new PDDocument())
-        {
-            PDPage page = new PDPage();
-            document.addPage(page);
-            PDTransition transition = new PDTransition(PDTransitionStyle.Fly);
-            transition.setDirection(PDTransitionDirection.NONE);
-            transition.setFlyScale(0.5f);
-            page.setTransition(transition, 2);
-            document.save(baos);
-        }
-        
-        // read
-        try (PDDocument doc = PDDocument.load(baos.toByteArray()))
-        {
-            PDPage page = doc.getPages().get(0);
-            PDTransition loadedTransition = page.getTransition();
-            assertEquals(PDTransitionStyle.Fly.name(), loadedTransition.getStyle());
-            assertEquals(2, page.getCOSObject().getFloat(COSName.DUR), 0);
-            assertEquals(PDTransitionDirection.NONE.getCOSBase(), loadedTransition.getDirection());
-        }
+    // read
+    try (PDDocument doc = PDDocument.load(baos.toByteArray())) {
+      final PDPage page = doc.getPages().get(0);
+      final PDTransition loadedTransition = page.getTransition();
+      Assert.assertEquals(PDTransitionStyle.Fly.name(), loadedTransition.getStyle());
+      Assert.assertEquals(2, page.getCOSObject().getFloat(COSName.DUR), 0);
+      Assert.assertEquals(PDTransitionDirection.NONE.getCOSBase(), loadedTransition.getDirection());
     }
+  }
 }
