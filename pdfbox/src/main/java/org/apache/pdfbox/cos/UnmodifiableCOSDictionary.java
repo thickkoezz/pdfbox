@@ -25,257 +25,228 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
  *
  * @author John Hewson
  */
-final class UnmodifiableCOSDictionary extends COSDictionary
-{
-    /**
-     * {@inheritDoc}
-     */
-    UnmodifiableCOSDictionary(COSDictionary dict)
-    {
-        super();
-        items = dict.items;
-    }
+final class UnmodifiableCOSDictionary extends COSDictionary {
+  /**
+   * {@inheritDoc}
+   */
+  UnmodifiableCOSDictionary(final COSDictionary dict) {
+    super();
+    items = dict.items;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void clear()
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setItem(COSName key, COSBase value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setItem(final COSName key, final COSBase value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setItem(COSName key, COSObjectable value)
-    {
-       throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setItem(final COSName key, final COSObjectable value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setItem(String key, COSObjectable value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setItem(final String key, final COSObjectable value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setBoolean(String key, boolean value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setBoolean(final String key, final boolean value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setBoolean(COSName key, boolean value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setBoolean(final COSName key, final boolean value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setItem(String key, COSBase value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setItem(final String key, final COSBase value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(String key, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setName(final String key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setName(COSName key, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setName(final COSName key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDate(String key, Calendar date)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setDate(final String key, final Calendar date) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setDate(COSName key, Calendar date)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setDate(final COSName key, final Calendar date) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedDate(String embedded, String key, Calendar date)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedDate(final String embedded, final String key, final Calendar date) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedDate(String embedded, COSName key, Calendar date)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedDate(final String embedded, final COSName key, final Calendar date) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setString(String key, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setString(final String key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setString(COSName key, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setString(final COSName key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedString(String embedded, String key, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedString(final String embedded, final String key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedString(String embedded, COSName key, String value)
-    {
-       throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedString(final String embedded, final COSName key, final String value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setInt(String key, int value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setInt(final String key, final int value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setInt(COSName key, int value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setInt(final COSName key, final int value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setLong(String key, long value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setLong(final String key, final long value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setLong(COSName key, long value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setLong(final COSName key, final long value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedInt(String embeddedDictionary, String key, int value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedInt(final String embeddedDictionary, final String key, final int value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEmbeddedInt(String embeddedDictionary, COSName key, int value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setEmbeddedInt(final String embeddedDictionary, final COSName key, final int value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFloat(String key, float value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFloat(final String key, final float value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFloat(COSName key, float value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFloat(final COSName key, final float value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void removeItem(COSName key)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeItem(final COSName key) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addAll(COSDictionary dic)
-    {
-        throw new UnsupportedOperationException();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addAll(final COSDictionary dic) {
+    throw new UnsupportedOperationException();
+  }
 }
