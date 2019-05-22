@@ -24,178 +24,168 @@ import java.io.OutputStream;
  *
  * @author Ben Litchfield
  */
-public final class COSInteger extends COSNumber
-{
+public final class COSInteger extends COSNumber {
 
-    /**
-     * The lowest integer to be kept in the {@link #STATIC} array.
-     */
-    private static final int LOW = -100;
+  /**
+   * The lowest integer to be kept in the {@link #STATIC} array.
+   */
+  private static final int LOW = -100;
 
-    /**
-     * The highest integer to be kept in the {@link #STATIC} array.
-     */
-    private static final int HIGH = 256;
+  /**
+   * The highest integer to be kept in the {@link #STATIC} array.
+   */
+  private static final int HIGH = 256;
 
-    /**
-     * Static instances of all COSIntegers in the range from {@link #LOW}
-     * to {@link #HIGH}.
-     */
-    private static final COSInteger[] STATIC = new COSInteger[HIGH - LOW + 1];
+  /**
+   * Static instances of all COSIntegers in the range from {@link #LOW} to
+   * {@link #HIGH}.
+   */
+  private static final COSInteger[] STATIC = new COSInteger[COSInteger.HIGH - COSInteger.LOW + 1];
 
-    /**
-     * Constant for the number zero.
-     * @since Apache PDFBox 1.1.0
-     */
-    public static final COSInteger ZERO = get(0); 
+  /**
+   * Constant for the number zero.
+   *
+   * @since Apache PDFBox 1.1.0
+   */
+  public static final COSInteger ZERO = COSInteger.get(0);
 
-    /**
-     * Constant for the number one.
-     * @since Apache PDFBox 1.1.0
-     */
-    public static final COSInteger ONE = get(1); 
+  /**
+   * Constant for the number one.
+   *
+   * @since Apache PDFBox 1.1.0
+   */
+  public static final COSInteger ONE = COSInteger.get(1);
 
-    /**
-     * Constant for the number two.
-     * @since Apache PDFBox 1.1.0
-     */
-    public static final COSInteger TWO = get(2); 
+  /**
+   * Constant for the number two.
+   *
+   * @since Apache PDFBox 1.1.0
+   */
+  public static final COSInteger TWO = COSInteger.get(2);
 
-    /**
-     * Constant for the number three.
-     * @since Apache PDFBox 1.1.0
-     */
-    public static final COSInteger THREE = get(3); 
+  /**
+   * Constant for the number three.
+   *
+   * @since Apache PDFBox 1.1.0
+   */
+  public static final COSInteger THREE = COSInteger.get(3);
 
-    /**
-     * Returns a COSInteger instance with the given value.
-     *
-     * @param val integer value
-     * @return COSInteger instance
-     */
-    public static COSInteger get(long val)
-    {
-        if (LOW <= val && val <= HIGH)
-        {
-            int index = (int) val - LOW;
-            // no synchronization needed
-            if (STATIC[index] == null)
-            {
-                STATIC[index] = new COSInteger(val);
-            }
-            return STATIC[index];
-        }
-        return new COSInteger(val);
+  /**
+   * Returns a COSInteger instance with the given value.
+   *
+   * @param val integer value
+   * @return COSInteger instance
+   */
+  public static COSInteger get(final long val) {
+    if (COSInteger.LOW <= val && val <= COSInteger.HIGH) {
+      final int index = (int) val - COSInteger.LOW;
+      // no synchronization needed
+      if (COSInteger.STATIC[index] == null) {
+        COSInteger.STATIC[index] = new COSInteger(val);
+      }
+      return COSInteger.STATIC[index];
     }
+    return new COSInteger(val);
+  }
 
-    private final long value;
+  private final long value;
 
-    /**
-     * constructor.
-     *
-     * @param val The integer value of this object.
-     */
-    private COSInteger( long val )
-    {
-        value = val;
-    }
+  /**
+   * constructor.
+   *
+   * @param val The integer value of this object.
+   */
+  private COSInteger(final long val) {
+    value = val;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        return o instanceof COSInteger && ((COSInteger)o).intValue() == intValue();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(final Object o) {
+    return o instanceof COSInteger && ((COSInteger) o).intValue() == intValue();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode()
-    {
-        //taken from java.lang.Long
-        return (int)(value ^ (value >> 32));
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    // taken from java.lang.Long
+    return (int) (value ^ value >> 32);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return "COSInt{" + value + "}";
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    return "COSInt{" + value + "}";
+  }
 
-    /**
-     * polymorphic access to value as float.
-     *
-     * @return The float value of this object.
-     */
-    @Override
-    public float floatValue()
-    {
-        return value;
-    }
+  /**
+   * polymorphic access to value as float.
+   *
+   * @return The float value of this object.
+   */
+  @Override
+  public float floatValue() {
+    return value;
+  }
 
-    /**
-     * polymorphic access to value as float.
-     *
-     * @return The double value of this object.
-     */
-    @Override
-    public double doubleValue()
-    {
-        return value;
-    }
+  /**
+   * polymorphic access to value as float.
+   *
+   * @return The double value of this object.
+   */
+  @Override
+  public double doubleValue() {
+    return value;
+  }
 
-    /**
-     * Polymorphic access to value as int
-     * This will get the integer value of this object.
-     *
-     * @return The int value of this object,
-     */
-    @Override
-    public int intValue()
-    {
-        return (int)value;
-    }
+  /**
+   * Polymorphic access to value as int This will get the integer value of this
+   * object.
+   *
+   * @return The int value of this object,
+   */
+  @Override
+  public int intValue() {
+    return (int) value;
+  }
 
-    /**
-     * Polymorphic access to value as int
-     * This will get the integer value of this object.
-     *
-     * @return The int value of this object,
-     */
-    @Override
-    public long longValue()
-    {
-        return value;
-    }
+  /**
+   * Polymorphic access to value as int This will get the integer value of this
+   * object.
+   *
+   * @return The int value of this object,
+   */
+  @Override
+  public long longValue() {
+    return value;
+  }
 
-    /**
-     * visitor pattern double dispatch method.
-     *
-     * @param visitor The object to notify when visiting this object.
-     * @return any object, depending on the visitor implementation, or null
-     * @throws IOException If an error occurs while visiting this object.
-     */
-    @Override
-    public Object accept(ICOSVisitor visitor) throws IOException
-    {
-        return visitor.visitFromInt(this);
-    }
+  /**
+   * visitor pattern double dispatch method.
+   *
+   * @param visitor The object to notify when visiting this object.
+   * @return any object, depending on the visitor implementation, or null
+   * @throws IOException If an error occurs while visiting this object.
+   */
+  @Override
+  public Object accept(final ICOSVisitor visitor) throws IOException {
+    return visitor.visitFromInt(this);
+  }
 
-    /**
-     * This will output this string as a PDF object.
-     *
-     * @param output The stream to write to.
-     * @throws IOException If there is an error writing to the stream.
-     */
-    public void writePDF( OutputStream output ) throws IOException
-    {
-        output.write(String.valueOf(value).getBytes("ISO-8859-1"));
-    }
+  /**
+   * This will output this string as a PDF object.
+   *
+   * @param output The stream to write to.
+   * @throws IOException If there is an error writing to the stream.
+   */
+  public void writePDF(final OutputStream output) throws IOException {
+    output.write(String.valueOf(value).getBytes("ISO-8859-1"));
+  }
 
 }
