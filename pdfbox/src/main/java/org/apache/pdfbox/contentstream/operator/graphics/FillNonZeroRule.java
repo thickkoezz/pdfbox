@@ -16,30 +16,27 @@
  */
 package org.apache.pdfbox.contentstream.operator.graphics;
 
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
  * f Fill path using non zero winding rule.
  *
  * @author Ben Litchfield
  */
-public class FillNonZeroRule extends GraphicsOperatorProcessor
-{
-    @Override
-    public final void process(Operator operator, List<COSBase> operands) throws IOException
-    {
-        context.fillPath(GeneralPath.WIND_NON_ZERO);
-    }
+public class FillNonZeroRule extends GraphicsOperatorProcessor {
+  @Override
+  public final void process(final Operator operator, final List<COSBase> operands) throws IOException {
+    context.fillPath(Path2D.WIND_NON_ZERO);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.FILL_NON_ZERO;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.FILL_NON_ZERO;
+  }
 }
