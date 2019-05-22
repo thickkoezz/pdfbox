@@ -21,53 +21,49 @@ import org.apache.pdfbox.cos.COSInteger;
 import org.apache.pdfbox.cos.COSName;
 
 /**
- * The direction in which the specified transition effect shall moves, expressed in degrees counterclockwise starting
- * from a left-to-right direction. Only for {@link PDTransitionStyle#Wipe}, {@link PDTransitionStyle#Glitter},
- * {@link PDTransitionStyle#Fly}, {@link PDTransitionStyle#Cover}, {@link PDTransitionStyle#Uncover} and
- * {@link PDTransitionStyle#Push}.
- * 
+ * The direction in which the specified transition effect shall moves, expressed
+ * in degrees counterclockwise starting from a left-to-right direction. Only for
+ * {@link PDTransitionStyle#Wipe}, {@link PDTransitionStyle#Glitter},
+ * {@link PDTransitionStyle#Fly}, {@link PDTransitionStyle#Cover},
+ * {@link PDTransitionStyle#Uncover} and {@link PDTransitionStyle#Push}.
+ *
  * @author Andrea Vacondio
  *
  */
-public enum PDTransitionDirection
-{
-    LEFT_TO_RIGHT(0),
-    /**
-     * Relevant only for the Wipe transition
-     */
-    BOTTOM_TO_TOP(90),
-    /**
-     * Relevant only for the Wipe transition
-     */
-    RIGHT_TO_LEFT(180), TOP_TO_BOTTOM(270),
-    /**
-     * Relevant only for the Glitter transition
-     */
-    TOP_LEFT_TO_BOTTOM_RIGHT(315),
-    /**
-     * Relevant only for the Fly transition when the value of SS is not 1.0
-     */
-    NONE(0)
-    {
-        @Override
-        public COSBase getCOSBase()
-        {
-            return COSName.NONE;
-        }
-    };
-
-    private final int degrees;
-
-    private PDTransitionDirection(int degrees)
-    {
-        this.degrees = degrees;
+public enum PDTransitionDirection {
+  LEFT_TO_RIGHT(0),
+  /**
+   * Relevant only for the Wipe transition
+   */
+  BOTTOM_TO_TOP(90),
+  /**
+   * Relevant only for the Wipe transition
+   */
+  RIGHT_TO_LEFT(180), TOP_TO_BOTTOM(270),
+  /**
+   * Relevant only for the Glitter transition
+   */
+  TOP_LEFT_TO_BOTTOM_RIGHT(315),
+  /**
+   * Relevant only for the Fly transition when the value of SS is not 1.0
+   */
+  NONE(0) {
+    @Override
+    public COSBase getCOSBase() {
+      return COSName.NONE;
     }
+  };
 
-    /**
-     * @return the value for this direction
-     */
-    public COSBase getCOSBase()
-    {
-        return COSInteger.get(degrees);
-    }
+  private final int degrees;
+
+  private PDTransitionDirection(final int degrees) {
+    this.degrees = degrees;
+  }
+
+  /**
+   * @return the value for this direction
+   */
+  public COSBase getCOSBase() {
+    return COSInteger.get(degrees);
+  }
 }
