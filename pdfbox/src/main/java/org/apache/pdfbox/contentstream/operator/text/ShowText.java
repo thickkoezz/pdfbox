@@ -16,49 +16,39 @@
  */
 package org.apache.pdfbox.contentstream.operator.text;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
-
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSString;
 
 /**
  * Tj: Show text.
  *
  * @author Laurent Huault
  */
-public class ShowText extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (arguments.isEmpty())
-        {
-            // ignore ( )Tj
-            return;
-        }
-        COSBase base = arguments.get(0);
-        if (!(base instanceof COSString))
-        {
-            // ignore
-            return;
-        }
-        if (context.getTextMatrix() == null)
-        {
-            // ignore: outside of BT...ET
-            return;
-        }
-        COSString string = (COSString) base;
-        context.showTextString(string.getBytes());
-    }
+public class ShowText extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (arguments.isEmpty())
+      // ignore ( )Tj
+      return;
+    final COSBase base = arguments.get(0);
+    if (!(base instanceof COSString))
+      // ignore
+      return;
+    if (context.getTextMatrix() == null)
+      // ignore: outside of BT...ET
+      return;
+    final COSString string = (COSString) base;
+    context.showTextString(string.getBytes());
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.SHOW_TEXT;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.SHOW_TEXT;
+  }
 }
