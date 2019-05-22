@@ -16,8 +16,8 @@
  */
 package org.apache.pdfbox.util;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,80 +36,67 @@ import org.xml.sax.SAXException;
  *
  * @author Ben Litchfield
  */
-public final class XMLUtil
-{
-    /**
-     * Utility class, should not be instantiated.
-     *
-     */
-    private XMLUtil()
-    {
-    }
+public final class XMLUtil {
+  /**
+   * Utility class, should not be instantiated.
+   *
+   */
+  private XMLUtil() {
+  }
 
-    /**
-     * This will parse an XML stream and create a DOM document.
-     *
-     * @param is The stream to get the XML from.
-     * @return The DOM document.
-     * @throws IOException It there is an error creating the dom.
-     */
-    public static Document parse(InputStream is) throws IOException
-    {
-        return parse(is, false);
-    }
+  /**
+   * This will parse an XML stream and create a DOM document.
+   *
+   * @param is The stream to get the XML from.
+   * @return The DOM document.
+   * @throws IOException It there is an error creating the dom.
+   */
+  public static Document parse(final InputStream is) throws IOException {
+    return XMLUtil.parse(is, false);
+  }
 
-    /**
-     * This will parse an XML stream and create a DOM document.
-     *
-     * @param is The stream to get the XML from.
-     * @param nsAware activates namespace awareness of the parser
-     * @return The DOM document.
-     * @throws IOException It there is an error creating the dom.
-     */
-    public static Document parse(InputStream is, boolean nsAware) throws IOException
-    {
-        try
-        {
-            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-            builderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            builderFactory.setFeature("http://xml.org/sax/features/external-general-entities",
-                    false);
-            builderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities",
-                    false);
-            builderFactory.setFeature(
-                    "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            builderFactory.setXIncludeAware(false);
-            builderFactory.setExpandEntityReferences(false);
-            builderFactory.setNamespaceAware(nsAware);
-            DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            return builder.parse(is);
-        }
-        catch (FactoryConfigurationError | ParserConfigurationException | SAXException e)
-        {
-            throw new IOException(e.getMessage(), e);
-        }
+  /**
+   * This will parse an XML stream and create a DOM document.
+   *
+   * @param is      The stream to get the XML from.
+   * @param nsAware activates namespace awareness of the parser
+   * @return The DOM document.
+   * @throws IOException It there is an error creating the dom.
+   */
+  public static Document parse(final InputStream is, final boolean nsAware) throws IOException {
+    try {
+      final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+      builderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+      builderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+      builderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+      builderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+      builderFactory.setXIncludeAware(false);
+      builderFactory.setExpandEntityReferences(false);
+      builderFactory.setNamespaceAware(nsAware);
+      final DocumentBuilder builder = builderFactory.newDocumentBuilder();
+      return builder.parse(is);
+    } catch (FactoryConfigurationError | ParserConfigurationException | SAXException e) {
+      throw new IOException(e.getMessage(), e);
     }
+  }
 
-    /**
-     * This will get the text value of an element.
-     *
-     * @param node The node to get the text value for.
-     * @return The text of the node.
-     */
-    public static String getNodeValue(Element node)
-    {
-        StringBuilder sb = new StringBuilder();
-        NodeList children = node.getChildNodes();
-        int numNodes = children.getLength();
-        for (int i = 0; i < numNodes; i++)
-        {
-            Node next = children.item(i);
-            if (next instanceof Text)
-            {
-                sb.append(next.getNodeValue());
-            }
-        }
-        return sb.toString();
+  /**
+   * This will get the text value of an element.
+   *
+   * @param node The node to get the text value for.
+   * @return The text of the node.
+   */
+  public static String getNodeValue(final Element node) {
+    final StringBuilder sb = new StringBuilder();
+    final NodeList children = node.getChildNodes();
+    final int numNodes = children.getLength();
+    for (int i = 0; i < numNodes; i++) {
+      final Node next = children.item(i);
+      if (next instanceof Text) {
+        sb.append(next.getNodeValue());
+      }
     }
+    return sb.toString();
+  }
 
 }
