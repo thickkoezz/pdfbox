@@ -22,70 +22,63 @@ import java.awt.RenderingHints;
 import org.apache.pdfbox.pdmodel.PDPage;
 
 /**
- * Parameters for a PageDrawer. This class ensures allows PDFRenderer and PageDrawer to share
- * private implementation data in a future-proof manner, while still allowing end-users to create
- * their own subclasses of PageDrawer.
- * 
+ * Parameters for a PageDrawer. This class ensures allows PDFRenderer and
+ * PageDrawer to share private implementation data in a future-proof manner,
+ * while still allowing end-users to create their own subclasses of PageDrawer.
+ *
  * @author John Hewson
  */
-public final class PageDrawerParameters
-{
-    private final PDFRenderer renderer;
-    private final PDPage page;
-    private final boolean subsamplingAllowed;
-    private final RenderDestination destination; 
-    private final RenderingHints renderingHints;
+public final class PageDrawerParameters {
+  private final PDFRenderer renderer;
+  private final PDPage page;
+  private final boolean subsamplingAllowed;
+  private final RenderDestination destination;
+  private final RenderingHints renderingHints;
 
-    /**
-     * Package-private constructor.
-     */
-    PageDrawerParameters(PDFRenderer renderer, PDPage page, boolean subsamplingAllowed,
-                         RenderDestination destination, RenderingHints renderingHints)
-    {
-        this.renderer = renderer;
-        this.page = page;
-        this.subsamplingAllowed = subsamplingAllowed;
-        this.destination = destination;
-        this.renderingHints = renderingHints;
-    }
+  /**
+   * Package-private constructor.
+   */
+  PageDrawerParameters(final PDFRenderer renderer, final PDPage page, final boolean subsamplingAllowed,
+      final RenderDestination destination, final RenderingHints renderingHints) {
+    this.renderer = renderer;
+    this.page = page;
+    this.subsamplingAllowed = subsamplingAllowed;
+    this.destination = destination;
+    this.renderingHints = renderingHints;
+  }
 
-    /**
-     * Returns the page.
-     */
-    public PDPage getPage()
-    {
-        return page;
-    }
-    
-    /**
-     * Returns the renderer.
-     */
-    PDFRenderer getRenderer()
-    {
-        return renderer;
-    }
+  /**
+   * Returns the page.
+   */
+  public PDPage getPage() {
+    return page;
+  }
 
-    /**
-     * Returns whether to allow subsampling of images.
-     */
-    public boolean isSubsamplingAllowed()
-    {
-        return subsamplingAllowed;
-    }
+  /**
+   * Returns the renderer.
+   */
+  PDFRenderer getRenderer() {
+    return renderer;
+  }
 
-    /**
-     * @return the destination
-     */
-    public RenderDestination getDestination()
-    {
-        return this.destination;
-    }
+  /**
+   * Returns whether to allow subsampling of images.
+   */
+  public boolean isSubsamplingAllowed() {
+    return subsamplingAllowed;
+  }
 
-    /**
-     * @return the rendering hints.
-     */
-    public RenderingHints getRenderingHints()
-    {
-        return renderingHints;
-    }
+  /**
+   * @return the destination
+   */
+  public RenderDestination getDestination() {
+    return destination;
+  }
+
+  /**
+   * @return the rendering hints.
+   */
+  public RenderingHints getRenderingHints() {
+    return renderingHints;
+  }
 }
