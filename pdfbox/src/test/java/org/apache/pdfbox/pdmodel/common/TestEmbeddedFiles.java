@@ -31,87 +31,77 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
-public class TestEmbeddedFiles extends TestCase
-{
-    @Test
-    public void testNullEmbeddedFile() throws IOException
-    {
-        PDEmbeddedFile embeddedFile = null;
-        boolean ok = false;
-        try
-        {
-            PDDocument doc = PDDocument.load(TestEmbeddedFiles.class.getResourceAsStream(
-                "null_PDComplexFileSpecification.pdf"));
+public class TestEmbeddedFiles extends TestCase {
+  @Test
+  public void testNullEmbeddedFile() throws IOException {
+    PDEmbeddedFile embeddedFile = null;
+    boolean ok = false;
+    try {
+      final PDDocument doc = PDDocument
+          .load(TestEmbeddedFiles.class.getResourceAsStream("null_PDComplexFileSpecification.pdf"));
 
-            PDDocumentCatalog catalog = doc.getDocumentCatalog();
-            PDDocumentNameDictionary names = catalog.getNames();
-            assertEquals("expected two files", 2, names.getEmbeddedFiles().getNames().size());
-            PDEmbeddedFilesNameTreeNode embeddedFiles = names.getEmbeddedFiles();
+      final PDDocumentCatalog catalog = doc.getDocumentCatalog();
+      final PDDocumentNameDictionary names = catalog.getNames();
+      TestCase.assertEquals("expected two files", 2, names.getEmbeddedFiles().getNames().size());
+      final PDEmbeddedFilesNameTreeNode embeddedFiles = names.getEmbeddedFiles();
 
-            PDComplexFileSpecification spec = embeddedFiles.getNames().get("non-existent-file.docx");
+      PDComplexFileSpecification spec = embeddedFiles.getNames().get("non-existent-file.docx");
 
-            if (spec != null)
-            {
-                embeddedFile = spec.getEmbeddedFile();
-                ok = true;
-            }
-            //now test for actual attachment
-            spec = embeddedFiles.getNames().get("My first attachment");
-            assertNotNull("one attachment actually exists", spec);
-            assertEquals("existing file length", 17660, spec.getEmbeddedFile().getLength());
-            spec = embeddedFiles.getNames().get("non-existent-file.docx");
-        }
-        catch (NullPointerException e)
-        {
-            assertNotNull("null pointer exception", null);
-        }
-        assertTrue("Was able to get file without exception", ok);
-        assertNull("EmbeddedFile was correctly null", embeddedFile);
+      if (spec != null) {
+        embeddedFile = spec.getEmbeddedFile();
+        ok = true;
+      }
+      // now test for actual attachment
+      spec = embeddedFiles.getNames().get("My first attachment");
+      TestCase.assertNotNull("one attachment actually exists", spec);
+      TestCase.assertEquals("existing file length", 17660, spec.getEmbeddedFile().getLength());
+      spec = embeddedFiles.getNames().get("non-existent-file.docx");
+    } catch (final NullPointerException e) {
+      TestCase.assertNotNull("null pointer exception", null);
+    }
+    TestCase.assertTrue("Was able to get file without exception", ok);
+    TestCase.assertNull("EmbeddedFile was correctly null", embeddedFile);
+  }
+
+  @Test
+  public void testOSSpecificAttachments() throws IOException {
+    PDEmbeddedFile nonOSFile = null;
+    PDEmbeddedFile macFile = null;
+    PDEmbeddedFile dosFile = null;
+    PDEmbeddedFile unixFile = null;
+
+    final PDDocument doc = PDDocument
+        .load(TestEmbeddedFiles.class.getResourceAsStream("testPDF_multiFormatEmbFiles.pdf"));
+
+    final PDDocumentCatalog catalog = doc.getDocumentCatalog();
+    final PDDocumentNameDictionary names = catalog.getNames();
+    final PDEmbeddedFilesNameTreeNode treeNode = names.getEmbeddedFiles();
+    final List<PDNameTreeNode<PDComplexFileSpecification>> kids = treeNode.getKids();
+    for (final PDNameTreeNode<PDComplexFileSpecification> kid : kids) {
+      final Map<String, PDComplexFileSpecification> tmpNames = kid.getNames();
+      final COSObjectable obj = tmpNames.get("My first attachment");
+
+      final PDComplexFileSpecification spec = (PDComplexFileSpecification) obj;
+      nonOSFile = spec.getEmbeddedFile();
+      macFile = spec.getEmbeddedFileMac();
+      dosFile = spec.getEmbeddedFileDos();
+      unixFile = spec.getEmbeddedFileUnix();
     }
 
-    @Test
-    public void testOSSpecificAttachments() throws IOException
-    {
-        PDEmbeddedFile nonOSFile = null;
-        PDEmbeddedFile macFile = null;
-        PDEmbeddedFile dosFile = null;
-        PDEmbeddedFile unixFile = null;
+    TestCase.assertTrue("non os specific",
+        byteArrayContainsLC("non os specific", nonOSFile.toByteArray(), "ISO-8859-1"));
 
-        PDDocument doc = PDDocument.load(TestEmbeddedFiles.class
-                .getResourceAsStream("testPDF_multiFormatEmbFiles.pdf"));
+    TestCase.assertTrue("mac", byteArrayContainsLC("mac embedded", macFile.toByteArray(), "ISO-8859-1"));
 
-        PDDocumentCatalog catalog = doc.getDocumentCatalog();
-        PDDocumentNameDictionary names = catalog.getNames();
-        PDEmbeddedFilesNameTreeNode treeNode = names.getEmbeddedFiles();
-        List<PDNameTreeNode<PDComplexFileSpecification>> kids = treeNode.getKids();
-        for (PDNameTreeNode<PDComplexFileSpecification> kid : kids)
-        {
-            Map<String, PDComplexFileSpecification> tmpNames = kid.getNames();
-            COSObjectable obj = tmpNames.get("My first attachment");
-            
-            PDComplexFileSpecification spec = (PDComplexFileSpecification) obj;
-            nonOSFile = spec.getEmbeddedFile();
-            macFile = spec.getEmbeddedFileMac();
-            dosFile = spec.getEmbeddedFileDos();
-            unixFile = spec.getEmbeddedFileUnix();
-        }
+    TestCase.assertTrue("dos", byteArrayContainsLC("dos embedded", dosFile.toByteArray(), "ISO-8859-1"));
 
-        assertTrue("non os specific",
-                byteArrayContainsLC("non os specific", nonOSFile.toByteArray(), "ISO-8859-1"));
+    TestCase.assertTrue("unix", byteArrayContainsLC("unix embedded", unixFile.toByteArray(), "ISO-8859-1"));
 
-        assertTrue("mac", byteArrayContainsLC("mac embedded", macFile.toByteArray(), "ISO-8859-1"));
+  }
 
-        assertTrue("dos", byteArrayContainsLC("dos embedded", dosFile.toByteArray(), "ISO-8859-1"));
-
-        assertTrue("unix",
-                byteArrayContainsLC("unix embedded", unixFile.toByteArray(), "ISO-8859-1"));
-
-    }
-
-    private boolean byteArrayContainsLC(String target, byte[] bytes, String encoding)
-            throws UnsupportedEncodingException
-    {
-        String s = new String(bytes, encoding);
-        return s.toLowerCase().contains(target);
-    }
+  private boolean byteArrayContainsLC(final String target, final byte[] bytes, final String encoding)
+      throws UnsupportedEncodingException {
+    final String s = new String(bytes, encoding);
+    return s.toLowerCase().contains(target);
+  }
 }
