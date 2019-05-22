@@ -18,48 +18,47 @@ package org.apache.pdfbox.pdmodel;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-import static org.junit.Assert.assertEquals;
+
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class PageLayoutTest
-{
-    /**
-     * @author Tilman Hausherr
-     *
-     * Test for completeness (PDFBOX-3362).
-     */
-    @Test
-    public void testValues()
-    {
-        Set<PageLayout> pageLayoutSet = EnumSet.noneOf(PageLayout.class);
-        Set<String> stringSet = new HashSet<>();
-        for (PageLayout pl : PageLayout.values())
-        {
-            String s = pl.stringValue();
-            stringSet.add(s);
-            pageLayoutSet.add(PageLayout.fromString(s));
-        }
-        assertEquals(PageLayout.values().length, pageLayoutSet.size());
-        assertEquals(PageLayout.values().length, stringSet.size());
+public class PageLayoutTest {
+  /**
+   * @author Tilman Hausherr
+   *
+   *         Test for completeness (PDFBOX-3362).
+   */
+  @Test
+  public void testValues() {
+    final Set<PageLayout> pageLayoutSet = EnumSet.noneOf(PageLayout.class);
+    final Set<String> stringSet = new HashSet<>();
+    for (final PageLayout pl : PageLayout.values()) {
+      final String s = pl.stringValue();
+      stringSet.add(s);
+      pageLayoutSet.add(PageLayout.fromString(s));
     }
+    Assert.assertEquals(PageLayout.values().length, pageLayoutSet.size());
+    Assert.assertEquals(PageLayout.values().length, stringSet.size());
+  }
 
-    /**
-     * @author John Bergqvist
-     */
-    @Rule public ExpectedException thrown = ExpectedException.none();
-    @Test
-    public void fromStringInputNotNullOutputIllegalArgumentException()
-    {
+  /**
+   * @author John Bergqvist
+   */
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
-        // Arrange
-        final String value = "SinglePag";
+  @Test
+  public void fromStringInputNotNullOutputIllegalArgumentException() {
 
-        // Act
-        thrown.expect(IllegalArgumentException.class);
-        PageLayout.fromString(value);
+    // Arrange
+    final String value = "SinglePag";
 
-        // Method is not expected to return due to exception thrown
-    }
+    // Act
+    thrown.expect(IllegalArgumentException.class);
+    PageLayout.fromString(value);
+
+    // Method is not expected to return due to exception thrown
+  }
 }
