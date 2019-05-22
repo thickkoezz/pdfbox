@@ -20,19 +20,18 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSStream;
 
 /**
- * A PostScript XObject.
- * Conforming readers may not be able to interpret the PostScript fragments.
+ * A PostScript XObject. Conforming readers may not be able to interpret the
+ * PostScript fragments.
  *
  * @author John Hewson
  */
-public class PDPostScriptXObject extends PDXObject
-{
-    /**
-     * Creates a PostScript XObject.
-     * @param stream The XObject stream
-     */
-    public PDPostScriptXObject(COSStream stream)
-    {
-        super(stream, COSName.PS);
-    }
+public class PDPostScriptXObject extends PDXObject {
+  /**
+   * Creates a PostScript XObject.
+   *
+   * @param stream The XObject stream
+   */
+  public PDPostScriptXObject(final COSStream stream) {
+    super(stream, COSName.PS);
+  }
 }
