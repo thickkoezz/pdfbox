@@ -18,37 +18,35 @@ package org.apache.pdfbox.cos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestCOSName
-{
-    /**
-     * PDFBOX-4076: Check that characters outside of US_ASCII are not replaced with "?".
-     * 
-     * @throws IOException 
-     */
-    @Test
-    public void PDFBox4076() throws IOException
-    {
-        String special = "中国你好!";
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+public class TestCOSName {
+  /**
+   * PDFBOX-4076: Check that characters outside of US_ASCII are not replaced with
+   * "?".
+   * 
+   * @throws IOException
+   */
+  @Test
+  public void PDFBox4076() throws IOException {
+    final String special = "中国你好!";
+    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        try (PDDocument document = new PDDocument())
-        {
-            PDPage page = new PDPage();
-            document.addPage(page);
-            document.getDocumentCatalog().getCOSObject().setString(COSName.getPDFName(special), special);
-            
-            document.save(baos);
-        }
-        try (PDDocument document = PDDocument.load(baos.toByteArray()))
-        {
-            COSDictionary catalogDict = document.getDocumentCatalog().getCOSObject();
-            Assert.assertTrue(catalogDict.containsKey(special));
-            Assert.assertEquals(special, catalogDict.getString(special));
-        }
+    try (PDDocument document = new PDDocument()) {
+      final PDPage page = new PDPage();
+      document.addPage(page);
+      document.getDocumentCatalog().getCOSObject().setString(COSName.getPDFName(special), special);
+
+      document.save(baos);
     }
+    try (PDDocument document = PDDocument.load(baos.toByteArray())) {
+      final COSDictionary catalogDict = document.getDocumentCatalog().getCOSObject();
+      Assert.assertTrue(catalogDict.containsKey(special));
+      Assert.assertEquals(special, catalogDict.getString(special));
+    }
+  }
 }
