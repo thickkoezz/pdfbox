@@ -21,34 +21,30 @@ import org.apache.fontbox.FontBoxFont;
 import org.apache.fontbox.ttf.OpenTypeFont;
 
 /**
- * A CIDFontMapping is a kind of FontMapping which allows for an additional TrueTypeFont substitute
- * to be provided if a CID font is not available.
+ * A CIDFontMapping is a kind of FontMapping which allows for an additional
+ * TrueTypeFont substitute to be provided if a CID font is not available.
  *
  * @author John Hewson
  */
-public final class CIDFontMapping extends FontMapping<OpenTypeFont>
-{
-    private final FontBoxFont ttf;
+public final class CIDFontMapping extends FontMapping<OpenTypeFont> {
+  private final FontBoxFont ttf;
 
-    public CIDFontMapping(OpenTypeFont font, FontBoxFont fontBoxFont, boolean isFallback)
-    {
-        super(font, isFallback);
-        this.ttf = fontBoxFont;
-    }
+  public CIDFontMapping(final OpenTypeFont font, final FontBoxFont fontBoxFont, final boolean isFallback) {
+    super(font, isFallback);
+    ttf = fontBoxFont;
+  }
 
-    /**
-     * Returns a TrueType font when isCIDFont() is true, otherwise null.
-     */
-    public FontBoxFont getTrueTypeFont()
-    {
-        return ttf;
-    }
+  /**
+   * Returns a TrueType font when isCIDFont() is true, otherwise null.
+   */
+  public FontBoxFont getTrueTypeFont() {
+    return ttf;
+  }
 
-    /**
-     * Returns true if this is a CID font.
-     */
-    public boolean isCIDFont()
-    {
-        return getFont() != null;
-    }
+  /**
+   * Returns true if this is a CID font.
+   */
+  public boolean isCIDFont() {
+    return getFont() != null;
+  }
 }
