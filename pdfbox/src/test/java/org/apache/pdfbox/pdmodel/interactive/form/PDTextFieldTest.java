@@ -19,52 +19,45 @@ package org.apache.pdfbox.pdmodel.interactive.form;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Test for the PDSignatureField class.
  *
  */
-public class PDTextFieldTest
-{
-    private PDDocument document;
-    private PDAcroForm acroForm;
+public class PDTextFieldTest {
+  private PDDocument document;
+  private PDAcroForm acroForm;
 
-    @Before
-    public void setUp()
-    {
-        document = new PDDocument();
-        acroForm = new PDAcroForm(document);
-    }
+  @Before
+  public void setUp() {
+    document = new PDDocument();
+    acroForm = new PDAcroForm(document);
+  }
 
-    @Test
-    public void createDefaultTextField()
-    {
-        PDField textField = new PDTextField(acroForm);
-        
-        assertEquals(textField.getFieldType(), textField.getCOSObject().getNameAsString(COSName.FT));
-        assertEquals(textField.getFieldType(), "Tx");
-    }
+  @Test
+  public void createDefaultTextField() {
+    final PDField textField = new PDTextField(acroForm);
 
-    @Test
-    public void createWidgetForGet()
-    {
-        PDTextField textField = new PDTextField(acroForm);
+    Assert.assertEquals(textField.getFieldType(), textField.getCOSObject().getNameAsString(COSName.FT));
+    Assert.assertEquals(textField.getFieldType(), "Tx");
+  }
 
-        assertNull(textField.getCOSObject().getItem(COSName.TYPE));
-        assertNull(textField.getCOSObject().getNameAsString(COSName.SUBTYPE));
-        
-        PDAnnotationWidget widget = textField.getWidgets().get(0);
-        
-        assertEquals(COSName.ANNOT, textField.getCOSObject().getItem(COSName.TYPE));
-        assertEquals(PDAnnotationWidget.SUB_TYPE, textField.getCOSObject().getNameAsString(COSName.SUBTYPE));
-        
-        assertEquals(widget.getCOSObject(), textField.getCOSObject());
-    }
+  @Test
+  public void createWidgetForGet() {
+    final PDTextField textField = new PDTextField(acroForm);
+
+    Assert.assertNull(textField.getCOSObject().getItem(COSName.TYPE));
+    Assert.assertNull(textField.getCOSObject().getNameAsString(COSName.SUBTYPE));
+
+    final PDAnnotationWidget widget = textField.getWidgets().get(0);
+
+    Assert.assertEquals(COSName.ANNOT, textField.getCOSObject().getItem(COSName.TYPE));
+    Assert.assertEquals(PDAnnotationWidget.SUB_TYPE, textField.getCOSObject().getNameAsString(COSName.SUBTYPE));
+
+    Assert.assertEquals(widget.getCOSObject(), textField.getCOSObject());
+  }
 
 }
