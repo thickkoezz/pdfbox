@@ -24,31 +24,27 @@ import org.apache.fontbox.FontBoxFont;
  *
  * @author John Hewson
  */
-public class FontMapping<T extends FontBoxFont>
-{
-    private final T font;
-    private final boolean isFallback;
+public class FontMapping<T extends FontBoxFont> {
+  private final T font;
+  private final boolean isFallback;
 
-    public FontMapping(T font, boolean isFallback)
-    {
-        this.font = font;
-        this.isFallback = isFallback;
-    }
+  public FontMapping(final T font, final boolean isFallback) {
+    this.font = font;
+    this.isFallback = isFallback;
+  }
 
-    /**
-     * Returns the mapped, FontBox font. This is never null.
-     */
-    public T getFont()
-    {
-        return font;
-    }
+  /**
+   * Returns the mapped, FontBox font. This is never null.
+   */
+  public T getFont() {
+    return font;
+  }
 
-    /**
-     * Returns true if the mapped font is a fallback, i.e. a substitute based on basic font style,
-     * such as bold/italic, rather than font name.
-     */
-    public boolean isFallback()
-    {
-        return isFallback;
-    }
+  /**
+   * Returns true if the mapped font is a fallback, i.e. a substitute based on
+   * basic font style, such as bold/italic, rather than font name.
+   */
+  public boolean isFallback() {
+    return isFallback;
+  }
 }
