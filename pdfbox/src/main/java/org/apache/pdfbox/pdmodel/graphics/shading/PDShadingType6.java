@@ -24,27 +24,23 @@ import org.apache.pdfbox.util.Matrix;
 /**
  * Resources for a shading type 6 (Coons Patch Mesh).
  */
-public class PDShadingType6 extends PDShadingType4
-{
-    /**
-     * Constructor using the given shading dictionary.
-     *
-     * @param shadingDictionary the dictionary for this shading
-     */
-    public PDShadingType6(COSDictionary shadingDictionary)
-    {
-        super(shadingDictionary);
-    }
+public class PDShadingType6 extends PDShadingType4 {
+  /**
+   * Constructor using the given shading dictionary.
+   *
+   * @param shadingDictionary the dictionary for this shading
+   */
+  public PDShadingType6(final COSDictionary shadingDictionary) {
+    super(shadingDictionary);
+  }
 
-    @Override
-    public int getShadingType()
-    {
-        return PDShading.SHADING_TYPE6;
-    }
+  @Override
+  public int getShadingType() {
+    return PDShading.SHADING_TYPE6;
+  }
 
-    @Override
-    public Paint toPaint(Matrix matrix)
-    {
-        return new Type6ShadingPaint(this, matrix);
-    }
+  @Override
+  public Paint toPaint(final Matrix matrix) {
+    return new Type6ShadingPaint(this, matrix);
+  }
 }
