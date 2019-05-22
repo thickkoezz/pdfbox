@@ -22,54 +22,52 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.List;
-import junit.framework.TestCase;
+
 import org.apache.pdfbox.pdmodel.fdf.FDFDocument;
 import org.apache.pdfbox.pdmodel.fdf.FDFField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+
+import junit.framework.TestCase;
 
 /**
  * This will test the FDF algorithms in PDFBox.
  *
  * @author Ben Litchfield
  * @author Tilman Hausherr
- * 
+ *
  */
-public class TestFDF extends TestCase
-{
-    /**
-     * Test load two simple fdf files with two fields. One of the files does not have a
-     * /Type/Catalog entry, which isn't required anyway (PDFBOX-3639).
-     *
-     * @throws URISyntaxException
-     * @throws IOException
-     */
-    public void testLoad2() throws URISyntaxException, IOException
-    {
-        checkFields("/org/apache/pdfbox/pdfparser/withcatalog.fdf");
-        checkFields("/org/apache/pdfbox/pdfparser/nocatalog.fdf");
-    }
+public class TestFDF extends TestCase {
+  /**
+   * Test load two simple fdf files with two fields. One of the files does not
+   * have a /Type/Catalog entry, which isn't required anyway (PDFBOX-3639).
+   *
+   * @throws URISyntaxException
+   * @throws IOException
+   */
+  public void testLoad2() throws URISyntaxException, IOException {
+    checkFields("/org/apache/pdfbox/pdfparser/withcatalog.fdf");
+    checkFields("/org/apache/pdfbox/pdfparser/nocatalog.fdf");
+  }
 
-    private void checkFields(String name) throws IOException, URISyntaxException
-    {
-        try (FDFDocument fdf = FDFDocument.load(new File(TestFDF.class.getResource(name).toURI())))
-        {
-            fdf.saveXFDF(new PrintWriter(new ByteArrayOutputStream()));
-            
-            List<FDFField> fields = fdf.getCatalog().getFDF().getFields();
-            
-            assertEquals(2, fields.size());
-            assertEquals("Field1", fields.get(0).getPartialFieldName());
-            assertEquals("Field2", fields.get(1).getPartialFieldName());
-            assertEquals("Test1", fields.get(0).getValue());
-            assertEquals("Test2", fields.get(1).getValue());
-            
-            try (PDDocument pdf = PDDocument.load(new File(TestFDF.class.getResource("/org/apache/pdfbox/pdfparser/SimpleForm2Fields.pdf").toURI())))
-            {
-                PDAcroForm acroForm = pdf.getDocumentCatalog().getAcroForm();
-                acroForm.importFDF(fdf);
-                assertEquals("Test1", acroForm.getField("Field1").getValueAsString());
-                assertEquals("Test2", acroForm.getField("Field2").getValueAsString());
-            }
-        }
+  private void checkFields(final String name) throws IOException, URISyntaxException {
+    try (FDFDocument fdf = FDFDocument.load(new File(TestFDF.class.getResource(name).toURI()))) {
+      fdf.saveXFDF(new PrintWriter(new ByteArrayOutputStream()));
+
+      final List<FDFField> fields = fdf.getCatalog().getFDF().getFields();
+
+      TestCase.assertEquals(2, fields.size());
+      TestCase.assertEquals("Field1", fields.get(0).getPartialFieldName());
+      TestCase.assertEquals("Field2", fields.get(1).getPartialFieldName());
+      TestCase.assertEquals("Test1", fields.get(0).getValue());
+      TestCase.assertEquals("Test2", fields.get(1).getValue());
+
+      try (PDDocument pdf = PDDocument
+          .load(new File(TestFDF.class.getResource("/org/apache/pdfbox/pdfparser/SimpleForm2Fields.pdf").toURI()))) {
+        final PDAcroForm acroForm = pdf.getDocumentCatalog().getAcroForm();
+        acroForm.importFDF(fdf);
+        TestCase.assertEquals("Test1", acroForm.getField("Field1").getValueAsString());
+        TestCase.assertEquals("Test2", acroForm.getField("Field2").getValueAsString());
+      }
     }
+  }
 }
