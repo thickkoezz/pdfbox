@@ -16,8 +16,7 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,167 +24,151 @@ import org.junit.Test;
  * @author Andrea Vacondio
  *
  */
-public class PDOutlineItemTest
-{
-    private PDOutlineItem root;
-    private PDOutlineItem first;
-    private PDOutlineItem second;
-    private PDOutlineItem newSibling;
+public class PDOutlineItemTest {
+  private PDOutlineItem root;
+  private PDOutlineItem first;
+  private PDOutlineItem second;
+  private PDOutlineItem newSibling;
 
-    @Before
-    public void setUp()
-    {
-        root = new PDOutlineItem();
-        first = new PDOutlineItem();
-        second = new PDOutlineItem();
-        root.addLast(first);
-        root.addLast(second);
-        newSibling = new PDOutlineItem();
-        newSibling.addLast(new PDOutlineItem());
-        newSibling.addLast(new PDOutlineItem());
-    }
+  @Before
+  public void setUp() {
+    root = new PDOutlineItem();
+    first = new PDOutlineItem();
+    second = new PDOutlineItem();
+    root.addLast(first);
+    root.addLast(second);
+    newSibling = new PDOutlineItem();
+    newSibling.addLast(new PDOutlineItem());
+    newSibling.addLast(new PDOutlineItem());
+  }
 
-    @Test
-    public void insertSiblingAfter_OpenChildToOpenParent()
-    {
-        newSibling.openNode();
-        root.openNode();
-        assertEquals(2, root.getOpenCount());
-        first.insertSiblingAfter(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(5, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingAfter_OpenChildToOpenParent() {
+    newSibling.openNode();
+    root.openNode();
+    Assert.assertEquals(2, root.getOpenCount());
+    first.insertSiblingAfter(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(5, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingBefore_OpenChildToOpenParent()
-    {
-        newSibling.openNode();
-        root.openNode();
-        assertEquals(2, root.getOpenCount());
-        second.insertSiblingBefore(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(5, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingBefore_OpenChildToOpenParent() {
+    newSibling.openNode();
+    root.openNode();
+    Assert.assertEquals(2, root.getOpenCount());
+    second.insertSiblingBefore(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(5, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingAfter_OpenChildToClosedParent()
-    {
-        newSibling.openNode();
-        assertEquals(-2, root.getOpenCount());
-        first.insertSiblingAfter(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(-5, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingAfter_OpenChildToClosedParent() {
+    newSibling.openNode();
+    Assert.assertEquals(-2, root.getOpenCount());
+    first.insertSiblingAfter(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(-5, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingBefore_OpenChildToClosedParent()
-    {
-        newSibling.openNode();
-        assertEquals(-2, root.getOpenCount());
-        second.insertSiblingBefore(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(-5, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingBefore_OpenChildToClosedParent() {
+    newSibling.openNode();
+    Assert.assertEquals(-2, root.getOpenCount());
+    second.insertSiblingBefore(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(-5, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingAfter_ClosedChildToOpenParent()
-    {
-        root.openNode();
-        assertEquals(2, root.getOpenCount());
-        first.insertSiblingAfter(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(3, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingAfter_ClosedChildToOpenParent() {
+    root.openNode();
+    Assert.assertEquals(2, root.getOpenCount());
+    first.insertSiblingAfter(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(3, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingBefore_ClosedChildToOpenParent()
-    {
-        root.openNode();
-        assertEquals(2, root.getOpenCount());
-        second.insertSiblingBefore(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(3, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingBefore_ClosedChildToOpenParent() {
+    root.openNode();
+    Assert.assertEquals(2, root.getOpenCount());
+    second.insertSiblingBefore(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(3, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingAfter_ClosedChildToClosedParent()
-    {
-        assertEquals(-2, root.getOpenCount());
-        first.insertSiblingAfter(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(-3, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingAfter_ClosedChildToClosedParent() {
+    Assert.assertEquals(-2, root.getOpenCount());
+    first.insertSiblingAfter(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(-3, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingBefore_ClosedChildToClosedParent()
-    {
-        assertEquals(-2, root.getOpenCount());
-        second.insertSiblingBefore(newSibling);
-        assertEquals(first.getNextSibling(), newSibling);
-        assertEquals(second.getPreviousSibling(), newSibling);
-        assertEquals(-3, root.getOpenCount());
-    }
+  @Test
+  public void insertSiblingBefore_ClosedChildToClosedParent() {
+    Assert.assertEquals(-2, root.getOpenCount());
+    second.insertSiblingBefore(newSibling);
+    Assert.assertEquals(first.getNextSibling(), newSibling);
+    Assert.assertEquals(second.getPreviousSibling(), newSibling);
+    Assert.assertEquals(-3, root.getOpenCount());
+  }
 
-    @Test
-    public void insertSiblingTop()
-    {
-        assertEquals(root.getFirstChild(), first);
-        PDOutlineItem newSibling = new PDOutlineItem();
-        first.insertSiblingBefore(newSibling);
-        assertEquals(first.getPreviousSibling(), newSibling);
-        assertEquals(root.getFirstChild(), newSibling);
-    }
+  @Test
+  public void insertSiblingTop() {
+    Assert.assertEquals(root.getFirstChild(), first);
+    final PDOutlineItem newSibling = new PDOutlineItem();
+    first.insertSiblingBefore(newSibling);
+    Assert.assertEquals(first.getPreviousSibling(), newSibling);
+    Assert.assertEquals(root.getFirstChild(), newSibling);
+  }
 
-    @Test
-    public void insertSiblingTopNoParent()
-    {
-        assertEquals(root.getFirstChild(), first);
-        PDOutlineItem newSibling = new PDOutlineItem();
-        root.insertSiblingBefore(newSibling);
-        assertEquals(root.getPreviousSibling(), newSibling);
-    }
+  @Test
+  public void insertSiblingTopNoParent() {
+    Assert.assertEquals(root.getFirstChild(), first);
+    final PDOutlineItem newSibling = new PDOutlineItem();
+    root.insertSiblingBefore(newSibling);
+    Assert.assertEquals(root.getPreviousSibling(), newSibling);
+  }
 
-    @Test
-    public void insertSiblingBottom()
-    {
-        assertEquals(root.getLastChild(), second);
-        PDOutlineItem newSibling = new PDOutlineItem();
-        second.insertSiblingAfter(newSibling);
-        assertEquals(second.getNextSibling(), newSibling);
-        assertEquals(root.getLastChild(), newSibling);
-    }
+  @Test
+  public void insertSiblingBottom() {
+    Assert.assertEquals(root.getLastChild(), second);
+    final PDOutlineItem newSibling = new PDOutlineItem();
+    second.insertSiblingAfter(newSibling);
+    Assert.assertEquals(second.getNextSibling(), newSibling);
+    Assert.assertEquals(root.getLastChild(), newSibling);
+  }
 
-    @Test
-    public void insertSiblingBottomNoParent()
-    {
-        assertEquals(root.getLastChild(), second);
-        PDOutlineItem newSibling = new PDOutlineItem();
-        root.insertSiblingAfter(newSibling);
-        assertEquals(root.getNextSibling(), newSibling);
-    }
+  @Test
+  public void insertSiblingBottomNoParent() {
+    Assert.assertEquals(root.getLastChild(), second);
+    final PDOutlineItem newSibling = new PDOutlineItem();
+    root.insertSiblingAfter(newSibling);
+    Assert.assertEquals(root.getNextSibling(), newSibling);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotInsertSiblingBeforeAList()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.insertSiblingAfter(new PDOutlineItem());
-        child.insertSiblingAfter(new PDOutlineItem());
-        root.insertSiblingBefore(child);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void cannotInsertSiblingBeforeAList() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.insertSiblingAfter(new PDOutlineItem());
+    child.insertSiblingAfter(new PDOutlineItem());
+    root.insertSiblingBefore(child);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotInsertSiblingAfterAList()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.insertSiblingAfter(new PDOutlineItem());
-        child.insertSiblingAfter(new PDOutlineItem());
-        root.insertSiblingAfter(child);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void cannotInsertSiblingAfterAList() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.insertSiblingAfter(new PDOutlineItem());
+    child.insertSiblingAfter(new PDOutlineItem());
+    root.insertSiblingAfter(child);
+  }
 }
