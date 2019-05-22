@@ -24,31 +24,28 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.io.IOUtils;
 
 /**
- * Decodes data encoded in an ASCII base-85 representation, reproducing the original binary data.
+ * Decodes data encoded in an ASCII base-85 representation, reproducing the
+ * original binary data.
+ *
  * @author Ben Litchfield
  */
-final class ASCII85Filter extends Filter
-{
-    @Override
-    public DecodeResult decode(InputStream encoded, OutputStream decoded,
-                                         COSDictionary parameters, int index) throws IOException
-    {
-        try (ASCII85InputStream is = new ASCII85InputStream(encoded))
-        {
-            IOUtils.copy(is, decoded);
-        }
-        decoded.flush();
-        return new DecodeResult(parameters);
+final class ASCII85Filter extends Filter {
+  @Override
+  public DecodeResult decode(final InputStream encoded, final OutputStream decoded, final COSDictionary parameters,
+      final int index) throws IOException {
+    try (ASCII85InputStream is = new ASCII85InputStream(encoded)) {
+      IOUtils.copy(is, decoded);
     }
+    decoded.flush();
+    return new DecodeResult(parameters);
+  }
 
-    @Override
-    protected void encode(InputStream input, OutputStream encoded, COSDictionary parameters)
-        throws IOException
-    {
-        try (ASCII85OutputStream os = new ASCII85OutputStream(encoded))
-        {
-            IOUtils.copy(input, os);
-        }
-        encoded.flush();
+  @Override
+  protected void encode(final InputStream input, final OutputStream encoded, final COSDictionary parameters)
+      throws IOException {
+    try (ASCII85OutputStream os = new ASCII85OutputStream(encoded)) {
+      IOUtils.copy(input, os);
     }
+    encoded.flush();
+  }
 }
