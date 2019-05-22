@@ -17,21 +17,18 @@
 package org.apache.pdfbox.pdmodel.interactive.annotation;
 
 import org.apache.pdfbox.cos.COSName;
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  *
  * @author Tilman Hausherr
  */
-public class PDCircleAnnotationTest
-{
-    @Test
-    public void createDefaultCircleAnnotation()
-    {
-        PDAnnotation annotation = new PDAnnotationCircle();
-        assertEquals(COSName.ANNOT, annotation.getCOSObject().getItem(COSName.TYPE));
-        assertEquals(PDAnnotationCircle.SUB_TYPE,
-                annotation.getCOSObject().getNameAsString(COSName.SUBTYPE));
-    }
+public class PDCircleAnnotationTest {
+  @Test
+  public void createDefaultCircleAnnotation() {
+    final PDAnnotation annotation = new PDAnnotationCircle();
+    Assert.assertEquals(COSName.ANNOT, annotation.getCOSObject().getItem(COSName.TYPE));
+    Assert.assertEquals(PDAnnotationCircle.SUB_TYPE, annotation.getCOSObject().getNameAsString(COSName.SUBTYPE));
+  }
 }
