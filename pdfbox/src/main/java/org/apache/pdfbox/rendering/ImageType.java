@@ -21,47 +21,38 @@ import java.awt.image.BufferedImage;
 /**
  * Image type for rendering.
  */
-public enum ImageType
-{
-    /** Black or white. */
-    BINARY
-    {
-        @Override
-        int toBufferedImageType()
-        {
-            return BufferedImage.TYPE_BYTE_BINARY;
-        }
-    },
+public enum ImageType {
+  /** Black or white. */
+  BINARY {
+    @Override
+    int toBufferedImageType() {
+      return BufferedImage.TYPE_BYTE_BINARY;
+    }
+  },
 
-    /** Shades of gray */
-    GRAY
-    {
-        @Override
-        int toBufferedImageType()
-        {
-            return BufferedImage.TYPE_BYTE_GRAY;
-        }
-    },
+  /** Shades of gray */
+  GRAY {
+    @Override
+    int toBufferedImageType() {
+      return BufferedImage.TYPE_BYTE_GRAY;
+    }
+  },
 
-    /** Red, Green, Blue */
-    RGB
-    {
-        @Override
-        int toBufferedImageType()
-        {
-            return BufferedImage.TYPE_INT_RGB;
-        }
-    },
+  /** Red, Green, Blue */
+  RGB {
+    @Override
+    int toBufferedImageType() {
+      return BufferedImage.TYPE_INT_RGB;
+    }
+  },
 
-    /** Alpha, Red, Green, Blue */
-    ARGB
-    {
-        @Override
-        int toBufferedImageType()
-        {
-            return BufferedImage.TYPE_INT_ARGB;
-        }
-    };
+  /** Alpha, Red, Green, Blue */
+  ARGB {
+    @Override
+    int toBufferedImageType() {
+      return BufferedImage.TYPE_INT_ARGB;
+    }
+  };
 
-    abstract int toBufferedImageType();
+  abstract int toBufferedImageType();
 }
