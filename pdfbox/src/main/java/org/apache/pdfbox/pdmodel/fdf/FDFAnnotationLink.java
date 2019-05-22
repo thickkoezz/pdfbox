@@ -25,42 +25,39 @@ import org.w3c.dom.Element;
 /**
  * This represents a Polygon FDF annotation.
  */
-public class FDFAnnotationLink extends FDFAnnotation
-{
-    /**
-     * COS Model value for SubType entry.
-     */
-    public static final String SUBTYPE = "Link";
+public class FDFAnnotationLink extends FDFAnnotation {
+  /**
+   * COS Model value for SubType entry.
+   */
+  public static final String SUBTYPE = "Link";
 
-    /**
-     * Default constructor.
-     */
-    public FDFAnnotationLink()
-    {
-        super();
-        annot.setName(COSName.SUBTYPE, SUBTYPE);
-    }
+  /**
+   * Default constructor.
+   */
+  public FDFAnnotationLink() {
+    super();
+    annot.setName(COSName.SUBTYPE, FDFAnnotationLink.SUBTYPE);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param a An existing FDF Annotation.
-     */
-    public FDFAnnotationLink(COSDictionary a)
-    {
-        super(a);
-    }
+  /**
+   * Constructor.
+   *
+   * @param a An existing FDF Annotation.
+   */
+  public FDFAnnotationLink(final COSDictionary a) {
+    super(a);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param element An XFDF element.
-     *
-     * @throws IOException If there is an error extracting information from the element.
-     */
-    public FDFAnnotationLink(Element element) throws IOException
-    {
-        super(element);
-        annot.setName(COSName.SUBTYPE, SUBTYPE);
-    }
+  /**
+   * Constructor.
+   *
+   * @param element An XFDF element.
+   *
+   * @throws IOException If there is an error extracting information from the
+   *                     element.
+   */
+  public FDFAnnotationLink(final Element element) throws IOException {
+    super(element);
+    annot.setName(COSName.SUBTYPE, FDFAnnotationLink.SUBTYPE);
+  }
 }
