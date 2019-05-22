@@ -23,20 +23,18 @@ import java.awt.geom.Point2D;
  *
  * @author Shaola Ren
  */
-class CoordinateColorPair
-{
-    final Point2D coordinate;
-    final float[] color;
+class CoordinateColorPair {
+  final Point2D coordinate;
+  final float[] color;
 
-    /**
-     * Constructor.
-     *
-     * @param p point
-     * @param c color
-     */
-    CoordinateColorPair(Point2D p, float[] c)
-    {
-        coordinate = p;
-        color = c.clone();
-    }
+  /**
+   * Constructor.
+   *
+   * @param p point
+   * @param c color
+   */
+  CoordinateColorPair(final Point2D p, final float[] c) {
+    coordinate = p;
+    color = c.clone();
+  }
 }
