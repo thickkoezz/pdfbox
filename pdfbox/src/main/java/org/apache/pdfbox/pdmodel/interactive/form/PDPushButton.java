@@ -23,72 +23,61 @@ import java.util.List;
 import org.apache.pdfbox.cos.COSDictionary;
 
 /**
- * A pushbutton is a purely interactive control that responds immediately to user
- * input without retaining a permanent value.
+ * A pushbutton is a purely interactive control that responds immediately to
+ * user input without retaining a permanent value.
  *
  * @author sug
  */
-public class PDPushButton extends PDButton
-{
-    /**
-     * @see PDField#PDField(PDAcroForm)
-     *
-     * @param acroForm The acroform.
-     */
-    public PDPushButton(PDAcroForm acroForm)
-    {
-        super(acroForm);
-        setPushButton(true);
-    }
-    
-    /**
-     * Constructor.
-     * 
-     * @param acroForm The form that this field is part of.
-     * @param field the PDF object to represent as a field.
-     * @param parent the parent node of the node
-     */
-    PDPushButton(PDAcroForm acroForm, COSDictionary field, PDNonTerminalField parent)
-    {
-        super(acroForm, field, parent);
-    }
+public class PDPushButton extends PDButton {
+  /**
+   * @see PDField#PDField(PDAcroForm)
+   *
+   * @param acroForm The acroform.
+   */
+  public PDPushButton(final PDAcroForm acroForm) {
+    super(acroForm);
+    setPushButton(true);
+  }
 
-    @Override
-    public List<String> getExportValues()
-    {
-        return Collections.emptyList();
-    }
-    
-    @Override
-    public void setExportValues(List<String> values)
-    {
-        if (values != null && !values.isEmpty())
-        {
-            throw new IllegalArgumentException("A PDPushButton shall not use the Opt entry in the field dictionary");
-        }
-    }
-    
-    @Override
-    public String getValue()
-    {
-        return "";
-    }
+  /**
+   * Constructor.
+   *
+   * @param acroForm The form that this field is part of.
+   * @param field    the PDF object to represent as a field.
+   * @param parent   the parent node of the node
+   */
+  PDPushButton(final PDAcroForm acroForm, final COSDictionary field, final PDNonTerminalField parent) {
+    super(acroForm, field, parent);
+  }
 
-    @Override
-    public String getDefaultValue()
-    {
-        return "";
-    }
+  @Override
+  public List<String> getExportValues() {
+    return Collections.emptyList();
+  }
 
-    @Override
-    public String getValueAsString()
-    {
-        return getValue();
-    }
-    
-    @Override
-    void constructAppearances() throws IOException
-    {
-        // TODO: add appearance handler to generate/update appearance
-    } 
+  @Override
+  public void setExportValues(final List<String> values) {
+    if (values != null && !values.isEmpty())
+      throw new IllegalArgumentException("A PDPushButton shall not use the Opt entry in the field dictionary");
+  }
+
+  @Override
+  public String getValue() {
+    return "";
+  }
+
+  @Override
+  public String getDefaultValue() {
+    return "";
+  }
+
+  @Override
+  public String getValueAsString() {
+    return getValue();
+  }
+
+  @Override
+  void constructAppearances() throws IOException {
+    // TODO: add appearance handler to generate/update appearance
+  }
 }
