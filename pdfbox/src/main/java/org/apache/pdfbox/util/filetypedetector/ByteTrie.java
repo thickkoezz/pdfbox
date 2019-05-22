@@ -22,113 +22,103 @@ import java.util.Map;
 /**
  * @author Drew Noakes
  *
- * code taken from https://github.com/drewnoakes/metadata-extractor
+ *         code taken from https://github.com/drewnoakes/metadata-extractor
  *
- * 2016-01-04
+ *         2016-01-04
  *
- * latest commit number 73f1a48
+ *         latest commit number 73f1a48
  *
- * Stores values using a prefix tree (aka 'trie', i.e. reTRIEval data structure).
+ *         Stores values using a prefix tree (aka 'trie', i.e. reTRIEval data
+ *         structure).
  *
  * @param <T> the type of value to store for byte sequences
  */
-class ByteTrie<T>
-{
-    /**
-     * A node in the trie. Has children and may have an associated value.
-     */
-    static class ByteTrieNode<T>
-    {
-        private final Map<Byte, ByteTrieNode<T>> children = new HashMap<>();
-        private T value = null;
+class ByteTrie<T> {
+  /**
+   * A node in the trie. Has children and may have an associated value.
+   */
+  static class ByteTrieNode<T> {
+    private final Map<Byte, ByteTrieNode<T>> children = new HashMap<>();
+    private T value = null;
 
-        public void setValue(T value)
-        {
-            if (this.value != null)
-            {
-                throw new IllegalStateException("Value already set for this trie node");
-            }
-            this.value = value;
+    public void setValue(final T value) {
+      if (this.value != null)
+        throw new IllegalStateException("Value already set for this trie node");
+      this.value = value;
+    }
+
+    public T getValue() {
+      return value;
+    }
+  }
+
+  private final ByteTrieNode<T> root = new ByteTrieNode<>();
+  private int maxDepth;
+
+  /**
+   * Return the most specific value stored for this byte sequence. If not found,
+   * returns <code>null</code> or a default values as specified by calling
+   * {@link ByteTrie#setDefaultValue}.
+   *
+   * @param bytes
+   * @return
+   */
+  public T find(final byte[] bytes) {
+    ByteTrieNode<T> node = root;
+    T val = node.getValue();
+    for (final byte b : bytes) {
+      final ByteTrieNode<T> child = node.children.get(b);
+      if (child == null) {
+        break;
+      }
+      node = child;
+      if (node.getValue() != null) {
+        val = node.getValue();
+      }
+    }
+    return val;
+  }
+
+  /**
+   * Store the given value at the specified path.
+   *
+   * @param value
+   * @param parts
+   */
+  public void addPath(final T value, final byte[]... parts) {
+    int depth = 0;
+    ByteTrieNode<T> node = root;
+    for (final byte[] part : parts) {
+      for (final byte b : part) {
+        ByteTrieNode<T> child = node.children.get(b);
+        if (child == null) {
+          child = new ByteTrieNode<>();
+          node.children.put(b, child);
         }
-
-        public T getValue()
-        {
-            return value;
-        }
+        node = child;
+        depth++;
+      }
     }
+    node.setValue(value);
+    maxDepth = Math.max(maxDepth, depth);
+  }
 
-    private final ByteTrieNode<T> root = new ByteTrieNode<>();
-    private int maxDepth;
+  /**
+   * Sets the default value to use in {@link ByteTrie#find(byte[])} when no path
+   * matches.
+   *
+   * @param defaultValue
+   */
+  public void setDefaultValue(final T defaultValue) {
+    root.setValue(defaultValue);
+  }
 
-    /**
-     * Return the most specific value stored for this byte sequence. If not found, returns
-     * <code>null</code> or a default values as specified by calling
-     * {@link ByteTrie#setDefaultValue}.
-     * @param bytes
-     * @return 
-     */
-    public T find(byte[] bytes)
-    {
-        ByteTrieNode<T> node = root;
-        T val = node.getValue();
-        for (byte b : bytes)
-        {
-            ByteTrieNode<T> child = node.children.get(b);
-            if (child == null)
-            {
-                break;
-            }
-            node = child;
-            if (node.getValue() != null)
-            {
-                val = node.getValue();
-            }
-        }
-        return val;
-    }
-
-    /**
-     * Store the given value at the specified path.
-     * @param value
-     * @param parts
-     */
-    public void addPath(T value, byte[]... parts)
-    {
-        int depth = 0;
-        ByteTrieNode<T> node = root;
-        for (byte[] part : parts)
-        {
-            for (byte b : part)
-            {
-                ByteTrieNode<T> child = node.children.get(b);
-                if (child == null)
-                {
-                    child = new ByteTrieNode<>();
-                    node.children.put(b, child);
-                }
-                node = child;
-                depth++;
-            }
-        }
-        node.setValue(value);
-        maxDepth = Math.max(maxDepth, depth);
-    }
-
-    /**
-     * Sets the default value to use in {@link ByteTrie#find(byte[])} when no path matches.
-     * @param defaultValue
-     */
-    public void setDefaultValue(T defaultValue)
-    {
-        root.setValue(defaultValue);
-    }
-
-    /**
-     * Gets the maximum depth stored in this trie.
-     * @return 
-     */
-    public int getMaxDepth()
-    {
-        return maxDepth;
-    }
+  /**
+   * Gets the maximum depth stored in this trie.
+   *
+   * @return
+   */
+  public int getMaxDepth() {
+    return maxDepth;
+  }
 }
