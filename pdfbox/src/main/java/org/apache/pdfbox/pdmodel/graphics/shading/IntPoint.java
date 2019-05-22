@@ -23,50 +23,46 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Point class with faster hashCode() to speed up the rendering of Gouraud shadings. Should only be
- * used for maps or sets when all elements are of this type, because the hashCode() method violates
- * its general contract "If two objects are equal according to the equals(Object) method, then
- * calling the hashCode method on each of the two objects must produce the same" when IntPoint is
- * mixed with Point, because IntPoint(x,y) would have a different hashCode than Point(x,y).
+ * Point class with faster hashCode() to speed up the rendering of Gouraud
+ * shadings. Should only be used for maps or sets when all elements are of this
+ * type, because the hashCode() method violates its general contract "If two
+ * objects are equal according to the equals(Object) method, then calling the
+ * hashCode method on each of the two objects must produce the same" when
+ * IntPoint is mixed with Point, because IntPoint(x,y) would have a different
+ * hashCode than Point(x,y).
  *
  * @author Tilman Hausherr
  */
-class IntPoint extends Point
-{
-    private static final Log LOG = LogFactory.getLog(IntPoint.class);
+class IntPoint extends Point {
+  /**
+  *
+  */
+  private static final long serialVersionUID = -3819241418433413741L;
+  private static final Log LOG = LogFactory.getLog(IntPoint.class);
 
-    IntPoint(int x, int y)
-    {
-        super(x, y);
-    }
+  IntPoint(final int x, final int y) {
+    super(x, y);
+  }
 
-    @Override
-    public int hashCode()
-    {
-        return 89 * (623 + this.x) + this.y;
-    }
+  @Override
+  public int hashCode() {
+    return 89 * (623 + x) + y;
+  }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            if (obj instanceof Point2D)
-            {
-                // hitting this branch means that the warning on top of the class wasn't read
-                LOG.error("IntPoint should not be used together with its base class");
-            }
-            return false;
-        }
-        final IntPoint other = (IntPoint) obj;
-        return this.x == other.x && this.y == other.y;
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass()) {
+      if (obj instanceof Point2D) {
+        // hitting this branch means that the warning on top of the class wasn't read
+        IntPoint.LOG.error("IntPoint should not be used together with its base class");
+      }
+      return false;
     }
+    final IntPoint other = (IntPoint) obj;
+    return x == other.x && y == other.y;
+  }
 }
