@@ -16,62 +16,55 @@
 
 package org.apache.pdfbox.pdmodel.interactive.annotation;
 
-import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDSquigglyAppearanceHandler;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDAppearanceHandler;
+import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDSquigglyAppearanceHandler;
 
 /**
  *
  * @author Paul King
  */
-public class PDAnnotationSquiggly extends PDAnnotationTextMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Squiggly";
+public class PDAnnotationSquiggly extends PDAnnotationTextMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Squiggly";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-     /**
-     * Constructor.
-     */
-    public PDAnnotationSquiggly()
-    {
-        super(SUB_TYPE);
+  /**
+   * Constructor.
+   */
+  public PDAnnotationSquiggly() {
+    super(PDAnnotationSquiggly.SUB_TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationSquiggly(final COSDictionary dict) {
+    super(dict);
+  }
+
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDSquigglyAppearanceHandler appearanceHandler = new PDSquigglyAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationSquiggly(COSDictionary dict)
-    {
-        super(dict);
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDSquigglyAppearanceHandler appearanceHandler = new PDSquigglyAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
