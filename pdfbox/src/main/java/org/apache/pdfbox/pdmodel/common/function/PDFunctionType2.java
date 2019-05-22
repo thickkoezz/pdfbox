@@ -16,12 +16,13 @@
  */
 package org.apache.pdfbox.pdmodel.common.function;
 
+import java.io.IOException;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSNumber;
-import java.io.IOException;
 
 /**
  * This class represents a Type 2 (exponential interpolation) function in a PDF
@@ -29,130 +30,110 @@ import java.io.IOException;
  *
  * @author Ben Litchfield
  */
-public class PDFunctionType2 extends PDFunction
-{
+public class PDFunctionType2 extends PDFunction {
 
-    /**
-     * The C0 values of the exponential function.
-     */
-    private final COSArray c0;
-    /**
-     * The C1 values of the exponential function.
-     */
-    private final COSArray c1;
-    /**
-     * The exponent value of the exponential function.
-     */
-    private final float exponent;
+  /**
+   * The C0 values of the exponential function.
+   */
+  private final COSArray c0;
+  /**
+   * The C1 values of the exponential function.
+   */
+  private final COSArray c1;
+  /**
+   * The exponent value of the exponential function.
+   */
+  private final float exponent;
 
-    /**
-     * Constructor.
-     *
-     * @param function The function.
-     */
-    public PDFunctionType2(COSBase function)
-    {
-        super(function);
+  /**
+   * Constructor.
+   *
+   * @param function The function.
+   */
+  public PDFunctionType2(final COSBase function) {
+    super(function);
 
-        if (getCOSObject().getDictionaryObject(COSName.C0) instanceof COSArray)
-        {
-            c0 = (COSArray) getCOSObject().getDictionaryObject(COSName.C0);
-        }
-        else
-        {
-            c0 = new COSArray();
-        }
-        if (c0.size() == 0)
-        {
-            c0.add(new COSFloat(0));
-        }
-
-        if (getCOSObject().getDictionaryObject(COSName.C1) instanceof COSArray)
-        {
-            c1 = (COSArray) getCOSObject().getDictionaryObject(COSName.C1);
-        }
-        else
-        {
-            c1 = new COSArray();
-        }
-        if (c1.size() == 0)
-        {
-            c1.add(new COSFloat(1));
-        }
-
-        exponent = getCOSObject().getFloat(COSName.N);
+    if (getCOSObject().getDictionaryObject(COSName.C0) instanceof COSArray) {
+      c0 = (COSArray) getCOSObject().getDictionaryObject(COSName.C0);
+    } else {
+      c0 = new COSArray();
+    }
+    if (c0.size() == 0) {
+      c0.add(new COSFloat(0));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getFunctionType()
-    {
-        return 2;
+    if (getCOSObject().getDictionaryObject(COSName.C1) instanceof COSArray) {
+      c1 = (COSArray) getCOSObject().getDictionaryObject(COSName.C1);
+    } else {
+      c1 = new COSArray();
+    }
+    if (c1.size() == 0) {
+      c1.add(new COSFloat(1));
     }
 
-    /**
-     * Performs exponential interpolation
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public float[] eval(float[] input) throws IOException
-    {
-        // exponential interpolation
-        float xToN = (float) Math.pow(input[0], exponent); // x^exponent
+    exponent = getCOSObject().getFloat(COSName.N);
+  }
 
-        float[] result = new float[Math.min(c0.size(),c1.size())];
-        for (int j = 0; j < result.length; j++)
-        {
-            float c0j = ((COSNumber) c0.get(j)).floatValue();
-            float c1j = ((COSNumber) c1.get(j)).floatValue();
-            result[j] = c0j + xToN * (c1j - c0j);
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getFunctionType() {
+    return 2;
+  }
 
-        return clipToRange(result);
+  /**
+   * Performs exponential interpolation
+   *
+   * {@inheritDoc}
+   */
+  @Override
+  public float[] eval(final float[] input) throws IOException {
+    // exponential interpolation
+    final float xToN = (float) Math.pow(input[0], exponent); // x^exponent
+
+    final float[] result = new float[Math.min(c0.size(), c1.size())];
+    for (int j = 0; j < result.length; j++) {
+      final float c0j = ((COSNumber) c0.get(j)).floatValue();
+      final float c1j = ((COSNumber) c1.get(j)).floatValue();
+      result[j] = c0j + xToN * (c1j - c0j);
     }
 
-    /**
-     * Returns the C0 values of the function, 0 if empty.
-     *
-     * @return a COSArray with the C0 values
-     */
-    public COSArray getC0()
-    {
-        return c0;
-    }
+    return clipToRange(result);
+  }
 
-    /**
-     * Returns the C1 values of the function, 1 if empty.
-     *
-     * @return a COSArray with the C1 values
-     */
-    public COSArray getC1()
-    {
-        return c1;
-    }
+  /**
+   * Returns the C0 values of the function, 0 if empty.
+   *
+   * @return a COSArray with the C0 values
+   */
+  public COSArray getC0() {
+    return c0;
+  }
 
-    /**
-     * Returns the exponent of the function.
-     *
-     * @return the float value of the exponent
-     */
-    public float getN()
-    {
-        return exponent;
-    }
+  /**
+   * Returns the C1 values of the function, 1 if empty.
+   *
+   * @return a COSArray with the C1 values
+   */
+  public COSArray getC1() {
+    return c1;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return "FunctionType2{"
-                + "C0: " + getC0() + " "
-                + "C1: " + getC1() + " "
-                + "N: " + getN() + "}";
-    }
+  /**
+   * Returns the exponent of the function.
+   *
+   * @return the float value of the exponent
+   */
+  public float getN() {
+    return exponent;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    return "FunctionType2{" + "C0: " + getC0() + " " + "C1: " + getC1() + " " + "N: " + getN() + "}";
+  }
 }
