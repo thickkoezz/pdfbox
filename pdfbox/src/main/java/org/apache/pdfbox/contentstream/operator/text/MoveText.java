@@ -33,45 +33,35 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author Laurent Huault
  */
-public class MoveText extends OperatorProcessor
-{
-    private static final Log LOG = LogFactory.getLog(MoveText.class);
+public class MoveText extends OperatorProcessor {
+  private static final Log LOG = LogFactory.getLog(MoveText.class);
 
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws MissingOperandException
-    {
-        if (arguments.size() < 2)
-        {
-            throw new MissingOperandException(operator, arguments);
-        }
-        Matrix textLineMatrix = context.getTextLineMatrix();
-        if (textLineMatrix == null)
-        {
-            LOG.warn("TextLineMatrix is null, " + getName() + " operator will be ignored");
-            return;
-        }        
-        
-        COSBase base0 = arguments.get(0);
-        COSBase base1 = arguments.get(1);
-        if (!(base0 instanceof COSNumber))
-        {
-            return;
-        }
-        if (!(base1 instanceof COSNumber))
-        {
-            return;
-        }
-        COSNumber x = (COSNumber) base0;
-        COSNumber y = (COSNumber) base1;
-
-        Matrix matrix = new Matrix(1, 0, 0, 1, x.floatValue(), y.floatValue());
-        textLineMatrix.concatenate(matrix);
-        context.setTextMatrix(textLineMatrix.clone());
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws MissingOperandException {
+    if (arguments.size() < 2)
+      throw new MissingOperandException(operator, arguments);
+    final Matrix textLineMatrix = context.getTextLineMatrix();
+    if (textLineMatrix == null) {
+      MoveText.LOG.warn("TextLineMatrix is null, " + getName() + " operator will be ignored");
+      return;
     }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.MOVE_TEXT;
-    }
+    final COSBase base0 = arguments.get(0);
+    final COSBase base1 = arguments.get(1);
+    if (!(base0 instanceof COSNumber))
+      return;
+    if (!(base1 instanceof COSNumber))
+      return;
+    final COSNumber x = (COSNumber) base0;
+    final COSNumber y = (COSNumber) base1;
+
+    final Matrix matrix = new Matrix(1, 0, 0, 1, x.floatValue(), y.floatValue());
+    textLineMatrix.concatenate(matrix);
+    context.setTextMatrix(textLineMatrix.clone());
+  }
+
+  @Override
+  public String getName() {
+    return OperatorName.MOVE_TEXT;
+  }
 }
