@@ -27,33 +27,32 @@ import org.apache.pdfbox.pdmodel.common.PDStream;
  *
  * @author John Hewson
  */
-public class PDTransparencyGroup extends PDFormXObject
-{
-    /**
-     * Creates a Transparency Group for reading.
-     * @param stream The XObject stream
-     */
-    public PDTransparencyGroup(PDStream stream)
-    {
-        super(stream);
-    }
+public class PDTransparencyGroup extends PDFormXObject {
+  /**
+   * Creates a Transparency Group for reading.
+   *
+   * @param stream The XObject stream
+   */
+  public PDTransparencyGroup(final PDStream stream) {
+    super(stream);
+  }
 
-    /**
-     * Creates a Transparency Group for reading.
-     * @param stream The XObject stream
-     */
-    public PDTransparencyGroup(COSStream stream, ResourceCache cache)
-    {
-        super(stream, cache);
-    }    
+  /**
+   * Creates a Transparency Group for reading.
+   *
+   * @param stream The XObject stream
+   */
+  public PDTransparencyGroup(final COSStream stream, final ResourceCache cache) {
+    super(stream, cache);
+  }
 
-    /**
-     * Creates a Transparency Group for writing, in the given document.
-     * @param document The current document
-     */
-    public PDTransparencyGroup(PDDocument document)
-    {
-        super(document);
-        // todo: set mandatory fields
-    }
+  /**
+   * Creates a Transparency Group for writing, in the given document.
+   *
+   * @param document The current document
+   */
+  public PDTransparencyGroup(final PDDocument document) {
+    super(document);
+    // todo: set mandatory fields
+  }
 }
