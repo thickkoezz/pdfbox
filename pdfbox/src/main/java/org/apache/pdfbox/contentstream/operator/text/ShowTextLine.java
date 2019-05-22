@@ -16,32 +16,28 @@
  */
 package org.apache.pdfbox.contentstream.operator.text;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.contentstream.operator.OperatorProcessor;
-
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
  * ': Move to the next line and show text.
  *
  * @author Laurent Huault
  */
-public class ShowTextLine extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        context.processOperator(OperatorName.NEXT_LINE, null);
-        context.processOperator(OperatorName.SHOW_TEXT, arguments);
-    }
+public class ShowTextLine extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    context.processOperator(OperatorName.NEXT_LINE, null);
+    context.processOperator(OperatorName.SHOW_TEXT, arguments);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.SHOW_TEXT_LINE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.SHOW_TEXT_LINE;
+  }
 }
