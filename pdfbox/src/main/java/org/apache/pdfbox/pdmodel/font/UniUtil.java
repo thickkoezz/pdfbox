@@ -22,26 +22,22 @@ import java.util.Locale;
  *
  * @author Philip Helger
  */
-final class UniUtil
-{
-    private UniUtil()
-    {
-    }
+final class UniUtil {
+  private UniUtil() {
+  }
 
-    // faster than String.format("uni%04X", codePoint)
-    static String getUniNameOfCodePoint(int codePoint)
-    {
-        String hex = Integer.toString(codePoint, 16).toUpperCase(Locale.US);
-        switch (hex.length())
-        {
-            case 1:
-                return "uni000" + hex;
-            case 2:
-                return "uni00" + hex;
-            case 3:
-                return "uni0" + hex;
-            default:
-                return "uni" + hex;
-        }
+  // faster than String.format("uni%04X", codePoint)
+  static String getUniNameOfCodePoint(final int codePoint) {
+    final String hex = Integer.toString(codePoint, 16).toUpperCase(Locale.US);
+    switch (hex.length()) {
+    case 1:
+      return "uni000" + hex;
+    case 2:
+      return "uni00" + hex;
+    case 3:
+      return "uni0" + hex;
+    default:
+      return "uni" + hex;
     }
+  }
 }
