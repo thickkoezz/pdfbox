@@ -17,13 +17,12 @@
 
 package org.apache.pdfbox.pdmodel.interactive.annotation.handlers;
 
-public interface PDAppearanceHandler
-{
-    void generateAppearanceStreams();
-    
-    void generateNormalAppearance();
+public interface PDAppearanceHandler {
+  void generateAppearanceStreams();
 
-    void generateRolloverAppearance();
+  void generateNormalAppearance();
 
-    void generateDownAppearance();
+  void generateRolloverAppearance();
+
+  void generateDownAppearance();
 }
