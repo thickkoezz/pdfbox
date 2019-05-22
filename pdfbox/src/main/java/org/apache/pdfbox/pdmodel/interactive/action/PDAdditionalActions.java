@@ -25,56 +25,50 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
  *
  * @author Ben Litchfield
  */
-public class PDAdditionalActions implements COSObjectable
-{
-    private final COSDictionary actions;
+public class PDAdditionalActions implements COSObjectable {
+  private final COSDictionary actions;
 
-    /**
-     * Default constructor.
-     */
-    public PDAdditionalActions()
-    {
-        actions = new COSDictionary();
-    }
+  /**
+   * Default constructor.
+   */
+  public PDAdditionalActions() {
+    actions = new COSDictionary();
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param a The action dictionary.
-     */
-    public PDAdditionalActions( COSDictionary a )
-    {
-        actions = a;
-    }
+  /**
+   * Constructor.
+   *
+   * @param a The action dictionary.
+   */
+  public PDAdditionalActions(final COSDictionary a) {
+    actions = a;
+  }
 
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return actions;
-    }
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return actions;
+  }
 
-    /**
-     * Get the F action.
-     *
-     * @return The F action.
-     */
-    public PDAction getF()
-    {
-        return PDActionFactory.createAction( (COSDictionary)actions.getDictionaryObject(COSName.F ) );
-    }
+  /**
+   * Get the F action.
+   *
+   * @return The F action.
+   */
+  public PDAction getF() {
+    return PDActionFactory.createAction((COSDictionary) actions.getDictionaryObject(COSName.F));
+  }
 
-    /**
-     * Set the F action.
-     *
-     * @param action Get the F action.
-     */
-    public void setF( PDAction action )
-    {
-        actions.setItem( COSName.F, action );
-    }
+  /**
+   * Set the F action.
+   *
+   * @param action Get the F action.
+   */
+  public void setF(final PDAction action) {
+    actions.setItem(COSName.F, action);
+  }
 }
