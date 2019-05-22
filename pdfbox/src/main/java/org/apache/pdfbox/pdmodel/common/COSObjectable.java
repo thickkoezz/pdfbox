@@ -23,12 +23,11 @@ import org.apache.pdfbox.cos.COSBase;
  *
  * @author Ben Litchfield
  */
-public interface COSObjectable
-{
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    COSBase getCOSObject();
+public interface COSObjectable {
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  COSBase getCOSObject();
 }
