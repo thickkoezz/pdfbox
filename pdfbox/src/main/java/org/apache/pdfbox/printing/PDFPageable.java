@@ -22,6 +22,7 @@ import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -31,193 +32,183 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
  *
  * @author John Hewson
  */
-public final class PDFPageable extends Book
-{
-    private final PDDocument document;
-    private final boolean showPageBorder;
-    private final float dpi;
-    private final Orientation orientation;
-    private boolean subsamplingAllowed = false;
-    private RenderingHints renderingHints = null;
+public final class PDFPageable extends Book {
+  private final PDDocument document;
+  private final boolean showPageBorder;
+  private final float dpi;
+  private final Orientation orientation;
+  private boolean subsamplingAllowed = false;
+  private RenderingHints renderingHints = null;
 
-    /**
-     * Creates a new PDFPageable.
-     *
-     * @param document the document to print
-     */
-    public PDFPageable(PDDocument document)
-    {
-        this(document, Orientation.AUTO, false, 0);
-    }
-    
-    /**
-     * Creates a new PDFPageable with the given page orientation.
-     *
-     * @param document the document to print
-     * @param orientation page orientation policy
-     */
-    public PDFPageable(PDDocument document, Orientation orientation)
-    {
-        this(document, orientation, false, 0);
-    }
-    
-    /**
-     * Creates a new PDFPageable with the given page orientation and with optional page borders
-     * shown. The image will be rasterized at the given DPI before being sent to the printer.
-     *
-     * @param document the document to print
-     * @param orientation page orientation policy
-     * @param showPageBorder true if page borders are to be printed
-     */
-    public PDFPageable(PDDocument document, Orientation orientation, boolean showPageBorder)
-    {
-        this(document, orientation, showPageBorder, 0);
+  /**
+   * Creates a new PDFPageable.
+   *
+   * @param document the document to print
+   */
+  public PDFPageable(final PDDocument document) {
+    this(document, Orientation.AUTO, false, 0);
+  }
+
+  /**
+   * Creates a new PDFPageable with the given page orientation.
+   *
+   * @param document    the document to print
+   * @param orientation page orientation policy
+   */
+  public PDFPageable(final PDDocument document, final Orientation orientation) {
+    this(document, orientation, false, 0);
+  }
+
+  /**
+   * Creates a new PDFPageable with the given page orientation and with optional
+   * page borders shown. The image will be rasterized at the given DPI before
+   * being sent to the printer.
+   *
+   * @param document       the document to print
+   * @param orientation    page orientation policy
+   * @param showPageBorder true if page borders are to be printed
+   */
+  public PDFPageable(final PDDocument document, final Orientation orientation, final boolean showPageBorder) {
+    this(document, orientation, showPageBorder, 0);
+  }
+
+  /**
+   * Creates a new PDFPageable with the given page orientation and with optional
+   * page borders shown. The image will be rasterized at the given DPI before
+   * being sent to the printer.
+   *
+   * @param document       the document to print
+   * @param orientation    page orientation policy
+   * @param showPageBorder true if page borders are to be printed
+   * @param dpi            if non-zero then the image will be rasterized at the
+   *                       given DPI
+   */
+  public PDFPageable(final PDDocument document, final Orientation orientation, final boolean showPageBorder,
+      final float dpi) {
+    this.document = document;
+    this.orientation = orientation;
+    this.showPageBorder = showPageBorder;
+    this.dpi = dpi;
+  }
+
+  /**
+   * Get the rendering hints.
+   *
+   * @return the rendering hints or null if none are set.
+   */
+  public RenderingHints getRenderingHints() {
+    return renderingHints;
+  }
+
+  /**
+   * Set the rendering hints. Use this to influence rendering quality and speed.
+   * If you don't set them yourself or pass null, PDFBox will decide <b><u>at
+   * runtime</u></b> depending on the destination.
+   *
+   * @param renderingHints
+   */
+  public void setRenderingHints(final RenderingHints renderingHints) {
+    this.renderingHints = renderingHints;
+  }
+
+  /**
+   * Value indicating if the renderer is allowed to subsample images before
+   * drawing, according to image dimensions and requested scale.
+   *
+   * Subsampling may be faster and less memory-intensive in some cases, but it may
+   * also lead to loss of quality, especially in images with high spatial
+   * frequency.
+   *
+   * @return true if subsampling of images is allowed, false otherwise.
+   */
+  public boolean isSubsamplingAllowed() {
+    return subsamplingAllowed;
+  }
+
+  /**
+   * Sets a value instructing the renderer whether it is allowed to subsample
+   * images before drawing. The subsampling frequency is determined according to
+   * image size and requested scale.
+   *
+   * Subsampling may be faster and less memory-intensive in some cases, but it may
+   * also lead to loss of quality, especially in images with high spatial
+   * frequency.
+   *
+   * @param subsamplingAllowed The new value indicating if subsampling is allowed.
+   */
+  public void setSubsamplingAllowed(final boolean subsamplingAllowed) {
+    this.subsamplingAllowed = subsamplingAllowed;
+  }
+
+  @Override
+  public int getNumberOfPages() {
+    return document.getNumberOfPages();
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * Returns the actual physical size of the pages in the PDF file. May not fit
+   * the local printer.
+   */
+  @Override
+  public PageFormat getPageFormat(final int pageIndex) {
+    final PDPage page = document.getPage(pageIndex);
+    final PDRectangle mediaBox = PDFPrintable.getRotatedMediaBox(page);
+    final PDRectangle cropBox = PDFPrintable.getRotatedCropBox(page);
+
+    // Java does not seem to understand landscape paper sizes, i.e. where width >
+    // height, it
+    // always crops the imageable area as if the page were in portrait. I suspect
+    // that this is
+    // a JDK bug but it might be by design, see PDFBOX-2922.
+    //
+    // As a workaround, we normalise all Page(s) to be portrait, then flag them as
+    // landscape in
+    // the PageFormat.
+    Paper paper;
+    boolean isLandscape;
+    if (mediaBox.getWidth() > mediaBox.getHeight()) {
+      // rotate
+      paper = new Paper();
+      paper.setSize(mediaBox.getHeight(), mediaBox.getWidth());
+      paper.setImageableArea(cropBox.getLowerLeftY(), cropBox.getLowerLeftX(), cropBox.getHeight(), cropBox.getWidth());
+      isLandscape = true;
+    } else {
+      paper = new Paper();
+      paper.setSize(mediaBox.getWidth(), mediaBox.getHeight());
+      paper.setImageableArea(cropBox.getLowerLeftX(), cropBox.getLowerLeftY(), cropBox.getWidth(), cropBox.getHeight());
+      isLandscape = false;
     }
 
-    /**
-     * Creates a new PDFPageable with the given page orientation and with optional page borders
-     * shown. The image will be rasterized at the given DPI before being sent to the printer.
-     *
-     * @param document the document to print
-     * @param orientation page orientation policy
-     * @param showPageBorder true if page borders are to be printed
-     * @param dpi if non-zero then the image will be rasterized at the given DPI
-     */
-    public PDFPageable(PDDocument document, Orientation orientation, boolean showPageBorder,
-                       float dpi)
-    {
-        this.document = document;
-        this.orientation = orientation;
-        this.showPageBorder = showPageBorder;
-        this.dpi = dpi;
+    final PageFormat format = new PageFormat();
+    format.setPaper(paper);
+
+    // auto portrait/landscape
+    switch (orientation) {
+    case AUTO:
+      format.setOrientation(isLandscape ? PageFormat.LANDSCAPE : PageFormat.PORTRAIT);
+      break;
+    case LANDSCAPE:
+      format.setOrientation(PageFormat.LANDSCAPE);
+      break;
+    case PORTRAIT:
+      format.setOrientation(PageFormat.PORTRAIT);
+      break;
+    default:
+      break;
     }
 
-    /**
-     * Get the rendering hints.
-     *
-     * @return the rendering hints or null if none are set.
-     */
-    public RenderingHints getRenderingHints()
-    {
-        return renderingHints;
-    }
+    return format;
+  }
 
-    /**
-     * Set the rendering hints. Use this to influence rendering quality and speed. If you don't set
-     * them yourself or pass null, PDFBox will decide <b><u>at runtime</u></b> depending on the
-     * destination.
-     *
-     * @param renderingHints
-     */
-    public void setRenderingHints(RenderingHints renderingHints)
-    {
-        this.renderingHints = renderingHints;
-    }
-
-    /**
-     * Value indicating if the renderer is allowed to subsample images before drawing, according to
-     * image dimensions and requested scale.
-     *
-     * Subsampling may be faster and less memory-intensive in some cases, but it may also lead to
-     * loss of quality, especially in images with high spatial frequency.
-     *
-     * @return true if subsampling of images is allowed, false otherwise.
-     */
-    public boolean isSubsamplingAllowed()
-    {
-        return subsamplingAllowed;
-    }
-
-    /**
-     * Sets a value instructing the renderer whether it is allowed to subsample images before
-     * drawing. The subsampling frequency is determined according to image size and requested scale.
-     *
-     * Subsampling may be faster and less memory-intensive in some cases, but it may also lead to
-     * loss of quality, especially in images with high spatial frequency.
-     *
-     * @param subsamplingAllowed The new value indicating if subsampling is allowed.
-     */
-    public void setSubsamplingAllowed(boolean subsamplingAllowed)
-    {
-        this.subsamplingAllowed = subsamplingAllowed;
-    }
-
-    @Override
-    public int getNumberOfPages()
-    {
-        return document.getNumberOfPages();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * Returns the actual physical size of the pages in the PDF file. May not fit the local printer.
-     */
-    @Override
-    public PageFormat getPageFormat(int pageIndex)
-    {
-        PDPage page = document.getPage(pageIndex);
-        PDRectangle mediaBox = PDFPrintable.getRotatedMediaBox(page);
-        PDRectangle cropBox = PDFPrintable.getRotatedCropBox(page);
-        
-        // Java does not seem to understand landscape paper sizes, i.e. where width > height, it
-        // always crops the imageable area as if the page were in portrait. I suspect that this is
-        // a JDK bug but it might be by design, see PDFBOX-2922.
-        //
-        // As a workaround, we normalise all Page(s) to be portrait, then flag them as landscape in
-        // the PageFormat.
-        Paper paper;
-        boolean isLandscape;
-        if (mediaBox.getWidth() > mediaBox.getHeight())
-        {
-            // rotate
-            paper = new Paper();
-            paper.setSize(mediaBox.getHeight(), mediaBox.getWidth());
-            paper.setImageableArea(cropBox.getLowerLeftY(), cropBox.getLowerLeftX(),
-                    cropBox.getHeight(), cropBox.getWidth());
-            isLandscape = true;
-        }
-        else
-        {
-            paper = new Paper();
-            paper.setSize(mediaBox.getWidth(), mediaBox.getHeight());
-            paper.setImageableArea(cropBox.getLowerLeftX(), cropBox.getLowerLeftY(),
-                    cropBox.getWidth(), cropBox.getHeight());
-            isLandscape = false;
-        }
-
-        PageFormat format = new PageFormat();
-        format.setPaper(paper);
-        
-        // auto portrait/landscape
-        switch (orientation)
-        {
-            case AUTO:
-                format.setOrientation(isLandscape ? PageFormat.LANDSCAPE : PageFormat.PORTRAIT);
-                break;
-            case LANDSCAPE:
-                format.setOrientation(PageFormat.LANDSCAPE);
-                break;
-            case PORTRAIT:
-                format.setOrientation(PageFormat.PORTRAIT);
-                break;
-            default:
-                break;
-        }
-        
-        return format;
-    }
-    
-    @Override
-    public Printable getPrintable(int i)
-    {
-        if (i >= getNumberOfPages())
-        {
-            throw new IndexOutOfBoundsException(i + " >= " + getNumberOfPages());
-        }
-        PDFPrintable printable = new PDFPrintable(document, Scaling.ACTUAL_SIZE, showPageBorder, dpi);
-        printable.setSubsamplingAllowed(subsamplingAllowed);
-        printable.setRenderingHints(renderingHints);
-        return printable;
-    }
+  @Override
+  public Printable getPrintable(final int i) {
+    if (i >= getNumberOfPages())
+      throw new IndexOutOfBoundsException(i + " >= " + getNumberOfPages());
+    final PDFPrintable printable = new PDFPrintable(document, Scaling.ACTUAL_SIZE, showPageBorder, dpi);
+    printable.setSubsamplingAllowed(subsamplingAllowed);
+    printable.setRenderingHints(renderingHints);
+    return printable;
+  }
 }
