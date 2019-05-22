@@ -27,111 +27,97 @@ import org.apache.pdfbox.pdmodel.graphics.pattern.PDAbstractPattern;
 
 /**
  * A Pattern color space is either a Tiling pattern or a Shading pattern.
+ *
  * @author John Hewson
  * @author Ben Litchfield
  */
-public final class PDPattern extends PDSpecialColorSpace
-{
-    /** A pattern which leaves no marks on the page. */
-    private static PDColor EMPTY_PATTERN = new PDColor(new float[] { }, null);
-    
-    private final PDResources resources;
-    private PDColorSpace underlyingColorSpace;
+public final class PDPattern extends PDSpecialColorSpace {
+  /** A pattern which leaves no marks on the page. */
+  private static PDColor EMPTY_PATTERN = new PDColor(new float[] {}, null);
 
-    /**
-     * Creates a new pattern color space.
-     * 
-     * @param resources The current resources.
-     */
-    public PDPattern(PDResources resources)
-    {
-        this.resources = resources;
-        array = new COSArray();
-        array.add(COSName.PATTERN);
-    }
+  private final PDResources resources;
+  private PDColorSpace underlyingColorSpace;
 
-    /**
-     * Creates a new uncolored tiling pattern color space.
-     * 
-     * @param resources The current resources.
-     * @param colorSpace The underlying color space.
-     */
-    public PDPattern(PDResources resources, PDColorSpace colorSpace)
-    {
-        this.resources = resources;
-        this.underlyingColorSpace = colorSpace;
-        array = new COSArray();
-        array.add(COSName.PATTERN);
-        array.add(colorSpace);
-    }
+  /**
+   * Creates a new pattern color space.
+   *
+   * @param resources The current resources.
+   */
+  public PDPattern(final PDResources resources) {
+    this.resources = resources;
+    array = new COSArray();
+    array.add(COSName.PATTERN);
+  }
 
-    @Override
-    public String getName()
-    {
-        return COSName.PATTERN.getName();
-    }
+  /**
+   * Creates a new uncolored tiling pattern color space.
+   *
+   * @param resources  The current resources.
+   * @param colorSpace The underlying color space.
+   */
+  public PDPattern(final PDResources resources, final PDColorSpace colorSpace) {
+    this.resources = resources;
+    underlyingColorSpace = colorSpace;
+    array = new COSArray();
+    array.add(COSName.PATTERN);
+    array.add(colorSpace);
+  }
 
-    @Override
-    public int getNumberOfComponents()
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public String getName() {
+    return COSName.PATTERN.getName();
+  }
 
-    @Override
-    public float[] getDefaultDecode(int bitsPerComponent)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public int getNumberOfComponents() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public PDColor getInitialColor()
-    {
-        return EMPTY_PATTERN;
-    }
+  @Override
+  public float[] getDefaultDecode(final int bitsPerComponent) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public float[] toRGB(float[] value)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public PDColor getInitialColor() {
+    return PDPattern.EMPTY_PATTERN;
+  }
 
-    @Override
-    public BufferedImage toRGBImage(WritableRaster raster) throws IOException
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public float[] toRGB(final float[] value) {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * Returns the pattern for the given color.
-     * 
-     * @param color color containing a pattern name
-     * @return pattern for the given color
-     * @throws java.io.IOException if the pattern name was not found.
-     */
-    public PDAbstractPattern getPattern(PDColor color) throws IOException
-    {
-        PDAbstractPattern pattern = resources.getPattern(color.getPatternName());
-        if (pattern == null)
-        {
-            throw new IOException("pattern " + color.getPatternName() + " was not found");
-        }
-        else
-        {
-            return pattern;
-        }
-    }
+  @Override
+  public BufferedImage toRGBImage(final WritableRaster raster) throws IOException {
+    throw new UnsupportedOperationException();
+  }
 
-    /**
-     * Returns the underlying color space, if this is an uncolored tiling pattern, otherwise null.
-     */
-    public PDColorSpace getUnderlyingColorSpace()
-    {
-        return underlyingColorSpace;
-    }
+  /**
+   * Returns the pattern for the given color.
+   *
+   * @param color color containing a pattern name
+   * @return pattern for the given color
+   * @throws java.io.IOException if the pattern name was not found.
+   */
+  public PDAbstractPattern getPattern(final PDColor color) throws IOException {
+    final PDAbstractPattern pattern = resources.getPattern(color.getPatternName());
+    if (pattern == null)
+      throw new IOException("pattern " + color.getPatternName() + " was not found");
+    else
+      return pattern;
+  }
 
-    @Override
-    public String toString()
-    {
-        return "Pattern";
-    }
+  /**
+   * Returns the underlying color space, if this is an uncolored tiling pattern,
+   * otherwise null.
+   */
+  public PDColorSpace getUnderlyingColorSpace() {
+    return underlyingColorSpace;
+  }
+
+  @Override
+  public String toString() {
+    return "Pattern";
+  }
 }
