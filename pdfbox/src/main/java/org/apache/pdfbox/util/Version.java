@@ -27,37 +27,28 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Exposes PDFBox version.
  */
-public final class Version
-{
-    private static final Log LOG = LogFactory.getLog(Version.class);
+public final class Version {
+  private static final Log LOG = LogFactory.getLog(Version.class);
 
-    private static final String PDFBOX_VERSION_PROPERTIES =
-            "/org/apache/pdfbox/resources/version.properties";
+  private static final String PDFBOX_VERSION_PROPERTIES = "/org/apache/pdfbox/resources/version.properties";
 
-    private Version()
-    {
-        // static helper
+  private Version() {
+    // static helper
+  }
+
+  /**
+   * Returns the version of PDFBox.
+   */
+  public static String getVersion() {
+    try (InputStream is = Version.class.getResourceAsStream(Version.PDFBOX_VERSION_PROPERTIES)) {
+      if (is == null)
+        return null;
+      final Properties properties = new Properties();
+      properties.load(is);
+      return properties.getProperty("pdfbox.version", null);
+    } catch (final IOException io) {
+      Version.LOG.debug("Unable to read version from properties - returning null", io);
+      return null;
     }
-
-    /**
-     * Returns the version of PDFBox.
-     */
-    public static String getVersion()
-    {
-        try (InputStream is = Version.class.getResourceAsStream(PDFBOX_VERSION_PROPERTIES))
-        {
-            if (is == null)
-            {
-                return null;
-            }
-            Properties properties = new Properties();
-            properties.load(is);
-            return properties.getProperty("pdfbox.version", null);
-        }
-        catch (IOException io)
-        {
-            LOG.debug("Unable to read version from properties - returning null", io);
-            return null;
-        }
-    }
+  }
 }
