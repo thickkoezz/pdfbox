@@ -18,6 +18,7 @@
 package org.apache.pdfbox.pdmodel.graphics.color;
 
 import java.io.IOException;
+
 import junit.framework.TestCase;
 
 /**
@@ -25,17 +26,13 @@ import junit.framework.TestCase;
  *
  * @author John Hewson
  */
-public class PDDeviceCMYKTest extends TestCase
-{
-    public void testCMYK() throws IOException
-    {
-        PDDeviceCMYK.INSTANCE = new CustomDeviceCMYK();
+public class PDDeviceCMYKTest extends TestCase {
+  public void testCMYK() throws IOException {
+    PDDeviceCMYK.INSTANCE = new CustomDeviceCMYK();
+  }
+
+  private static class CustomDeviceCMYK extends PDDeviceCMYK {
+    protected CustomDeviceCMYK() throws IOException {
     }
-    
-    private static class CustomDeviceCMYK extends PDDeviceCMYK
-    {
-        protected CustomDeviceCMYK() throws IOException
-        {
-        }
-    }
+  }
 }
