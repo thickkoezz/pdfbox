@@ -23,6 +23,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.util.Matrix;
@@ -33,39 +34,33 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author Shaola Ren
  */
-class Type6ShadingPaint extends ShadingPaint<PDShadingType6>
-{
-    private static final Log LOG = LogFactory.getLog(Type6ShadingPaint.class);
+class Type6ShadingPaint extends ShadingPaint<PDShadingType6> {
+  private static final Log LOG = LogFactory.getLog(Type6ShadingPaint.class);
 
-    /**
-     * Constructor.
-     *
-     * @param shading the shading resources
-     * @param matrix the pattern matrix concatenated with that of the parent content stream
-     */
-    Type6ShadingPaint(PDShadingType6 shading, Matrix matrix)
-    {
-        super(shading, matrix);
-    }
+  /**
+   * Constructor.
+   *
+   * @param shading the shading resources
+   * @param matrix  the pattern matrix concatenated with that of the parent
+   *                content stream
+   */
+  Type6ShadingPaint(final PDShadingType6 shading, final Matrix matrix) {
+    super(shading, matrix);
+  }
 
-    @Override
-    public int getTransparency()
-    {
-        return 0;
-    }
+  @Override
+  public int getTransparency() {
+    return 0;
+  }
 
-    @Override
-    public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds,
-            AffineTransform xform, RenderingHints hints)
-    {
-        try
-        {
-            return new Type6ShadingContext(shading, cm, xform, matrix, deviceBounds);
-        }
-        catch (IOException e)
-        {
-            LOG.error("An error occurred while painting", e);
-            return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
-        }
+  @Override
+  public PaintContext createContext(final ColorModel cm, final Rectangle deviceBounds, final Rectangle2D userBounds,
+      final AffineTransform xform, final RenderingHints hints) {
+    try {
+      return new Type6ShadingContext(shading, cm, xform, matrix, deviceBounds);
+    } catch (final IOException e) {
+      Type6ShadingPaint.LOG.error("An error occurred while painting", e);
+      return new Color(0, 0, 0, 0).createContext(cm, deviceBounds, userBounds, xform, hints);
     }
+  }
 }
