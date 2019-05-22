@@ -16,41 +16,39 @@
  */
 package org.apache.pdfbox.contentstream.operator.color;
 
-import org.apache.pdfbox.cos.COSBase;
-import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
-import org.apache.pdfbox.contentstream.operator.Operator;
-import org.apache.pdfbox.contentstream.operator.OperatorName;
-
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.pdfbox.contentstream.operator.Operator;
+import org.apache.pdfbox.contentstream.operator.OperatorName;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
+
 /**
- * RG: Set the stroking colour space to DeviceRGB and set the colour to use for stroking operations.
+ * RG: Set the stroking colour space to DeviceRGB and set the colour to use for
+ * stroking operations.
  *
  * @author John Hewson
  */
-public class SetStrokingDeviceRGBColor extends SetStrokingColor
-{
-    /**
-     * RG Set the stroking colour space to DeviceRGB and set the colour to
-     * use for stroking operations.
-     *
-     * @param operator The operator that is being executed.
-     * @param arguments List
-     * @throws IOException If the color space cannot be read.
-     */
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        PDColorSpace cs = context.getResources().getColorSpace(COSName.DEVICERGB);
-        context.getGraphicsState().setStrokingColorSpace(cs);
-        super.process(operator, arguments);
-    }
+public class SetStrokingDeviceRGBColor extends SetStrokingColor {
+  /**
+   * RG Set the stroking colour space to DeviceRGB and set the colour to use for
+   * stroking operations.
+   *
+   * @param operator  The operator that is being executed.
+   * @param arguments List
+   * @throws IOException If the color space cannot be read.
+   */
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    final PDColorSpace cs = context.getResources().getColorSpace(COSName.DEVICERGB);
+    context.getGraphicsState().setStrokingColorSpace(cs);
+    super.process(operator, arguments);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.STROKING_COLOR_RGB;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.STROKING_COLOR_RGB;
+  }
 }
