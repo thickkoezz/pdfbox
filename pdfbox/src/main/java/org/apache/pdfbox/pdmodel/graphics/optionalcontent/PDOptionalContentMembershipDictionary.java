@@ -18,6 +18,7 @@ package org.apache.pdfbox.pdmodel.graphics.optionalcontent;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -29,91 +30,79 @@ import org.apache.pdfbox.pdmodel.documentinterchange.markedcontent.PDPropertyLis
  *
  * @author Tilman Hausherr
  */
-public class PDOptionalContentMembershipDictionary extends PDPropertyList
-{
-    /**
-     * Creates a new optional content membership dictionary (OCMD).
-     */
-    public PDOptionalContentMembershipDictionary()
-    {
-        this.dict.setItem(COSName.TYPE, COSName.OCMD);
-    }
+public class PDOptionalContentMembershipDictionary extends PDPropertyList {
+  /**
+   * Creates a new optional content membership dictionary (OCMD).
+   */
+  public PDOptionalContentMembershipDictionary() {
+    dict.setItem(COSName.TYPE, COSName.OCMD);
+  }
 
-    /**
-     * Creates a new instance based on a given {@link COSDictionary}.
-     * @param dict the dictionary
-     */
-    public PDOptionalContentMembershipDictionary(COSDictionary dict)
-    {
-        super(dict);
-        if (!dict.getItem(COSName.TYPE).equals(COSName.OCMD))
-        {
-            throw new IllegalArgumentException(
-                    "Provided dictionary is not of type '" + COSName.OCMD + "'");
+  /**
+   * Creates a new instance based on a given {@link COSDictionary}.
+   *
+   * @param dict the dictionary
+   */
+  public PDOptionalContentMembershipDictionary(final COSDictionary dict) {
+    super(dict);
+    if (!dict.getItem(COSName.TYPE).equals(COSName.OCMD))
+      throw new IllegalArgumentException("Provided dictionary is not of type '" + COSName.OCMD + "'");
+  }
+
+  /**
+   * Get a list of optional content groups.
+   *
+   * @return List of optional content groups, never null.
+   */
+  public List<PDPropertyList> getOCGs() {
+    final List<PDPropertyList> list = new ArrayList<>();
+    final COSBase base = dict.getDictionaryObject(COSName.OCGS);
+    if (base instanceof COSDictionary) {
+      list.add(PDPropertyList.create((COSDictionary) base));
+    } else if (base instanceof COSArray) {
+      final COSArray ar = (COSArray) base;
+      for (int i = 0; i < ar.size(); ++i) {
+        final COSBase elem = ar.getObject(i);
+        if (elem instanceof COSDictionary) {
+          list.add(PDPropertyList.create((COSDictionary) elem));
         }
+      }
     }
+    return list;
+  }
 
-    /**
-     * Get a list of optional content groups.
-     * 
-     * @return List of optional content groups, never null.
-     */
-    public List<PDPropertyList> getOCGs()
-    {
-        List<PDPropertyList> list = new ArrayList<>();
-        COSBase base = dict.getDictionaryObject(COSName.OCGS);
-        if (base instanceof COSDictionary)
-        {
-            list.add(PDPropertyList.create((COSDictionary) base));
-        }
-        else if (base instanceof COSArray)
-        {
-            COSArray ar = (COSArray) base;
-            for (int i = 0; i < ar.size(); ++i)
-            {
-                COSBase elem = ar.getObject(i);
-                if (elem instanceof COSDictionary)
-                {
-                    list.add(PDPropertyList.create((COSDictionary) elem));
-                }
-            }
-        }
-        return list;
+  /**
+   * Set optional content groups as a list.
+   *
+   * @param ocgs list of optional content groups to set.
+   */
+  public void setOCGs(final List<PDPropertyList> ocgs) {
+    final COSArray ar = new COSArray();
+    for (final PDPropertyList prop : ocgs) {
+      ar.add(prop);
     }
+    dict.setItem(COSName.OCGS, ar);
+  }
 
-    /**
-     * Set optional content groups as a list.
-     * 
-     * @param ocgs list of optional content groups to set.
-     */
-    public void setOCGs(List<PDPropertyList> ocgs)
-    {
-        COSArray ar = new COSArray();
-        for (PDPropertyList prop : ocgs)
-        {
-            ar.add(prop);
-        }
-        dict.setItem(COSName.OCGS, ar);
-    }
+  /**
+   * Get the visibility policy name. Valid names are AllOff, AllOn, AnyOff, AnyOn
+   * (default).
+   *
+   * @return the visibility policy, never null.
+   */
+  public COSName getVisibilityPolicy() {
+    return dict.getCOSName(COSName.P, COSName.ANY_ON);
+  }
 
-    /**
-     * Get the visibility policy name. Valid names are AllOff, AllOn, AnyOff, AnyOn (default).
-     *
-     * @return the visibility policy, never null.
-     */
-    public COSName getVisibilityPolicy()
-    {
-        return dict.getCOSName(COSName.P, COSName.ANY_ON);
-    }
+  /**
+   * Sets the visibility policy name. Valid names are AllOff, AllOn, AnyOff, AnyOn
+   * (default).
+   *
+   * @param visibilityPolicy
+   */
+  public void setVisibilityPolicy(final COSName visibilityPolicy) {
+    dict.setItem(COSName.P, visibilityPolicy);
+  }
 
-    /**
-     * Sets the visibility policy name. Valid names are AllOff, AllOn, AnyOff, AnyOn (default).
-     * @param visibilityPolicy 
-     */
-    public void setVisibilityPolicy(COSName visibilityPolicy)
-    {
-        dict.setItem(COSName.P, visibilityPolicy);
-    }
-    
-    //TODO support /VE some day
+  // TODO support /VE some day
 }
