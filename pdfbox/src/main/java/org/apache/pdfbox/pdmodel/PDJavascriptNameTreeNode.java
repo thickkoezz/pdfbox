@@ -17,6 +17,7 @@
 package org.apache.pdfbox.pdmodel;
 
 import java.io.IOException;
+
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.common.PDNameTreeNode;
@@ -24,43 +25,37 @@ import org.apache.pdfbox.pdmodel.interactive.action.PDActionFactory;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionJavaScript;
 
 /**
- * This class holds all of the name trees that are available at the document level.
+ * This class holds all of the name trees that are available at the document
+ * level.
  *
  * @author Ben Litchfield
  */
-public class PDJavascriptNameTreeNode extends PDNameTreeNode<PDActionJavaScript>
-{
-    /**
-     * Constructor.
-     */
-    public PDJavascriptNameTreeNode()
-    {
-        super();
-    }
+public class PDJavascriptNameTreeNode extends PDNameTreeNode<PDActionJavaScript> {
+  /**
+   * Constructor.
+   */
+  public PDJavascriptNameTreeNode() {
+    super();
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param dic The COS dictionary.
-     */
-    public PDJavascriptNameTreeNode( COSDictionary dic )
-    {
-        super(dic);
-    }
+  /**
+   * Constructor.
+   *
+   * @param dic The COS dictionary.
+   */
+  public PDJavascriptNameTreeNode(final COSDictionary dic) {
+    super(dic);
+  }
 
-    @Override
-    protected PDActionJavaScript convertCOSToPD( COSBase base ) throws IOException
-    {
-        if (!(base instanceof COSDictionary))
-        {
-            throw new IOException( "Error creating Javascript object, expected a COSDictionary and not " + base);
-        }
-        return (PDActionJavaScript)PDActionFactory.createAction((COSDictionary) base);
-    }
+  @Override
+  protected PDActionJavaScript convertCOSToPD(final COSBase base) throws IOException {
+    if (!(base instanceof COSDictionary))
+      throw new IOException("Error creating Javascript object, expected a COSDictionary and not " + base);
+    return (PDActionJavaScript) PDActionFactory.createAction((COSDictionary) base);
+  }
 
-    @Override
-    protected PDNameTreeNode<PDActionJavaScript> createChildNode( COSDictionary dic )
-    {
-        return new PDJavascriptNameTreeNode(dic);
-    }
+  @Override
+  protected PDNameTreeNode<PDActionJavaScript> createChildNode(final COSDictionary dic) {
+    return new PDJavascriptNameTreeNode(dic);
+  }
 }
