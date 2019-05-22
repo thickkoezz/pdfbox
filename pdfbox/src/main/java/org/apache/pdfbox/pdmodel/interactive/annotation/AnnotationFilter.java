@@ -18,11 +18,10 @@ package org.apache.pdfbox.pdmodel.interactive.annotation;
 
 /**
  * Simple interface allowing the use of an annotation filter visitor.
- * 
+ *
  * @author <a href="mailto:maxime.veron.pro@gmail.com">Maxime Veron</a>
- * 
+ *
  */
-public interface AnnotationFilter
-{
-    boolean accept(PDAnnotation annotation);
+public interface AnnotationFilter {
+  boolean accept(PDAnnotation annotation);
 }
