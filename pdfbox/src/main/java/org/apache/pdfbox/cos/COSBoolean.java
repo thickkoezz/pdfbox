@@ -24,123 +24,111 @@ import java.io.OutputStream;
  *
  * @author Ben Litchfield
  */
-public final class COSBoolean extends COSBase
-{
-    /**
-     * The true boolean token.
-     */
-    public static final byte[] TRUE_BYTES = new byte[]{ 116, 114, 117, 101 }; //"true".getBytes( "ISO-8859-1" );
-    /**
-     * The false boolean token.
-     */
-    public static final byte[] FALSE_BYTES = new byte[]{ 102, 97, 108, 115, 101 }; //"false".getBytes( "ISO-8859-1" );
+public final class COSBoolean extends COSBase {
+  /**
+   * The true boolean token.
+   */
+  public static final byte[] TRUE_BYTES = new byte[] { 116, 114, 117, 101 }; // "true".getBytes( "ISO-8859-1" );
+  /**
+   * The false boolean token.
+   */
+  public static final byte[] FALSE_BYTES = new byte[] { 102, 97, 108, 115, 101 }; // "false".getBytes( "ISO-8859-1" );
 
-    /**
-     * The PDF true value.
-     */
-    public static final COSBoolean TRUE = new COSBoolean( true );
+  /**
+   * The PDF true value.
+   */
+  public static final COSBoolean TRUE = new COSBoolean(true);
 
-    /**
-     * The PDF false value.
-     */
-    public static final COSBoolean FALSE = new COSBoolean( false );
+  /**
+   * The PDF false value.
+   */
+  public static final COSBoolean FALSE = new COSBoolean(false);
 
-    private final boolean value;
+  private final boolean value;
 
-    /**
-     * Constructor.
-     *
-     * @param aValue The boolean value.
-     */
-    private COSBoolean(boolean aValue)
-    {
-        value = aValue;
+  /**
+   * Constructor.
+   *
+   * @param aValue The boolean value.
+   */
+  private COSBoolean(final boolean aValue) {
+    value = aValue;
+  }
+
+  /**
+   * This will get the value that this object wraps.
+   *
+   * @return The boolean value of this object.
+   */
+  public boolean getValue() {
+    return value;
+  }
+
+  /**
+   * This will get the value that this object wraps.
+   *
+   * @return The boolean value of this object.
+   */
+  public Boolean getValueAsObject() {
+    return value ? Boolean.TRUE : Boolean.FALSE;
+  }
+
+  /**
+   * This will get the boolean value.
+   *
+   * @param value Parameter telling which boolean value to get.
+   *
+   * @return The single boolean instance that matches the parameter.
+   */
+  public static COSBoolean getBoolean(final boolean value) {
+    return value ? COSBoolean.TRUE : COSBoolean.FALSE;
+  }
+
+  /**
+   * This will get the boolean value.
+   *
+   * @param value Parameter telling which boolean value to get.
+   *
+   * @return The single boolean instance that matches the parameter.
+   */
+  public static COSBoolean getBoolean(final Boolean value) {
+    return COSBoolean.getBoolean(value.booleanValue());
+  }
+
+  /**
+   * visitor pattern double dispatch method.
+   *
+   * @param visitor The object to notify when visiting this object.
+   * @return any object, depending on the visitor implementation, or null
+   * @throws IOException If an error occurs while visiting this object.
+   */
+  @Override
+  public Object accept(final ICOSVisitor visitor) throws IOException {
+    return visitor.visitFromBoolean(this);
+  }
+
+  /**
+   * Return a string representation of this object.
+   *
+   * @return The string value of this object.
+   */
+  @Override
+  public String toString() {
+    return String.valueOf(value);
+  }
+
+  /**
+   * This will write this object out to a PDF stream.
+   *
+   * @param output The stream to write this object out to.
+   *
+   * @throws IOException If an error occurs while writing out this object.
+   */
+  public void writePDF(final OutputStream output) throws IOException {
+    if (value) {
+      output.write(COSBoolean.TRUE_BYTES);
+    } else {
+      output.write(COSBoolean.FALSE_BYTES);
     }
-
-    /**
-     * This will get the value that this object wraps.
-     *
-     * @return The boolean value of this object.
-     */
-    public boolean getValue()
-    {
-        return value;
-    }
-
-    /**
-     * This will get the value that this object wraps.
-     *
-     * @return The boolean value of this object.
-     */
-    public Boolean getValueAsObject()
-    {
-        return (value?Boolean.TRUE:Boolean.FALSE);
-    }
-
-    /**
-     * This will get the boolean value.
-     *
-     * @param value Parameter telling which boolean value to get.
-     *
-     * @return The single boolean instance that matches the parameter.
-     */
-    public static COSBoolean getBoolean( boolean value )
-    {
-        return (value?TRUE:FALSE);
-    }
-
-    /**
-     * This will get the boolean value.
-     *
-     * @param value Parameter telling which boolean value to get.
-     *
-     * @return The single boolean instance that matches the parameter.
-     */
-    public static COSBoolean getBoolean( Boolean value )
-    {
-        return getBoolean( value.booleanValue() );
-    }
-
-    /**
-     * visitor pattern double dispatch method.
-     *
-     * @param visitor The object to notify when visiting this object.
-     * @return any object, depending on the visitor implementation, or null
-     * @throws IOException If an error occurs while visiting this object.
-     */
-    @Override
-    public Object accept(ICOSVisitor  visitor) throws IOException
-    {
-        return visitor.visitFromBoolean(this);
-    }
-
-    /**
-     * Return a string representation of this object.
-     *
-     * @return The string value of this object.
-     */
-    @Override
-    public String toString()
-    {
-        return String.valueOf( value );
-    }
-
-    /**
-     * This will write this object out to a PDF stream.
-     *
-     * @param output The stream to write this object out to.
-     *
-     * @throws IOException If an error occurs while writing out this object.
-     */
-    public void writePDF( OutputStream output ) throws IOException
-    {
-        if( value )
-        {
-            output.write( TRUE_BYTES );
-        }
-        else
-        {
-            output.write( FALSE_BYTES );
-        }
-    }
+  }
 }
