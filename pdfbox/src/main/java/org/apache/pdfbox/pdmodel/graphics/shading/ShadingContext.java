@@ -22,6 +22,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.io.IOException;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.util.Matrix;
@@ -32,93 +33,83 @@ import org.apache.pdfbox.util.Matrix;
  * @author Shaola Ren
  * @author Tilman Hausherr
  */
-public abstract class ShadingContext
-{
-    private float[] background;
-    private int rgbBackground;
-    private final PDShading shading;
-    private ColorModel outputColorModel;
-    private PDColorSpace shadingColorSpace;
+public abstract class ShadingContext {
+  private float[] background;
+  private int rgbBackground;
+  private final PDShading shading;
+  private ColorModel outputColorModel;
+  private PDColorSpace shadingColorSpace;
 
-    /**
-     * Constructor.
-     *
-     * @param shading the shading type to be used
-     * @param cm the color model to be used
-     * @param xform transformation for user to device space
-     * @param matrix the pattern matrix concatenated with that of the parent content stream
-     * @throws java.io.IOException if there is an error getting the color space
-     * or doing background color conversion.
-     */
-    public ShadingContext(PDShading shading, ColorModel cm, AffineTransform xform,
-                          Matrix matrix) throws IOException
-    {
-        this.shading = shading;
-        shadingColorSpace = shading.getColorSpace();
+  /**
+   * Constructor.
+   *
+   * @param shading the shading type to be used
+   * @param cm      the color model to be used
+   * @param xform   transformation for user to device space
+   * @param matrix  the pattern matrix concatenated with that of the parent
+   *                content stream
+   * @throws java.io.IOException if there is an error getting the color space or
+   *                             doing background color conversion.
+   */
+  public ShadingContext(final PDShading shading, final ColorModel cm, final AffineTransform xform, final Matrix matrix)
+      throws IOException {
+    this.shading = shading;
+    shadingColorSpace = shading.getColorSpace();
 
-        // create the output color model using RGB+alpha as color space
-        ColorSpace outputCS = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-        outputColorModel = new ComponentColorModel(outputCS, true, false, Transparency.TRANSLUCENT,
-                DataBuffer.TYPE_BYTE);
+    // create the output color model using RGB+alpha as color space
+    final ColorSpace outputCS = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+    outputColorModel = new ComponentColorModel(outputCS, true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 
-        // get background values if available
-        COSArray bg = shading.getBackground();
-        if (bg != null)
-        {
-            background = bg.toFloatArray();
-            rgbBackground = convertToRGB(background);
-        }
+    // get background values if available
+    final COSArray bg = shading.getBackground();
+    if (bg != null) {
+      background = bg.toFloatArray();
+      rgbBackground = convertToRGB(background);
     }
+  }
 
-    PDColorSpace getShadingColorSpace()
-    {
-        return shadingColorSpace;
-    }
+  PDColorSpace getShadingColorSpace() {
+    return shadingColorSpace;
+  }
 
-    PDShading getShading()
-    {
-        return shading;
-    }
+  PDShading getShading() {
+    return shading;
+  }
 
-    float[] getBackground()
-    {
-        return background;
-    }
+  float[] getBackground() {
+    return background;
+  }
 
-    int getRgbBackground()
-    {
-        return rgbBackground;
-    }
+  int getRgbBackground() {
+    return rgbBackground;
+  }
 
-    /**
-     * Convert color values from shading colorspace to RGB color values encoded
-     * into an integer.
-     *
-     * @param values color values in shading colorspace.
-     * @return RGB values encoded in an integer.
-     * @throws java.io.IOException if the color conversion fails.
-     */
-    final int convertToRGB(float[] values) throws IOException
-    {
-        int normRGBValues;
+  /**
+   * Convert color values from shading colorspace to RGB color values encoded into
+   * an integer.
+   *
+   * @param values color values in shading colorspace.
+   * @return RGB values encoded in an integer.
+   * @throws java.io.IOException if the color conversion fails.
+   */
+  final int convertToRGB(final float[] values) throws IOException {
+    int normRGBValues;
 
-        float[] rgbValues = shadingColorSpace.toRGB(values);
-        normRGBValues = (int) (rgbValues[0] * 255);
-        normRGBValues |= (int) (rgbValues[1] * 255) << 8;
-        normRGBValues |= (int) (rgbValues[2] * 255) << 16;
+    final float[] rgbValues = shadingColorSpace.toRGB(values);
+    normRGBValues = (int) (rgbValues[0] * 255);
+    normRGBValues |= (int) (rgbValues[1] * 255) << 8;
+    normRGBValues |= (int) (rgbValues[2] * 255) << 16;
 
-        return normRGBValues;
-    }
-    
-    ColorModel getColorModel()
-    {
-        return outputColorModel;
-    }
+    return normRGBValues;
+  }
 
-    void dispose()
-    {
-        outputColorModel = null;
-        shadingColorSpace = null;
-    }
+  ColorModel getColorModel() {
+    return outputColorModel;
+  }
+
+  void dispose() {
+    outputColorModel = null;
+    shadingColorSpace = null;
+  }
 
 }
