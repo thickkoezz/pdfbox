@@ -24,98 +24,87 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 
 /**
- * Radio button fields contain a set of related buttons that can each be on or off.
+ * Radio button fields contain a set of related buttons that can each be on or
+ * off.
  *
  * @author sug
  */
-public final class PDRadioButton extends PDButton
-{
-    /**
-     * A Ff flag.
-     */
-    private static final int FLAG_NO_TOGGLE_TO_OFF = 1 << 14;
-    
-    /**
-     * @see PDField#PDField(PDAcroForm)
-     *
-     * @param acroForm The acroform.
-     */
-    public PDRadioButton(PDAcroForm acroForm)
-    {
-        super(acroForm);
-        setRadioButton(true);
-    }
-    
-    /**
-     * Constructor.
-     * 
-     * @param acroForm The form that this field is part of.
-     * @param field the PDF object to represent as a field.
-     * @param parent the parent node of the node
-     */
-    PDRadioButton(PDAcroForm acroForm, COSDictionary field, PDNonTerminalField parent)
-    {
-        super(acroForm, field, parent);
-    }
+public final class PDRadioButton extends PDButton {
+  /**
+   * @see PDField#PDField(PDAcroForm)
+   *
+   * @param acroForm The acroform.
+   */
+  public PDRadioButton(final PDAcroForm acroForm) {
+    super(acroForm);
+    setRadioButton(true);
+  }
 
-    /**
-     * From the PDF Spec <br>
-     * If set, a group of radio buttons within a radio button field that use the same value for the on state will turn
-     * on and off in unison; that is if one is checked, they are all checked. If clear, the buttons are mutually
-     * exclusive (the same behavior as HTML radio buttons).
-     *
-     * @param radiosInUnison The new flag for radiosInUnison.
-     */
-    public void setRadiosInUnison(boolean radiosInUnison)
-    {
-        getCOSObject().setFlag(COSName.FF, FLAG_RADIOS_IN_UNISON, radiosInUnison);
-    }
+  /**
+   * Constructor.
+   *
+   * @param acroForm The form that this field is part of.
+   * @param field    the PDF object to represent as a field.
+   * @param parent   the parent node of the node
+   */
+  PDRadioButton(final PDAcroForm acroForm, final COSDictionary field, final PDNonTerminalField parent) {
+    super(acroForm, field, parent);
+  }
 
-    /**
-     *
-     * @return true If the flag is set for radios in unison.
-     */
-    public boolean isRadiosInUnison()
-    {
-        return getCOSObject().getFlag(COSName.FF, FLAG_RADIOS_IN_UNISON);
-    }
+  /**
+   * From the PDF Spec <br>
+   * If set, a group of radio buttons within a radio button field that use the
+   * same value for the on state will turn on and off in unison; that is if one is
+   * checked, they are all checked. If clear, the buttons are mutually exclusive
+   * (the same behavior as HTML radio buttons).
+   *
+   * @param radiosInUnison The new flag for radiosInUnison.
+   */
+  public void setRadiosInUnison(final boolean radiosInUnison) {
+    getCOSObject().setFlag(COSName.FF, PDButton.FLAG_RADIOS_IN_UNISON, radiosInUnison);
+  }
 
-    /**
-     * This will get the selected export values.
-     * <p>
-     * A RadioButton might have an export value to allow field values
-     * which can not be encoded as PDFDocEncoding or for the same export value 
-     * being assigned to multiple RadioButtons in a group.<br>
-     * To define an export value the RadioButton must define options {@link #setExportValues(List)}
-     * which correspond to the individual items within the RadioButton.</p>
-     * <p>
-     * The method will either return the corresponding values from the options entry or in case there
-     * is no such entry the fields value</p>
-     * 
-     * @return the export value of the field.
-     */
-    public List<String> getSelectedExportValues()
-    {
-        Set<String> onValues = getOnValues();
-        List<String> exportValues = getExportValues();
-        List<String> selectedExportValues = new ArrayList<>();
-        if (exportValues.isEmpty())
-        {
-            selectedExportValues.add(getValue());
-            return selectedExportValues;
+  /**
+   *
+   * @return true If the flag is set for radios in unison.
+   */
+  public boolean isRadiosInUnison() {
+    return getCOSObject().getFlag(COSName.FF, PDButton.FLAG_RADIOS_IN_UNISON);
+  }
+
+  /**
+   * This will get the selected export values.
+   * <p>
+   * A RadioButton might have an export value to allow field values which can not
+   * be encoded as PDFDocEncoding or for the same export value being assigned to
+   * multiple RadioButtons in a group.<br>
+   * To define an export value the RadioButton must define options
+   * {@link #setExportValues(List)} which correspond to the individual items
+   * within the RadioButton.
+   * </p>
+   * <p>
+   * The method will either return the corresponding values from the options entry
+   * or in case there is no such entry the fields value
+   * </p>
+   *
+   * @return the export value of the field.
+   */
+  public List<String> getSelectedExportValues() {
+    final Set<String> onValues = getOnValues();
+    final List<String> exportValues = getExportValues();
+    final List<String> selectedExportValues = new ArrayList<>();
+    if (exportValues.isEmpty()) {
+      selectedExportValues.add(getValue());
+      return selectedExportValues;
+    } else {
+      final String fieldValue = getValue();
+      final int idx = 0;
+      for (final String onValue : onValues) {
+        if (onValue.compareTo(fieldValue) == 0) {
+          selectedExportValues.add(exportValues.get(idx));
         }
-        else
-        {
-            String fieldValue = getValue();
-            int idx = 0;
-            for (String onValue : onValues)
-            {
-                if (onValue.compareTo(fieldValue) == 0)
-                {
-                    selectedExportValues.add(exportValues.get(idx));
-                }
-            }
-            return selectedExportValues;
-        }
+      }
+      return selectedExportValues;
     }
+  }
 }
