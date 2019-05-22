@@ -35,147 +35,124 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author Kühn &amp; Weyh Software GmbH
  */
-public final class PDSoftMask implements COSObjectable
-{
-    /**
-     * Creates a new soft mask.
-     *
-     * @param dictionary SMask
-     */
-    public static PDSoftMask create(COSBase dictionary)
-    {
-        if (dictionary instanceof COSName)
-        {
-            if (COSName.NONE.equals(dictionary))
-            {
-                return null;
-            }
-            else
-            {
-                LOG.warn("Invalid SMask " + dictionary);
-                return null;
-            }
+public final class PDSoftMask implements COSObjectable {
+  /**
+   * Creates a new soft mask.
+   *
+   * @param dictionary SMask
+   */
+  public static PDSoftMask create(final COSBase dictionary) {
+    if (dictionary instanceof COSName) {
+      if (COSName.NONE.equals(dictionary))
+        return null;
+      else {
+        PDSoftMask.LOG.warn("Invalid SMask " + dictionary);
+        return null;
+      }
+    } else if (dictionary instanceof COSDictionary)
+      return new PDSoftMask((COSDictionary) dictionary);
+    else {
+      PDSoftMask.LOG.warn("Invalid SMask " + dictionary);
+      return null;
+    }
+  }
+
+  private static final Log LOG = LogFactory.getLog(PDSoftMask.class);
+
+  private final COSDictionary dictionary;
+  private COSName subType = null;
+  private PDTransparencyGroup group = null;
+  private COSArray backdropColor = null;
+  private PDFunction transferFunction = null;
+
+  /**
+   * To allow a soft mask to know the CTM at the time of activation of the
+   * ExtGState.
+   */
+  private Matrix ctm;
+
+  /**
+   * Creates a new soft mask.
+   *
+   * @param dictionary The soft mask dictionary.
+   */
+  public PDSoftMask(final COSDictionary dictionary) {
+    this.dictionary = dictionary;
+  }
+
+  @Override
+  public COSDictionary getCOSObject() {
+    return dictionary;
+  }
+
+  /**
+   * Returns the subtype of the soft mask (Alpha, Luminosity) - S entry
+   */
+  public COSName getSubType() {
+    if (subType == null) {
+      subType = (COSName) getCOSObject().getDictionaryObject(COSName.S);
+    }
+    return subType;
+  }
+
+  /**
+   * Returns the G entry of the soft mask object
+   *
+   * @return form containing the transparency group
+   * @throws IOException
+   */
+  public PDTransparencyGroup getGroup() throws IOException {
+    if (group == null) {
+      final COSBase cosGroup = getCOSObject().getDictionaryObject(COSName.G);
+      if (cosGroup != null) {
+        final PDXObject x = PDXObject.createXObject(cosGroup, null);
+        if (x instanceof PDTransparencyGroup) {
+          group = (PDTransparencyGroup) x;
         }
-        else if (dictionary instanceof COSDictionary)
-        {
-            return new PDSoftMask((COSDictionary) dictionary);
-        }
-        else
-        {
-            LOG.warn("Invalid SMask " + dictionary);
-            return null;
-        }
+      }
     }
+    return group;
+  }
 
-    private static final Log LOG = LogFactory.getLog(PDSoftMask.class);
-
-    private final COSDictionary dictionary;
-    private COSName subType = null;
-    private PDTransparencyGroup group = null;
-    private COSArray backdropColor = null;
-    private PDFunction transferFunction = null;
-
-    /**
-     * To allow a soft mask to know the CTM at the time of activation of the ExtGState.
-     */
-    private Matrix ctm;
-
-    /**
-     * Creates a new soft mask.
-     *
-     * @param dictionary The soft mask dictionary.
-     */
-    public PDSoftMask(COSDictionary dictionary)
-    {
-        this.dictionary = dictionary;
+  /**
+   * Returns the backdrop color.
+   */
+  public COSArray getBackdropColor() {
+    if (backdropColor == null) {
+      backdropColor = (COSArray) getCOSObject().getDictionaryObject(COSName.BC);
     }
+    return backdropColor;
+  }
 
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return dictionary;
+  /**
+   * Returns the transfer function.
+   *
+   * @throws IOException If we are unable to create the PDFunction object.
+   */
+  public PDFunction getTransferFunction() throws IOException {
+    if (transferFunction == null) {
+      final COSBase cosTF = getCOSObject().getDictionaryObject(COSName.TR);
+      if (cosTF != null) {
+        transferFunction = PDFunction.create(cosTF);
+      }
     }
+    return transferFunction;
+  }
 
-    /**
-     * Returns the subtype of the soft mask (Alpha, Luminosity) - S entry
-     */
-    public COSName getSubType()
-    {
-        if (subType == null)
-        {
-            subType = (COSName) getCOSObject().getDictionaryObject(COSName.S);
-        }
-        return subType;
-    }
+  /**
+   * Set the CTM that is valid at the time the ExtGState was activated.
+   *
+   * @param ctm
+   */
+  void setInitialTransformationMatrix(final Matrix ctm) {
+    this.ctm = ctm;
+  }
 
-    /**
-     * Returns the G entry of the soft mask object
-     * 
-     * @return form containing the transparency group
-     * @throws IOException
-     */
-    public PDTransparencyGroup getGroup() throws IOException
-    {
-        if (group == null)
-        {
-            COSBase cosGroup = getCOSObject().getDictionaryObject(COSName.G);
-            if (cosGroup != null)
-            {
-                PDXObject x = PDXObject.createXObject(cosGroup, null);
-                if (x instanceof PDTransparencyGroup)
-                {
-                    group = (PDTransparencyGroup) x;
-                }
-            }
-        }
-        return group;
-    }
-
-    /**
-     * Returns the backdrop color.
-     */
-    public COSArray getBackdropColor()
-    {
-        if (backdropColor == null)
-        {
-            backdropColor = (COSArray) getCOSObject().getDictionaryObject(COSName.BC);
-        }
-        return backdropColor;
-    }
-
-    /**
-     * Returns the transfer function.
-     * @throws IOException If we are unable to create the PDFunction object.
-     */
-    public PDFunction getTransferFunction() throws IOException
-    {
-        if (transferFunction == null)
-        {
-            COSBase cosTF = getCOSObject().getDictionaryObject(COSName.TR);
-            if (cosTF != null)
-            {
-                transferFunction = PDFunction.create(cosTF);
-            }
-        }
-        return transferFunction;
-    }
-
-    /**
-     * Set the CTM that is valid at the time the ExtGState was activated.
-     *
-     * @param ctm
-     */
-    void setInitialTransformationMatrix(Matrix ctm)
-    {
-        this.ctm = ctm;
-    }
-
-    /**
-     * Returns the CTM at the time the ExtGState was activated.
-     *
-     */
-    public Matrix getInitialTransformationMatrix()
-    {
-        return ctm;
-    }
+  /**
+   * Returns the CTM at the time the ExtGState was activated.
+   *
+   */
+  public Matrix getInitialTransformationMatrix() {
+    return ctm;
+  }
 }
