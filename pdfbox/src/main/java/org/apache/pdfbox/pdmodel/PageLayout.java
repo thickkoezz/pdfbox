@@ -18,54 +18,48 @@
 package org.apache.pdfbox.pdmodel;
 
 /**
- * A name object specifying the page layout shall be used when the document is opened.
+ * A name object specifying the page layout shall be used when the document is
+ * opened.
  *
  * @author John Hewson
  */
-public enum PageLayout
-{
-    /** Display one page at a time. */
-    SINGLE_PAGE("SinglePage"),
+public enum PageLayout {
+  /** Display one page at a time. */
+  SINGLE_PAGE("SinglePage"),
 
-    /**  Display the pages in one column. */
-    ONE_COLUMN("OneColumn"),
+  /** Display the pages in one column. */
+  ONE_COLUMN("OneColumn"),
 
-    /** Display the pages in two columns), with odd numbered pages on the left. */
-    TWO_COLUMN_LEFT("TwoColumnLeft"),
+  /** Display the pages in two columns), with odd numbered pages on the left. */
+  TWO_COLUMN_LEFT("TwoColumnLeft"),
 
-    /** Display the pages in two columns), with odd numbered pages on the right.  */
-    TWO_COLUMN_RIGHT("TwoColumnRight"),
+  /** Display the pages in two columns), with odd numbered pages on the right. */
+  TWO_COLUMN_RIGHT("TwoColumnRight"),
 
-    /** Display the pages two at a time), with odd-numbered pages on the left. */
-    TWO_PAGE_LEFT("TwoPageLeft"),
+  /** Display the pages two at a time), with odd-numbered pages on the left. */
+  TWO_PAGE_LEFT("TwoPageLeft"),
 
-    /** Display the pages two at a time), with odd-numbered pages on the right. */
-    TWO_PAGE_RIGHT("TwoPageRight");
+  /** Display the pages two at a time), with odd-numbered pages on the right. */
+  TWO_PAGE_RIGHT("TwoPageRight");
 
-    public static PageLayout fromString(String value)
-    {
-        for (PageLayout instance : PageLayout.values())
-        {
-            if (instance.value.equals(value))
-            {
-                return instance;
-            }
-        }
-        throw new IllegalArgumentException(value);
+  public static PageLayout fromString(final String value) {
+    for (final PageLayout instance : PageLayout.values()) {
+      if (instance.value.equals(value))
+        return instance;
     }
+    throw new IllegalArgumentException(value);
+  }
 
-    private final String value;
+  private final String value;
 
-    PageLayout(String value)
-    {
-        this.value = value;
-    }
+  PageLayout(final String value) {
+    this.value = value;
+  }
 
-    /**
-     * Returns the string value, as used in a PDF file.
-     */
-    public String stringValue()
-    {
-        return value;
-    }
+  /**
+   * Returns the string value, as used in a PDF file.
+   */
+  public String stringValue() {
+    return value;
+  }
 }
