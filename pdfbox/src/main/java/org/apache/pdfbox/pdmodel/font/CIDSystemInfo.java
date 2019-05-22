@@ -22,37 +22,31 @@ package org.apache.pdfbox.pdmodel.font;
  *
  * @author John Hewson
  */
-public final class CIDSystemInfo
-{
-    private final String registry;
-    private final String ordering;
-    private final int supplement;
+public final class CIDSystemInfo {
+  private final String registry;
+  private final String ordering;
+  private final int supplement;
 
-    CIDSystemInfo(String registry, String ordering, int supplement)
-    {
-        this.registry = registry;
-        this.ordering = ordering;
-        this.supplement = supplement;
-    }
-    
-    public String getRegistry()
-    {
-        return registry;
-    }
+  CIDSystemInfo(final String registry, final String ordering, final int supplement) {
+    this.registry = registry;
+    this.ordering = ordering;
+    this.supplement = supplement;
+  }
 
-    public String getOrdering()
-    {
-        return ordering;
-    }
+  public String getRegistry() {
+    return registry;
+  }
 
-    public int getSupplement()
-    {
-        return supplement;
-    }
+  public String getOrdering() {
+    return ordering;
+  }
 
-    @Override
-    public String toString()
-    {
-        return getRegistry() + "-" + getOrdering() + "-" + getSupplement();
-    }
+  public int getSupplement() {
+    return supplement;
+  }
+
+  @Override
+  public String toString() {
+    return getRegistry() + "-" + getOrdering() + "-" + getSupplement();
+  }
 }
