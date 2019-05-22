@@ -19,38 +19,32 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 
-public class PDSoundAppearanceHandler extends PDAbstractAppearanceHandler
-{
-    private static final Log LOG = LogFactory.getLog(PDSoundAppearanceHandler.class);
+public class PDSoundAppearanceHandler extends PDAbstractAppearanceHandler {
+  private static final Log LOG = LogFactory.getLog(PDSoundAppearanceHandler.class);
 
-    public PDSoundAppearanceHandler(PDAnnotation annotation)
-    {
-        super(annotation);
-    }
+  public PDSoundAppearanceHandler(final PDAnnotation annotation) {
+    super(annotation);
+  }
 
-    @Override
-    public void generateAppearanceStreams()
-    {
-        generateNormalAppearance();
-        generateRolloverAppearance();
-        generateDownAppearance();
-    }
+  @Override
+  public void generateAppearanceStreams() {
+    generateNormalAppearance();
+    generateRolloverAppearance();
+    generateDownAppearance();
+  }
 
-    @Override
-    public void generateNormalAppearance()
-    {
-        // TODO to be implemented
-    }
+  @Override
+  public void generateNormalAppearance() {
+    // TODO to be implemented
+  }
 
-    @Override
-    public void generateRolloverAppearance()
-    {
-        // TODO to be implemented
-    }
+  @Override
+  public void generateRolloverAppearance() {
+    // TODO to be implemented
+  }
 
-    @Override
-    public void generateDownAppearance()
-    {
-        // TODO to be implemented
-    }
+  @Override
+  public void generateDownAppearance() {
+    // TODO to be implemented
+  }
 }
