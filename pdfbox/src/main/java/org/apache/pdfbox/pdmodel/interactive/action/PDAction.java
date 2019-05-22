@@ -32,129 +32,115 @@ import org.apache.pdfbox.pdmodel.common.PDDestinationOrAction;
  * @author Ben Litchfield
  * @author Panagiotis Toumasis
  */
-public abstract class PDAction implements PDDestinationOrAction
-{
-    /**
-     * The type of PDF object.
-     */
-    public static final String TYPE = "Action";
+public abstract class PDAction implements PDDestinationOrAction {
+  /**
+   * The type of PDF object.
+   */
+  public static final String TYPE = "Action";
 
-    /**
-     * The action dictionary.
-     */
-    protected COSDictionary action;
+  /**
+   * The action dictionary.
+   */
+  protected COSDictionary action;
 
-    /**
-     * Default constructor.
-     */
-    public PDAction()
-    {
-        action = new COSDictionary();
-        setType( TYPE );
+  /**
+   * Default constructor.
+   */
+  public PDAction() {
+    action = new COSDictionary();
+    setType(PDAction.TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param a The action dictionary.
+   */
+  public PDAction(final COSDictionary a) {
+    action = a;
+  }
+
+  /**
+   * Convert this standard java object to a COS object.
+   *
+   * @return The cos object that matches this Java object.
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return action;
+  }
+
+  /**
+   * This will get the type of PDF object that the actions dictionary describes.
+   * If present must be Action for an action dictionary.
+   *
+   * @return The Type of PDF object.
+   */
+  public final String getType() {
+    return action.getNameAsString(COSName.TYPE);
+  }
+
+  /**
+   * This will set the type of PDF object that the actions dictionary describes.
+   * If present must be Action for an action dictionary.
+   *
+   * @param type The new Type for the PDF object.
+   */
+  protected final void setType(final String type) {
+    action.setName(COSName.TYPE, type);
+  }
+
+  /**
+   * This will get the type of action that the actions dictionary describes.
+   *
+   * @return The S entry of actions dictionary.
+   */
+  public final String getSubType() {
+    return action.getNameAsString(COSName.S);
+  }
+
+  /**
+   * This will set the type of action that the actions dictionary describes.
+   *
+   * @param s The new type of action.
+   */
+  protected final void setSubType(final String s) {
+    action.setName(COSName.S, s);
+  }
+
+  /**
+   * This will get the next action, or sequence of actions, to be performed after
+   * this one. The value is either a single action dictionary or an array of
+   * action dictionaries to be performed in order.
+   *
+   * @return The Next action or sequence of actions.
+   */
+  public List<PDAction> getNext() {
+    List<PDAction> retval = null;
+    final COSBase next = action.getDictionaryObject(COSName.NEXT);
+    if (next instanceof COSDictionary) {
+      final PDAction pdAction = PDActionFactory.createAction((COSDictionary) next);
+      retval = new COSArrayList<>(pdAction, next, action, COSName.NEXT);
+    } else if (next instanceof COSArray) {
+      final COSArray array = (COSArray) next;
+      final List<PDAction> actions = new ArrayList<>();
+      for (int i = 0; i < array.size(); i++) {
+        actions.add(PDActionFactory.createAction((COSDictionary) array.getObject(i)));
+      }
+      retval = new COSArrayList<>(actions, array);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param a The action dictionary.
-     */
-    public PDAction( COSDictionary a )
-    {
-        action = a;
-    }
+    return retval;
+  }
 
-    /**
-     * Convert this standard java object to a COS object.
-     *
-     * @return The cos object that matches this Java object.
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return action;
-    }
-
-    /**
-     * This will get the type of PDF object that the actions dictionary describes.
-     * If present must be Action for an action dictionary.
-     *
-     * @return The Type of PDF object.
-     */
-    public final String getType()
-    {
-       return action.getNameAsString( COSName.TYPE );
-    }
-
-    /**
-     * This will set the type of PDF object that the actions dictionary describes.
-     * If present must be Action for an action dictionary.
-     *
-     * @param type The new Type for the PDF object.
-     */
-    protected final void setType(String type)
-    {
-       action.setName(COSName.TYPE, type );
-    }
-
-    /**
-     * This will get the type of action that the actions dictionary describes.
-     *
-     * @return The S entry of actions dictionary.
-     */
-    public final String getSubType()
-    {
-        return action.getNameAsString(COSName.S);
-    }
-
-    /**
-     * This will set the type of action that the actions dictionary describes.
-     *
-     * @param s The new type of action.
-     */
-    protected final void setSubType(String s)
-    {
-        action.setName(COSName.S, s);
-    }
-
-    /**
-     * This will get the next action, or sequence of actions, to be performed after this one.
-     * The value is either a single action dictionary or an array of action dictionaries
-     * to be performed in order.
-     *
-     * @return The Next action or sequence of actions.
-     */
-    public List<PDAction> getNext()
-    {
-        List<PDAction> retval = null;
-        COSBase next = action.getDictionaryObject(COSName.NEXT);
-        if( next instanceof COSDictionary )
-        {
-            PDAction pdAction = PDActionFactory.createAction( (COSDictionary) next );
-            retval = new COSArrayList<>(pdAction, next, action, COSName.NEXT);
-        }
-        else if( next instanceof COSArray )
-        {
-            COSArray array = (COSArray)next;
-            List<PDAction> actions = new ArrayList<>();
-            for( int i=0; i<array.size(); i++ )
-            {
-                actions.add( PDActionFactory.createAction( (COSDictionary) array.getObject( i )));
-            }
-            retval = new COSArrayList<>( actions, array );
-        }
-
-        return retval;
-    }
-
-    /**
-     * This will set the next action, or sequence of actions, to be performed after this one.
-     * The value is either a single action dictionary or an array of action dictionaries
-     * to be performed in order.
-     *
-     * @param next The Next action or sequence of actions.
-     */
-    public void setNext( List<?> next )
-    {
-        action.setItem(COSName.NEXT, COSArrayList.converterToCOSArray(next));
-    }
+  /**
+   * This will set the next action, or sequence of actions, to be performed after
+   * this one. The value is either a single action dictionary or an array of
+   * action dictionaries to be performed in order.
+   *
+   * @param next The Next action or sequence of actions.
+   */
+  public void setNext(final List<?> next) {
+    action.setItem(COSName.NEXT, COSArrayList.converterToCOSArray(next));
+  }
 }
