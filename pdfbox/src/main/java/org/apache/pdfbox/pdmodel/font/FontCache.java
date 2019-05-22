@@ -20,32 +20,30 @@ package org.apache.pdfbox.pdmodel.font;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.fontbox.FontBoxFont;
 
 /**
- * An in-memory cache for system fonts. This allows PDFBox to manage caching for a {@link FontProvider}.
- * PDFBox is free to purge this cache at will.
+ * An in-memory cache for system fonts. This allows PDFBox to manage caching for
+ * a {@link FontProvider}. PDFBox is free to purge this cache at will.
  *
  * @author John Hewson
  */
-public final class FontCache
-{
-    private final Map<FontInfo, SoftReference<FontBoxFont>> cache = new ConcurrentHashMap<>();
+public final class FontCache {
+  private final Map<FontInfo, SoftReference<FontBoxFont>> cache = new ConcurrentHashMap<>();
 
-    /**
-     * Adds the given FontBox font to the cache.
-     */
-    public void addFont(FontInfo info, FontBoxFont font)
-    {
-        cache.put(info, new SoftReference<>(font));
-    }
+  /**
+   * Adds the given FontBox font to the cache.
+   */
+  public void addFont(final FontInfo info, final FontBoxFont font) {
+    cache.put(info, new SoftReference<>(font));
+  }
 
-    /**
-     * Returns the FontBox font associated with the given FontInfo.
-     */
-    public FontBoxFont getFont(FontInfo info)
-    {
-        SoftReference<FontBoxFont> reference = cache.get(info);
-        return reference != null ? reference.get() : null;
-    }
+  /**
+   * Returns the FontBox font associated with the given FontInfo.
+   */
+  public FontBoxFont getFont(final FontInfo info) {
+    final SoftReference<FontBoxFont> reference = cache.get(info);
+    return reference != null ? reference.get() : null;
+  }
 }
