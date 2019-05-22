@@ -22,50 +22,43 @@ package org.apache.pdfbox.pdmodel;
  *
  * @author John Hewson
  */
-public enum PageMode
-{
-    /** Neither the outline nor the thumbnails are displayed. */
-    USE_NONE("UseNone"),
+public enum PageMode {
+  /** Neither the outline nor the thumbnails are displayed. */
+  USE_NONE("UseNone"),
 
-    /** Show bookmarks when pdf is opened. */
-    USE_OUTLINES("UseOutlines"),
+  /** Show bookmarks when pdf is opened. */
+  USE_OUTLINES("UseOutlines"),
 
-    /** Show thumbnails when pdf is opened. */
-    USE_THUMBS("UseThumbs"),
+  /** Show thumbnails when pdf is opened. */
+  USE_THUMBS("UseThumbs"),
 
-    /** Full screen mode with no menu bar, window controls. */
-    FULL_SCREEN("FullScreen"),
+  /** Full screen mode with no menu bar, window controls. */
+  FULL_SCREEN("FullScreen"),
 
-    /** Optional content group panel is visible when opened. */
-    USE_OPTIONAL_CONTENT("UseOC"),
+  /** Optional content group panel is visible when opened. */
+  USE_OPTIONAL_CONTENT("UseOC"),
 
-    /** Attachments panel is visible. */
-    USE_ATTACHMENTS("UseAttachments");
+  /** Attachments panel is visible. */
+  USE_ATTACHMENTS("UseAttachments");
 
-    public static PageMode fromString(String value)
-    {
-        for (PageMode instance : PageMode.values())
-        {
-            if (instance.value.equals(value))
-            {
-                return instance;
-            }
-        }
-        throw new IllegalArgumentException(value);
+  public static PageMode fromString(final String value) {
+    for (final PageMode instance : PageMode.values()) {
+      if (instance.value.equals(value))
+        return instance;
     }
+    throw new IllegalArgumentException(value);
+  }
 
-    private final String value;
+  private final String value;
 
-    PageMode(String value)
-    {
-        this.value = value;
-    }
+  PageMode(final String value) {
+    this.value = value;
+  }
 
-    /**
-     * Returns the string value, as used in a PDF file.
-     */
-    public String stringValue()
-    {
-        return value;
-    }
+  /**
+   * Returns the string value, as used in a PDF file.
+   */
+  public String stringValue() {
+    return value;
+  }
 }
