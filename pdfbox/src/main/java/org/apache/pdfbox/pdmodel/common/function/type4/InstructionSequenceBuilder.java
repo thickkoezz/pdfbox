@@ -21,110 +21,100 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Basic parser for Type 4 functions which is used to build up instruction sequences.
+ * Basic parser for Type 4 functions which is used to build up instruction
+ * sequences.
  *
  */
-public final class InstructionSequenceBuilder extends Parser.AbstractSyntaxHandler
-{
+public final class InstructionSequenceBuilder extends Parser.AbstractSyntaxHandler {
 
-    private final InstructionSequence mainSequence = new InstructionSequence();
-    private final Stack<InstructionSequence> seqStack = new Stack<>();
+  private final InstructionSequence mainSequence = new InstructionSequence();
+  private final Stack<InstructionSequence> seqStack = new Stack<>();
 
-    private InstructionSequenceBuilder()
-    {
-        this.seqStack.push(this.mainSequence);
+  private InstructionSequenceBuilder() {
+    seqStack.push(mainSequence);
+  }
+
+  /**
+   * Returns the instruction sequence that has been build from the syntactic
+   * elements.
+   *
+   * @return the instruction sequence
+   */
+  public InstructionSequence getInstructionSequence() {
+    return mainSequence;
+  }
+
+  /**
+   * Parses the given text into an instruction sequence representing a Type 4
+   * function that can be executed.
+   *
+   * @param text the Type 4 function text
+   * @return the instruction sequence
+   */
+  public static InstructionSequence parse(final CharSequence text) {
+    final InstructionSequenceBuilder builder = new InstructionSequenceBuilder();
+    Parser.parse(text, builder);
+    return builder.getInstructionSequence();
+  }
+
+  private InstructionSequence getCurrentSequence() {
+    return seqStack.peek();
+  }
+
+  private static final Pattern INTEGER_PATTERN = Pattern.compile("[\\+\\-]?\\d+");
+  private static final Pattern REAL_PATTERN = Pattern.compile("[\\-]?\\d*\\.\\d*([Ee]\\-?\\d+)?");
+
+  /** {@inheritDoc} */
+  @Override
+  public void token(final CharSequence text) {
+    final String token = text.toString();
+    token(token);
+  }
+
+  private void token(final String token) {
+    if ("{".equals(token)) {
+      final InstructionSequence child = new InstructionSequence();
+      getCurrentSequence().addProc(child);
+      seqStack.push(child);
+    } else if ("}".equals(token)) {
+      seqStack.pop();
+    } else {
+      Matcher m = InstructionSequenceBuilder.INTEGER_PATTERN.matcher(token);
+      if (m.matches()) {
+        getCurrentSequence().addInteger(InstructionSequenceBuilder.parseInt(token));
+        return;
+      }
+
+      m = InstructionSequenceBuilder.REAL_PATTERN.matcher(token);
+      if (m.matches()) {
+        getCurrentSequence().addReal(InstructionSequenceBuilder.parseReal(token));
+        return;
+      }
+
+      // TODO Maybe implement radix numbers, such as 8#1777 or 16#FFFE
+
+      getCurrentSequence().addName(token);
     }
+  }
 
-    /**
-     * Returns the instruction sequence that has been build from the syntactic elements.
-     * @return the instruction sequence
-     */
-    public InstructionSequence getInstructionSequence()
-    {
-        return this.mainSequence;
-    }
+  /**
+   * Parses a value of type "int".
+   *
+   * @param token the token to be parsed
+   * @return the parsed value
+   */
+  public static int parseInt(final String token) {
+    return Integer.parseInt(token);
+  }
 
-    /**
-     * Parses the given text into an instruction sequence representing a Type 4 function
-     * that can be executed.
-     * @param text the Type 4 function text
-     * @return the instruction sequence
-     */
-    public static InstructionSequence parse(CharSequence text)
-    {
-        InstructionSequenceBuilder builder = new InstructionSequenceBuilder();
-        Parser.parse(text, builder);
-        return builder.getInstructionSequence();
-    }
-
-    private InstructionSequence getCurrentSequence()
-    {
-        return this.seqStack.peek();
-    }
-
-    private static final Pattern INTEGER_PATTERN = Pattern.compile("[\\+\\-]?\\d+");
-    private static final Pattern REAL_PATTERN = Pattern.compile("[\\-]?\\d*\\.\\d*([Ee]\\-?\\d+)?");
-
-    /** {@inheritDoc} */
-    @Override
-    public void token(CharSequence text)
-    {
-        String token = text.toString();
-        token(token);
-    }
-
-    private void token(String token)
-    {
-        if ("{".equals(token))
-        {
-            InstructionSequence child = new InstructionSequence();
-            getCurrentSequence().addProc(child);
-            this.seqStack.push(child);
-        }
-        else if ("}".equals(token))
-        {
-            this.seqStack.pop();
-        }
-        else
-        {
-            Matcher m = INTEGER_PATTERN.matcher(token);
-            if (m.matches())
-            {
-                getCurrentSequence().addInteger(parseInt(token));
-                return;
-            }
-
-            m = REAL_PATTERN.matcher(token);
-            if (m.matches())
-            {
-                getCurrentSequence().addReal(parseReal(token));
-                return;
-            }
-
-            //TODO Maybe implement radix numbers, such as 8#1777 or 16#FFFE
-
-            getCurrentSequence().addName(token);
-        }
-    }
-
-    /**
-     * Parses a value of type "int".
-     * @param token the token to be parsed
-     * @return the parsed value
-     */
-    public static int parseInt(String token)
-    {
-        return Integer.parseInt(token);
-    }
-
-    /**
-     * Parses a value of type "real".
-     * @param token the token to be parsed
-     * @return the parsed value
-     */
-    public static float parseReal(String token)
-    {
-        return Float.parseFloat(token);
-    }
+  /**
+   * Parses a value of type "real".
+   *
+   * @param token the token to be parsed
+   * @return the parsed value
+   */
+  public static float parseReal(final String token) {
+    return Float.parseFloat(token);
+  }
 
 }
