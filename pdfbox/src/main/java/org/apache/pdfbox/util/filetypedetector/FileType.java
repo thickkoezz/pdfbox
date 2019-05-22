@@ -19,39 +19,29 @@ package org.apache.pdfbox.util.filetypedetector;
 /**
  * @author Drew Noakes
  *
- * code taken from https://github.com/drewnoakes/metadata-extractor
+ *         code taken from https://github.com/drewnoakes/metadata-extractor
  *
- * 2016-01-04
+ *         2016-01-04
  *
- * latest commit number 73f1a48
+ *         latest commit number 73f1a48
  *
- * Enumeration of supported image file formats.
+ *         Enumeration of supported image file formats.
  */
-public enum FileType
-{
-    UNKNOWN,
-    JPEG,
-    TIFF,
-    PSD,
-    PNG,
-    BMP,
-    GIF,
-    ICO,
-    PCX,
-    RIFF,
+public enum FileType {
+  UNKNOWN, JPEG, TIFF, PSD, PNG, BMP, GIF, ICO, PCX, RIFF,
 
-    /** Sony camera raw. */
-    ARW,
-    /** Canon camera raw, version 1. */
-    CRW,
-    /** Canon camera raw, version 2. */
-    CR2,
-    /** Nikon camera raw. */
-    NEF,
-    /** Olympus camera raw. */
-    ORF,
-    /** FujiFilm camera raw. */
-    RAF,
-    /** Panasonic camera raw. */
-    RW2
+  /** Sony camera raw. */
+  ARW,
+  /** Canon camera raw, version 1. */
+  CRW,
+  /** Canon camera raw, version 2. */
+  CR2,
+  /** Nikon camera raw. */
+  NEF,
+  /** Olympus camera raw. */
+  ORF,
+  /** FujiFilm camera raw. */
+  RAF,
+  /** Panasonic camera raw. */
+  RW2
 }
