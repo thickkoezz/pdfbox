@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+
 import org.apache.pdfbox.filter.Filter;
 import org.apache.pdfbox.io.RandomAccess;
 import org.apache.pdfbox.io.RandomAccessInputStream;
@@ -33,139 +34,103 @@ import org.apache.pdfbox.io.ScratchFile;
  *
  * @author John Hewson
  */
-public final class COSOutputStream extends FilterOutputStream
-{
-    private final List<Filter> filters;
-    private final COSDictionary parameters;
-    private final ScratchFile scratchFile;
-    private RandomAccess buffer;
+public final class COSOutputStream extends FilterOutputStream {
+  private final List<Filter> filters;
+  private final COSDictionary parameters;
+  private final ScratchFile scratchFile;
+  private RandomAccess buffer;
 
-    /**
-     * Creates a new COSOutputStream writes to an encoded COS stream.
-     * 
-     * @param filters Filters to apply.
-     * @param parameters Filter parameters.
-     * @param output Encoded stream.
-     * @param scratchFile Scratch file to use.
-     * 
-     * @throws IOException If there was an error creating a temporary buffer
-     */
-    COSOutputStream(List<Filter> filters, COSDictionary parameters, OutputStream output,
-                    ScratchFile scratchFile) throws IOException
-    {
-        super(output);
-        this.filters = filters;
-        this.parameters = parameters;
-        this.scratchFile = scratchFile;
+  /**
+   * Creates a new COSOutputStream writes to an encoded COS stream.
+   *
+   * @param filters     Filters to apply.
+   * @param parameters  Filter parameters.
+   * @param output      Encoded stream.
+   * @param scratchFile Scratch file to use.
+   *
+   * @throws IOException If there was an error creating a temporary buffer
+   */
+  COSOutputStream(final List<Filter> filters, final COSDictionary parameters, final OutputStream output,
+      final ScratchFile scratchFile) throws IOException {
+    super(output);
+    this.filters = filters;
+    this.parameters = parameters;
+    this.scratchFile = scratchFile;
 
-        if (filters.isEmpty())
-        {
-            this.buffer = null;
-        }
-        else
-        {
-            this.buffer = scratchFile.createBuffer();
-        }
+    if (filters.isEmpty()) {
+      buffer = null;
+    } else {
+      buffer = scratchFile.createBuffer();
     }
+  }
 
-    @Override
-    public void write(byte[] b) throws IOException
-    {
-        if (buffer != null)
-        {
-            buffer.write(b);
-        }
-        else
-        {
-            super.write(b);
-        }
+  @Override
+  public void write(final byte[] b) throws IOException {
+    if (buffer != null) {
+      buffer.write(b);
+    } else {
+      super.write(b);
     }
+  }
 
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException
-    {
-        if (buffer != null)
-        {
-            buffer.write(b, off, len);
-        }
-        else
-        {
-            super.write(b, off, len);
-        }
+  @Override
+  public void write(final byte[] b, final int off, final int len) throws IOException {
+    if (buffer != null) {
+      buffer.write(b, off, len);
+    } else {
+      super.write(b, off, len);
     }
+  }
 
-    @Override
-    public void write(int b) throws IOException
-    {
-        if (buffer != null)
-        {
-            buffer.write(b);
-        }
-        else
-        {
-            super.write(b);
-        }
+  @Override
+  public void write(final int b) throws IOException {
+    if (buffer != null) {
+      buffer.write(b);
+    } else {
+      super.write(b);
     }
+  }
 
-    @Override
-    public void flush() throws IOException
-    {
-    }
+  @Override
+  public void flush() throws IOException {
+  }
 
-    @Override
-    public void close() throws IOException
-    {
-        try
-        {
-            if (buffer != null)
-            {
-                try
-                {
-                    // apply filters in reverse order
-                    for (int i = filters.size() - 1; i >= 0; i--)
-                    {
-                        try (InputStream unfilteredIn = new RandomAccessInputStream(buffer))
-                        {
-                            if (i == 0)
-                            {
-                                /*
-                                 * The last filter to run can encode directly to the enclosed output
-                                 * stream.
-                                 */
-                                filters.get(i).encode(unfilteredIn, out, parameters, i);
-                            }
-                            else
-                            {
-                                RandomAccess filteredBuffer = scratchFile.createBuffer();
-                                try
-                                {
-                                    try (OutputStream filteredOut = new RandomAccessOutputStream(filteredBuffer))
-                                    {
-                                        filters.get(i).encode(unfilteredIn, filteredOut, parameters, i);
-                                    }
+  @Override
+  public void close() throws IOException {
+    try {
+      if (buffer != null) {
+        try {
+          // apply filters in reverse order
+          for (int i = filters.size() - 1; i >= 0; i--) {
+            try (InputStream unfilteredIn = new RandomAccessInputStream(buffer)) {
+              if (i == 0) {
+                /*
+                 * The last filter to run can encode directly to the enclosed output stream.
+                 */
+                filters.get(i).encode(unfilteredIn, out, parameters, i);
+              } else {
+                RandomAccess filteredBuffer = scratchFile.createBuffer();
+                try {
+                  try (OutputStream filteredOut = new RandomAccessOutputStream(filteredBuffer)) {
+                    filters.get(i).encode(unfilteredIn, filteredOut, parameters, i);
+                  }
 
-                                    RandomAccess tmpSwap = filteredBuffer;
-                                    filteredBuffer = buffer;
-                                    buffer = tmpSwap;
-                                }
-                                finally
-                                {
-                                    filteredBuffer.close();
-                                }
-                            }
-                        }
-                    }
+                  final RandomAccess tmpSwap = filteredBuffer;
+                  filteredBuffer = buffer;
+                  buffer = tmpSwap;
+                } finally {
+                  filteredBuffer.close();
                 }
-                finally
-                {
-                    buffer.close();
-                    buffer = null;
-                }
+              }
             }
+          }
+        } finally {
+          buffer.close();
+          buffer = null;
         }
-        finally
-        {
-            super.close();
-        }
+      }
+    } finally {
+      super.close();
     }
+  }
 }
