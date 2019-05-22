@@ -16,32 +16,25 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.pagenavigation;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.pdfbox.cos.COSInteger;
 import org.apache.pdfbox.cos.COSName;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Andrea Vacondio
  *
  */
-public class PDTransitionDirectionTest
-{
+public class PDTransitionDirectionTest {
 
-    @Test
-    public void getCOSBase()
-    {
-        assertEquals(COSName.NONE, PDTransitionDirection.NONE.getCOSBase());
-        assertEquals(0, ((COSInteger) PDTransitionDirection.LEFT_TO_RIGHT.getCOSBase()).intValue());
-        assertEquals(90, ((COSInteger) PDTransitionDirection.BOTTOM_TO_TOP.getCOSBase()).intValue());
-        assertEquals(180,
-                ((COSInteger) PDTransitionDirection.RIGHT_TO_LEFT.getCOSBase()).intValue());
-        assertEquals(270,
-                ((COSInteger) PDTransitionDirection.TOP_TO_BOTTOM.getCOSBase()).intValue());
-        assertEquals(315,
-                ((COSInteger) PDTransitionDirection.TOP_LEFT_TO_BOTTOM_RIGHT.getCOSBase())
-                        .intValue());
-    }
+  @Test
+  public void getCOSBase() {
+    Assert.assertEquals(COSName.NONE, PDTransitionDirection.NONE.getCOSBase());
+    Assert.assertEquals(0, ((COSInteger) PDTransitionDirection.LEFT_TO_RIGHT.getCOSBase()).intValue());
+    Assert.assertEquals(90, ((COSInteger) PDTransitionDirection.BOTTOM_TO_TOP.getCOSBase()).intValue());
+    Assert.assertEquals(180, ((COSInteger) PDTransitionDirection.RIGHT_TO_LEFT.getCOSBase()).intValue());
+    Assert.assertEquals(270, ((COSInteger) PDTransitionDirection.TOP_TO_BOTTOM.getCOSBase()).intValue());
+    Assert.assertEquals(315, ((COSInteger) PDTransitionDirection.TOP_LEFT_TO_BOTTOM_RIGHT.getCOSBase()).intValue());
+  }
 
 }
