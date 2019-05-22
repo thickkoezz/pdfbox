@@ -16,62 +16,55 @@
 
 package org.apache.pdfbox.pdmodel.interactive.annotation;
 
-import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDUnderlineAppearanceHandler;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDAppearanceHandler;
+import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDUnderlineAppearanceHandler;
 
 /**
  *
  * @author Paul King
  */
-public class PDAnnotationUnderline extends PDAnnotationTextMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Underline";
+public class PDAnnotationUnderline extends PDAnnotationTextMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Underline";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-     /**
-     * Constructor.
-     */
-    public PDAnnotationUnderline()
-    {
-        super(SUB_TYPE);
+  /**
+   * Constructor.
+   */
+  public PDAnnotationUnderline() {
+    super(PDAnnotationUnderline.SUB_TYPE);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationUnderline(final COSDictionary dict) {
+    super(dict);
+  }
+
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDUnderlineAppearanceHandler appearanceHandler = new PDUnderlineAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationUnderline(COSDictionary dict)
-    {
-        super(dict);
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDUnderlineAppearanceHandler appearanceHandler = new PDUnderlineAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
