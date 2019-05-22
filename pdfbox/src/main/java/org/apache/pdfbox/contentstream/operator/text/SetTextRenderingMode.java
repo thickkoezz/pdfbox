@@ -32,33 +32,24 @@ import org.apache.pdfbox.pdmodel.graphics.state.RenderingMode;
  *
  * @author Ben Litchfield
  */
-public class SetTextRenderingMode extends OperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        if (arguments.isEmpty())
-        {
-            throw new MissingOperandException(operator, arguments);
-        }
-        COSBase base0 = arguments.get(0);
-        if (!(base0 instanceof COSNumber))
-        {
-            return;
-        }
-        COSNumber mode = (COSNumber) base0;
-        int val = mode.intValue();
-        if (val < 0 || val >= RenderingMode.values().length)
-        {
-            return;
-        }
-        RenderingMode renderingMode = RenderingMode.fromInt(val);
-        context.getGraphicsState().getTextState().setRenderingMode(renderingMode);
-    }
+public class SetTextRenderingMode extends OperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    if (arguments.isEmpty())
+      throw new MissingOperandException(operator, arguments);
+    final COSBase base0 = arguments.get(0);
+    if (!(base0 instanceof COSNumber))
+      return;
+    final COSNumber mode = (COSNumber) base0;
+    final int val = mode.intValue();
+    if (val < 0 || val >= RenderingMode.values().length)
+      return;
+    final RenderingMode renderingMode = RenderingMode.fromInt(val);
+    context.getGraphicsState().getTextState().setRenderingMode(renderingMode);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.SET_TEXT_RENDERINGMODE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.SET_TEXT_RENDERINGMODE;
+  }
 }
