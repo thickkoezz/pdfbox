@@ -17,32 +17,29 @@ package org.apache.pdfbox.util;
 
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSFloat;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Tilman Hausherr
  */
-public class MatrixTest
-{
-    
-    /**
-     * Test of PDFBOX-2872 bug
-     */
-    @Test
-    public void testPdfbox2872()
-    {
-        Matrix m = new Matrix(2, 4, 5, 8, 2, 0);
-        COSArray toCOSArray = m.toCOSArray();
-        assertEquals(new COSFloat(2), toCOSArray.get(0));
-        assertEquals(new COSFloat(4), toCOSArray.get(1));
-        assertEquals(new COSFloat(5), toCOSArray.get(2));
-        assertEquals(new COSFloat(8), toCOSArray.get(3));
-        assertEquals(new COSFloat(2), toCOSArray.get(4));
-        assertEquals(new COSFloat(0), toCOSArray.get(5));
-        
-    }
+public class MatrixTest {
 
-    
+  /**
+   * Test of PDFBOX-2872 bug
+   */
+  @Test
+  public void testPdfbox2872() {
+    final Matrix m = new Matrix(2, 4, 5, 8, 2, 0);
+    final COSArray toCOSArray = m.toCOSArray();
+    Assert.assertEquals(new COSFloat(2), toCOSArray.get(0));
+    Assert.assertEquals(new COSFloat(4), toCOSArray.get(1));
+    Assert.assertEquals(new COSFloat(5), toCOSArray.get(2));
+    Assert.assertEquals(new COSFloat(8), toCOSArray.get(3));
+    Assert.assertEquals(new COSFloat(2), toCOSArray.get(4));
+    Assert.assertEquals(new COSFloat(0), toCOSArray.get(5));
+
+  }
+
 }
