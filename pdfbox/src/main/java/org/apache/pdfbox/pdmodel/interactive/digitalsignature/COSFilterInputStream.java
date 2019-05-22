@@ -25,109 +25,84 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.io.IOUtils;
 
-
-public class COSFilterInputStream extends FilterInputStream
-{
+public class COSFilterInputStream extends FilterInputStream {
   /**
-  * Log instance.
+   * Log instance.
    */
   private static final Log LOG = LogFactory.getLog(COSFilterInputStream.class);
 
   private final int[] byteRange;
   private long position = 0;
-  
-  public COSFilterInputStream(InputStream in, int[] byteRange)
-  {
+
+  public COSFilterInputStream(final InputStream in, final int[] byteRange) {
     super(in);
     this.byteRange = byteRange;
   }
 
-  public COSFilterInputStream(byte[] in, int[] byteRange)
-  {
+  public COSFilterInputStream(final byte[] in, final int[] byteRange) {
     super(new ByteArrayInputStream(in));
     this.byteRange = byteRange;
   }
 
   @Override
-  public int read() throws IOException
-  {
+  public int read() throws IOException {
     nextAvailable();
-    int i = super.read();
-    if (i>-1)
-    {
+    final int i = super.read();
+    if (i > -1) {
       ++position;
     }
     return i;
   }
-  
+
   @Override
-  public int read(byte[] b) throws IOException
-  {
-    return read(b,0,b.length);
+  public int read(final byte[] b) throws IOException {
+    return read(b, 0, b.length);
   }
-  
+
   @Override
-  public int read(byte[] b, int off, int len) throws IOException
-  {
+  public int read(final byte[] b, final int off, final int len) throws IOException {
     if (len == 0)
-    {
-        return 0;
-    }
-    
+      return 0;
+
     int c = read();
     if (c == -1)
-    {
-        return -1;
-    }
-    b[off] = (byte)c;
-  
+      return -1;
+    b[off] = (byte) c;
+
     int i = 1;
-    try
-    {
-        for (; i < len; i++)
-        {
-            c = read();
-            if (c == -1)
-            {
-                break;
-            }
-            b[off + i] = (byte)c;
+    try {
+      for (; i < len; i++) {
+        c = read();
+        if (c == -1) {
+          break;
         }
-    }
-    catch (IOException ee) 
-    {
-      LOG.debug("An exception occured while trying to fill byte[] - ignoring", ee);
+        b[off + i] = (byte) c;
+      }
+    } catch (final IOException ee) {
+      COSFilterInputStream.LOG.debug("An exception occured while trying to fill byte[] - ignoring", ee);
     }
     return i;
   }
 
-  private boolean inRange() throws IOException
-  {
-    long pos = position;
-    for (int i = 0; i<byteRange.length/2;++i)
-    {
-      if(byteRange[i*2] <= pos &&  byteRange[i*2]+byteRange[i*2+1]>pos)
-      {
+  private boolean inRange() throws IOException {
+    final long pos = position;
+    for (int i = 0; i < byteRange.length / 2; ++i) {
+      if (byteRange[i * 2] <= pos && byteRange[i * 2] + byteRange[i * 2 + 1] > pos)
         return true;
-      }
     }
     return false;
   }
 
-  private void nextAvailable() throws IOException
-  {
-    while (!inRange())
-    {
+  private void nextAvailable() throws IOException {
+    while (!inRange()) {
       ++position;
-      if(super.read()<0)
-      {
+      if (super.read() < 0) {
         break;
       }
     }
   }
-  
-  public byte[] toByteArray() throws IOException 
-  {
-      return IOUtils.toByteArray(this);
+
+  public byte[] toByteArray() throws IOException {
+    return IOUtils.toByteArray(this);
   }
 }
