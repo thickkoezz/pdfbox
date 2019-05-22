@@ -22,29 +22,26 @@ import org.apache.pdfbox.cos.COSDictionary;
 /**
  * @author Timur Kamalov
  */
-public class PDActionMovie extends PDAction
-{
+public class PDActionMovie extends PDAction {
 
-    /**
-     * This type of action this object represents.
-     */
-    public static final String SUB_TYPE = "Movie";
+  /**
+   * This type of action this object represents.
+   */
+  public static final String SUB_TYPE = "Movie";
 
-    /**
-     * Default constructor.
-     */
-    public PDActionMovie()
-    {
-        setSubType(SUB_TYPE);
-    }
+  /**
+   * Default constructor.
+   */
+  public PDActionMovie() {
+    setSubType(PDActionMovie.SUB_TYPE);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param a The action dictionary.
-     */
-    public PDActionMovie(COSDictionary a)
-    {
-        super(a);
-    }
+  /**
+   * Constructor.
+   *
+   * @param a The action dictionary.
+   */
+  public PDActionMovie(final COSDictionary a) {
+    super(a);
+  }
 }
