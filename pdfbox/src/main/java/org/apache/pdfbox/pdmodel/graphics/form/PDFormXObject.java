@@ -19,6 +19,7 @@ package org.apache.pdfbox.pdmodel.graphics.form;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.pdfbox.contentstream.PDContentStream;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -49,213 +50,199 @@ final and all fields private.
 
 /**
  * A Form XObject.
- * 
+ *
  * @author Ben Litchfield
  */
-public class PDFormXObject extends PDXObject implements PDContentStream
-{
-    private PDTransparencyGroupAttributes group;
-    private final ResourceCache cache;
+public class PDFormXObject extends PDXObject implements PDContentStream {
+  private PDTransparencyGroupAttributes group;
+  private final ResourceCache cache;
 
-    /**
-     * Creates a Form XObject for reading.
-     * @param stream The XObject stream
-     */
-    public PDFormXObject(PDStream stream)
-    {
-        super(stream, COSName.FORM);
-        cache = null;
-    }
+  /**
+   * Creates a Form XObject for reading.
+   *
+   * @param stream The XObject stream
+   */
+  public PDFormXObject(final PDStream stream) {
+    super(stream, COSName.FORM);
+    cache = null;
+  }
 
-    /**
-     * Creates a Form XObject for reading.
-     * @param stream The XObject stream
-     */
-    public PDFormXObject(COSStream stream)
-    {
-        super(stream, COSName.FORM);
-        cache = null;
-    }
+  /**
+   * Creates a Form XObject for reading.
+   *
+   * @param stream The XObject stream
+   */
+  public PDFormXObject(final COSStream stream) {
+    super(stream, COSName.FORM);
+    cache = null;
+  }
 
-    /**
-     * Creates a Form XObject for reading.
-     * @param stream The XObject stream
-     */
-    public PDFormXObject(COSStream stream, ResourceCache cache)
-    {
-        super(stream, COSName.FORM);
-        this.cache = cache;
-    }
-    
-    /**
-     * Creates a Form Image XObject for writing, in the given document.
-     * @param document The current document
-     */
-    public PDFormXObject(PDDocument document)
-    {
-        super(document, COSName.FORM);
-        cache = null;
-    }
+  /**
+   * Creates a Form XObject for reading.
+   *
+   * @param stream The XObject stream
+   */
+  public PDFormXObject(final COSStream stream, final ResourceCache cache) {
+    super(stream, COSName.FORM);
+    this.cache = cache;
+  }
 
-    /**
-     * This will get the form type, currently 1 is the only form type.
-     * @return The form type.
-     */
-    public int getFormType()
-    {
-        return getCOSObject().getInt(COSName.FORMTYPE, 1);
-    }
+  /**
+   * Creates a Form Image XObject for writing, in the given document.
+   *
+   * @param document The current document
+   */
+  public PDFormXObject(final PDDocument document) {
+    super(document, COSName.FORM);
+    cache = null;
+  }
 
-    /**
-     * Set the form type.
-     * @param formType The new form type.
-     */
-    public void setFormType(int formType)
-    {
-        getCOSObject().setInt(COSName.FORMTYPE, formType);
-    }
+  /**
+   * This will get the form type, currently 1 is the only form type.
+   *
+   * @return The form type.
+   */
+  public int getFormType() {
+    return getCOSObject().getInt(COSName.FORMTYPE, 1);
+  }
 
-    /**
-     * Returns the group attributes dictionary.
-     *
-     * @return the group attributes dictionary
-     */
-    public PDTransparencyGroupAttributes getGroup()
-    {
-        if( group == null ) 
-        {
-            COSDictionary dic = (COSDictionary) getCOSObject().getDictionaryObject(COSName.GROUP);
-            if( dic != null ) 
-            {
-                group = new PDTransparencyGroupAttributes(dic);
-            }
-        }
-        return group;
-    }
-    
-    public PDStream getContentStream()
-    {
-        return new PDStream(getCOSObject());
-    }
+  /**
+   * Set the form type.
+   *
+   * @param formType The new form type.
+   */
+  public void setFormType(final int formType) {
+    getCOSObject().setInt(COSName.FORMTYPE, formType);
+  }
 
-    @Override
-    public InputStream getContents() throws IOException
-    {
-        return getCOSObject().createInputStream();
+  /**
+   * Returns the group attributes dictionary.
+   *
+   * @return the group attributes dictionary
+   */
+  public PDTransparencyGroupAttributes getGroup() {
+    if (group == null) {
+      final COSDictionary dic = (COSDictionary) getCOSObject().getDictionaryObject(COSName.GROUP);
+      if (dic != null) {
+        group = new PDTransparencyGroupAttributes(dic);
+      }
     }
+    return group;
+  }
 
-    /**
-     * This will get the resources for this Form XObject.
-     * This will return null if no resources are available.
-     * 
-     * @return The resources for this Form XObject.
-     */
-    @Override
-    public PDResources getResources()
-    {
-        COSDictionary resources = getCOSObject().getCOSDictionary(COSName.RESOURCES);
-        if (resources != null)
-        {
-            return new PDResources(resources, cache);
-        }
-        if (getCOSObject().containsKey(COSName.RESOURCES))
-        {
-            // PDFBOX-4372 if the resource key exists but has nothing, return empty resources,
-            // to avoid a self-reference (xobject form Fm0 contains "/Fm0 Do")
-            // See also the mention of PDFBOX-1359 in PDFStreamEngine
-            return new PDResources();
-        }
-        return null;
-    }
+  public PDStream getContentStream() {
+    return new PDStream(getCOSObject());
+  }
 
-    /**
-     * This will set the resources for this page.
-     * @param resources The new resources for this page.
-     */
-    public void setResources(PDResources resources)
-    {
-        getCOSObject().setItem(COSName.RESOURCES, resources);
-    }
+  @Override
+  public InputStream getContents() throws IOException {
+    return getCOSObject().createInputStream();
+  }
 
-    /**
-     * An array of four numbers in the form coordinate system (see below),
-     * giving the coordinates of the left, bottom, right, and top edges, respectively,
-     * of the form XObject's bounding box.
-     * These boundaries are used to clip the form XObject and to determine its size for caching.
-     * @return The BBox of the form.
-     */
-    @Override
-    public PDRectangle getBBox()
-    {
-        PDRectangle retval = null;
-        COSArray array = (COSArray) getCOSObject().getDictionaryObject(COSName.BBOX);
-        if (array != null)
-        {
-            retval = new PDRectangle(array);
-        }
-        return retval;
-    }
+  /**
+   * This will get the resources for this Form XObject. This will return null if
+   * no resources are available.
+   *
+   * @return The resources for this Form XObject.
+   */
+  @Override
+  public PDResources getResources() {
+    final COSDictionary resources = getCOSObject().getCOSDictionary(COSName.RESOURCES);
+    if (resources != null)
+      return new PDResources(resources, cache);
+    if (getCOSObject().containsKey(COSName.RESOURCES))
+      // PDFBOX-4372 if the resource key exists but has nothing, return empty
+      // resources,
+      // to avoid a self-reference (xobject form Fm0 contains "/Fm0 Do")
+      // See also the mention of PDFBOX-1359 in PDFStreamEngine
+      return new PDResources();
+    return null;
+  }
 
-    /**
-     * This will set the BBox (bounding box) for this form.
-     * @param bbox The new BBox for this form.
-     */
-    public void setBBox(PDRectangle bbox)
-    {
-        if (bbox == null)
-        {
-            getCOSObject().removeItem(COSName.BBOX);
-        }
-        else
-        {
-            getCOSObject().setItem(COSName.BBOX, bbox.getCOSArray());
-        }
-    }
+  /**
+   * This will set the resources for this page.
+   *
+   * @param resources The new resources for this page.
+   */
+  public void setResources(final PDResources resources) {
+    getCOSObject().setItem(COSName.RESOURCES, resources);
+  }
 
-    /**
-     * This will get the optional matrix of an XObjectForm. It maps the form space to user space.
-     * @return the form matrix if available, or the identity matrix.
-     */
-    @Override
-    public Matrix getMatrix()
-    {
-        return Matrix.createMatrix(getCOSObject().getDictionaryObject(COSName.MATRIX));
+  /**
+   * An array of four numbers in the form coordinate system (see below), giving
+   * the coordinates of the left, bottom, right, and top edges, respectively, of
+   * the form XObject's bounding box. These boundaries are used to clip the form
+   * XObject and to determine its size for caching.
+   *
+   * @return The BBox of the form.
+   */
+  @Override
+  public PDRectangle getBBox() {
+    PDRectangle retval = null;
+    final COSArray array = (COSArray) getCOSObject().getDictionaryObject(COSName.BBOX);
+    if (array != null) {
+      retval = new PDRectangle(array);
     }
+    return retval;
+  }
 
-    /**
-     * Sets the optional Matrix entry for the form XObject.
-     * @param transform the transformation matrix
-     */
-    public void setMatrix(AffineTransform transform)
-    {
-        COSArray matrix = new COSArray();
-        double[] values = new double[6];
-        transform.getMatrix(values);
-        for (double v : values)
-        {
-            matrix.add(new COSFloat((float) v));
-        }
-        getCOSObject().setItem(COSName.MATRIX, matrix);
+  /**
+   * This will set the BBox (bounding box) for this form.
+   *
+   * @param bbox The new BBox for this form.
+   */
+  public void setBBox(final PDRectangle bbox) {
+    if (bbox == null) {
+      getCOSObject().removeItem(COSName.BBOX);
+    } else {
+      getCOSObject().setItem(COSName.BBOX, bbox.getCOSArray());
     }
+  }
 
-    /**
-     * This will get the key of this XObjectForm in the structural parent tree. Required if the form
-     * XObject contains marked-content sequences that are structural content items.
-     *
-     * @return the integer key of the XObjectForm's entry in the structural parent tree or -1 if
-     * there isn't any.
-     */
-    public int getStructParents()
-    {
-        return getCOSObject().getInt(COSName.STRUCT_PARENTS);
-    }
+  /**
+   * This will get the optional matrix of an XObjectForm. It maps the form space
+   * to user space.
+   *
+   * @return the form matrix if available, or the identity matrix.
+   */
+  @Override
+  public Matrix getMatrix() {
+    return Matrix.createMatrix(getCOSObject().getDictionaryObject(COSName.MATRIX));
+  }
 
-    /**
-     * This will set the key for this XObjectForm in the structural parent tree.
-     * @param structParent The new key for this XObjectForm.
-     */
-    public void setStructParents(int structParent)
-    {
-        getCOSObject().setInt(COSName.STRUCT_PARENTS, structParent);
+  /**
+   * Sets the optional Matrix entry for the form XObject.
+   *
+   * @param transform the transformation matrix
+   */
+  public void setMatrix(final AffineTransform transform) {
+    final COSArray matrix = new COSArray();
+    final double[] values = new double[6];
+    transform.getMatrix(values);
+    for (final double v : values) {
+      matrix.add(new COSFloat((float) v));
     }
+    getCOSObject().setItem(COSName.MATRIX, matrix);
+  }
+
+  /**
+   * This will get the key of this XObjectForm in the structural parent tree.
+   * Required if the form XObject contains marked-content sequences that are
+   * structural content items.
+   *
+   * @return the integer key of the XObjectForm's entry in the structural parent
+   *         tree or -1 if there isn't any.
+   */
+  public int getStructParents() {
+    return getCOSObject().getInt(COSName.STRUCT_PARENTS);
+  }
+
+  /**
+   * This will set the key for this XObjectForm in the structural parent tree.
+   *
+   * @param structParent The new key for this XObjectForm.
+   */
+  public void setStructParents(final int structParent) {
+    getCOSObject().setInt(COSName.STRUCT_PARENTS, structParent);
+  }
 }
