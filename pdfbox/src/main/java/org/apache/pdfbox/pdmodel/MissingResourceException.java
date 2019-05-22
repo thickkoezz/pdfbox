@@ -22,10 +22,13 @@ import java.io.IOException;
 /**
  * Thrown when a named resource is missing.
  */
-public final class MissingResourceException extends IOException
-{
-    public MissingResourceException(String message)
-    {
-        super(message);
-    }
+public final class MissingResourceException extends IOException {
+  /**
+  *
+  */
+  private static final long serialVersionUID = 7752941941855802276L;
+
+  public MissingResourceException(final String message) {
+    super(message);
+  }
 }
