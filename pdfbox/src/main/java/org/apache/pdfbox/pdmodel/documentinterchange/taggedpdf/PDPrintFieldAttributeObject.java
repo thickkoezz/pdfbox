@@ -20,158 +20,143 @@ import org.apache.pdfbox.cos.COSDictionary;
 
 /**
  * A PrintField attribute object.
- * 
+ *
  * @author Johannes Koch
  */
-public class PDPrintFieldAttributeObject extends PDStandardAttributeObject
-{
+public class PDPrintFieldAttributeObject extends PDStandardAttributeObject {
 
-    /**
-     * standard attribute owner: PrintField
-     */
-    public static final String OWNER_PRINT_FIELD = "PrintField";
+  /**
+   * standard attribute owner: PrintField
+   */
+  public static final String OWNER_PRINT_FIELD = "PrintField";
 
-    private static final String ROLE = "Role";
-    private static final String CHECKED = "checked";
-    private static final String DESC = "Desc";
+  private static final String ROLE = "Role";
+  private static final String CHECKED = "checked";
+  private static final String DESC = "Desc";
 
-    /**
-     * role: rb: Radio button
-     */
-    public static final String ROLE_RB = "rb";
-    /**
-     * role: cb: Check box
-     */
-    public static final String ROLE_CB = "cb";
-    /**
-     * role: pb: Push button
-     */
-    public static final String ROLE_PB = "pb";
-    /**
-     * role: tv: Text-value field
-     */
-    public static final String ROLE_TV = "tv";
-    /**
-     * checked state: on
-     */
-    public static final String CHECKED_STATE_ON = "on";
-    /**
-     * checked state: off
-     */
-    public static final String CHECKED_STATE_OFF = "off";
-    /**
-     * checked state: neutral
-     */
-    public static final String CHECKED_STATE_NEUTRAL = "neutral";
+  /**
+   * role: rb: Radio button
+   */
+  public static final String ROLE_RB = "rb";
+  /**
+   * role: cb: Check box
+   */
+  public static final String ROLE_CB = "cb";
+  /**
+   * role: pb: Push button
+   */
+  public static final String ROLE_PB = "pb";
+  /**
+   * role: tv: Text-value field
+   */
+  public static final String ROLE_TV = "tv";
+  /**
+   * checked state: on
+   */
+  public static final String CHECKED_STATE_ON = "on";
+  /**
+   * checked state: off
+   */
+  public static final String CHECKED_STATE_OFF = "off";
+  /**
+   * checked state: neutral
+   */
+  public static final String CHECKED_STATE_NEUTRAL = "neutral";
 
+  /**
+   * Default constructor.
+   */
+  public PDPrintFieldAttributeObject() {
+    setOwner(PDPrintFieldAttributeObject.OWNER_PRINT_FIELD);
+  }
 
-    /**
-     * Default constructor.
-     */
-    public PDPrintFieldAttributeObject()
-    {
-        this.setOwner(OWNER_PRINT_FIELD);
+  /**
+   * Creates a new PrintField attribute object with a given dictionary.
+   *
+   * @param dictionary the dictionary
+   */
+  public PDPrintFieldAttributeObject(final COSDictionary dictionary) {
+    super(dictionary);
+  }
+
+  /**
+   * Gets the role.
+   *
+   * @return the role
+   */
+  public String getRole() {
+    return this.getName(PDPrintFieldAttributeObject.ROLE);
+  }
+
+  /**
+   * Sets the role. The value of Role shall be one of the following:
+   * <ul>
+   * <li>{@link #ROLE_RB},</li>
+   * <li>{@link #ROLE_CB},</li>
+   * <li>{@link #ROLE_PB},</li>
+   * <li>{@link #ROLE_TV}.</li>
+   * </ul>
+   *
+   * @param role the role
+   */
+  public void setRole(final String role) {
+    setName(PDPrintFieldAttributeObject.ROLE, role);
+  }
+
+  /**
+   * Gets the checked state. The default value is {@link #CHECKED_STATE_OFF}.
+   *
+   * @return the checked state
+   */
+  public String getCheckedState() {
+    return this.getName(PDPrintFieldAttributeObject.CHECKED, PDPrintFieldAttributeObject.CHECKED_STATE_OFF);
+  }
+
+  /**
+   * Sets the checked state. The value shall be one of:
+   * <ul>
+   * <li>{@link #CHECKED_STATE_ON},</li>
+   * <li>{@link #CHECKED_STATE_OFF} (default), or</li>
+   * <li>{@link #CHECKED_STATE_NEUTRAL}.</li>
+   * </ul>
+   *
+   * @param checkedState the checked state
+   */
+  public void setCheckedState(final String checkedState) {
+    setName(PDPrintFieldAttributeObject.CHECKED, checkedState);
+  }
+
+  /**
+   * Gets the alternate name of the field (Desc).
+   *
+   * @return the alternate name of the field
+   */
+  public String getAlternateName() {
+    return getString(PDPrintFieldAttributeObject.DESC);
+  }
+
+  /**
+   * Sets the alternate name of the field (Desc).
+   *
+   * @param alternateName the alternate name of the field
+   */
+  public void setAlternateName(final String alternateName) {
+    setString(PDPrintFieldAttributeObject.DESC, alternateName);
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder().append(super.toString());
+    if (isSpecified(PDPrintFieldAttributeObject.ROLE)) {
+      sb.append(", Role=").append(getRole());
     }
-
-    /**
-     * Creates a new PrintField attribute object with a given dictionary.
-     * 
-     * @param dictionary the dictionary
-     */
-    public PDPrintFieldAttributeObject(COSDictionary dictionary)
-    {
-        super(dictionary);
+    if (isSpecified(PDPrintFieldAttributeObject.CHECKED)) {
+      sb.append(", Checked=").append(getCheckedState());
     }
-
-
-    /**
-     * Gets the role.
-     * 
-     * @return the role
-     */
-    public String getRole()
-    {
-        return this.getName(ROLE);
+    if (isSpecified(PDPrintFieldAttributeObject.DESC)) {
+      sb.append(", Desc=").append(getAlternateName());
     }
-
-    /**
-     * Sets the role. The value of Role shall be one of the following:
-     * <ul>
-     *   <li>{@link #ROLE_RB},</li>
-     *   <li>{@link #ROLE_CB},</li>
-     *   <li>{@link #ROLE_PB},</li>
-     *   <li>{@link #ROLE_TV}.</li>
-     * </ul>
-     * 
-     * @param role the role
-     */
-    public void setRole(String role)
-    {
-        this.setName(ROLE, role);
-    }
-
-    /**
-     * Gets the checked state. The default value is {@link #CHECKED_STATE_OFF}.
-     * 
-     * @return the checked state
-     */
-    public String getCheckedState()
-    {
-        return this.getName(CHECKED, CHECKED_STATE_OFF);
-    }
-
-    /**
-     * Sets the checked state. The value shall be one of:
-     * <ul>
-     *   <li>{@link #CHECKED_STATE_ON},</li>
-     *   <li>{@link #CHECKED_STATE_OFF} (default), or</li>
-     *   <li>{@link #CHECKED_STATE_NEUTRAL}.</li>
-     * </ul>
-     * 
-     * @param checkedState the checked state
-     */
-    public void setCheckedState(String checkedState)
-    {
-        this.setName(CHECKED, checkedState);
-    }
-
-    /**
-     * Gets the alternate name of the field (Desc).
-     * 
-     * @return the alternate name of the field
-     */
-    public String getAlternateName()
-    {
-        return this.getString(DESC);
-    }
-
-    /**
-     * Sets the alternate name of the field (Desc).
-     * 
-     * @param alternateName the alternate name of the field
-     */
-    public void setAlternateName(String alternateName)
-    {
-        this.setString(DESC, alternateName);
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder().append(super.toString());
-        if (this.isSpecified(ROLE))
-        {
-            sb.append(", Role=").append(this.getRole());
-        }
-        if (this.isSpecified(CHECKED))
-        {
-            sb.append(", Checked=").append(this.getCheckedState());
-        }
-        if (this.isSpecified(DESC))
-        {
-            sb.append(", Desc=").append(this.getAlternateName());
-        }
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 
 }
