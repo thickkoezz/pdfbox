@@ -16,12 +16,7 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,348 +24,318 @@ import org.junit.Test;
  * @author Andrea Vacondio
  *
  */
-public class PDOutlineNodeTest
-{
-    private PDOutlineItem root;
+public class PDOutlineNodeTest {
+  private PDOutlineItem root;
 
-    @Before
-    public void setUp()
-    {
-        root = new PDOutlineItem();
-    }
+  @Before
+  public void setUp() {
+    root = new PDOutlineItem();
+  }
 
-    @Test
-    public void getParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        root.addLast(child);
-        PDDocumentOutline outline = new PDDocumentOutline();
-        outline.addLast(root);
-        assertNull(outline.getParent());
-        assertEquals(outline, root.getParent());
-        assertEquals(root, child.getParent());
-    }
+  @Test
+  public void getParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    root.addLast(child);
+    final PDDocumentOutline outline = new PDDocumentOutline();
+    outline.addLast(root);
+    Assert.assertNull(outline.getParent());
+    Assert.assertEquals(outline, root.getParent());
+    Assert.assertEquals(root, child.getParent());
+  }
 
-    @Test
-    public void nullLastChild()
-    {
-        assertNull(root.getLastChild());
-    }
+  @Test
+  public void nullLastChild() {
+    Assert.assertNull(root.getLastChild());
+  }
 
-    @Test
-    public void nullFirstChild()
-    {
-        assertNull(root.getFirstChild());
-    }
+  @Test
+  public void nullFirstChild() {
+    Assert.assertNull(root.getFirstChild());
+  }
 
-    @Test
-    public void openAlreadyOpenedRootNode()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        assertEquals(0, root.getOpenCount());
-        root.addLast(child);
-        root.openNode();
-        assertTrue(root.isNodeOpen());
-        assertEquals(1, root.getOpenCount());
-        root.openNode();
-        assertTrue(root.isNodeOpen());
-        assertEquals(1, root.getOpenCount());
-    }
+  @Test
+  public void openAlreadyOpenedRootNode() {
+    final PDOutlineItem child = new PDOutlineItem();
+    Assert.assertEquals(0, root.getOpenCount());
+    root.addLast(child);
+    root.openNode();
+    Assert.assertTrue(root.isNodeOpen());
+    Assert.assertEquals(1, root.getOpenCount());
+    root.openNode();
+    Assert.assertTrue(root.isNodeOpen());
+    Assert.assertEquals(1, root.getOpenCount());
+  }
 
-    @Test
-    public void closeAlreadyClosedRootNode()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        assertEquals(0, root.getOpenCount());
-        root.addLast(child);
-        root.openNode();
-        root.closeNode();
-        assertFalse(root.isNodeOpen());
-        assertEquals(-1, root.getOpenCount());
-        root.closeNode();
-        assertFalse(root.isNodeOpen());
-        assertEquals(-1, root.getOpenCount());
-    }
+  @Test
+  public void closeAlreadyClosedRootNode() {
+    final PDOutlineItem child = new PDOutlineItem();
+    Assert.assertEquals(0, root.getOpenCount());
+    root.addLast(child);
+    root.openNode();
+    root.closeNode();
+    Assert.assertFalse(root.isNodeOpen());
+    Assert.assertEquals(-1, root.getOpenCount());
+    root.closeNode();
+    Assert.assertFalse(root.isNodeOpen());
+    Assert.assertEquals(-1, root.getOpenCount());
+  }
 
-    @Test
-    public void openLeaf()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        root.addLast(child);
-        child.openNode();
-        assertFalse(child.isNodeOpen());
-    }
+  @Test
+  public void openLeaf() {
+    final PDOutlineItem child = new PDOutlineItem();
+    root.addLast(child);
+    child.openNode();
+    Assert.assertFalse(child.isNodeOpen());
+  }
 
-    @Test
-    public void nodeClosedByDefault()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        root.addLast(child);
-        assertFalse(root.isNodeOpen());
-        assertEquals(-1, root.getOpenCount());
-    }
+  @Test
+  public void nodeClosedByDefault() {
+    final PDOutlineItem child = new PDOutlineItem();
+    root.addLast(child);
+    Assert.assertFalse(root.isNodeOpen());
+    Assert.assertEquals(-1, root.getOpenCount());
+  }
 
-    @Test
-    public void closeNodeWithOpendParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        child.openNode();
-        root.addLast(child);
-        root.openNode();
-        assertEquals(3, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        child.closeNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-    }
+  @Test
+  public void closeNodeWithOpendParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    child.openNode();
+    root.addLast(child);
+    root.openNode();
+    Assert.assertEquals(3, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    child.closeNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+  }
 
-    @Test
-    public void closeNodeWithClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        child.openNode();
-        root.addLast(child);
-        assertEquals(-3, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        child.closeNode();
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-    }
+  @Test
+  public void closeNodeWithClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    child.openNode();
+    root.addLast(child);
+    Assert.assertEquals(-3, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    child.closeNode();
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+  }
 
-    @Test
-    public void openNodeWithOpendParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        root.addLast(child);
-        root.openNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        child.openNode();
-        assertEquals(3, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-    }
+  @Test
+  public void openNodeWithOpendParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    root.addLast(child);
+    root.openNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    child.openNode();
+    Assert.assertEquals(3, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+  }
 
-    @Test
-    public void openNodeWithClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        root.addLast(child);
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        child.openNode();
-        assertEquals(-3, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-    }
+  @Test
+  public void openNodeWithClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    root.addLast(child);
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    child.openNode();
+    Assert.assertEquals(-3, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+  }
 
-    @Test
-    public void addLastSingleChild()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        root.addLast(child);
-        assertEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-    }
+  @Test
+  public void addLastSingleChild() {
+    final PDOutlineItem child = new PDOutlineItem();
+    root.addLast(child);
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+  }
 
-    @Test
-    public void addFirstSingleChild()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        root.addFirst(child);
-        assertEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-    }
+  @Test
+  public void addFirstSingleChild() {
+    final PDOutlineItem child = new PDOutlineItem();
+    root.addFirst(child);
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+  }
 
-    @Test
-    public void addLastOpenChildToOpenParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        child.openNode();
-        root.addLast(new PDOutlineItem());
-        root.openNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        root.addLast(child);
-        assertNotEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-        assertEquals(4, root.getOpenCount());
-    }
+  @Test
+  public void addLastOpenChildToOpenParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    child.openNode();
+    root.addLast(new PDOutlineItem());
+    root.openNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    root.addLast(child);
+    Assert.assertNotEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+    Assert.assertEquals(4, root.getOpenCount());
+  }
 
-    @Test
-    public void addFirstOpenChildToOpenParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addFirst(new PDOutlineItem());
-        child.addFirst(new PDOutlineItem());
-        child.openNode();
-        root.addFirst(new PDOutlineItem());
-        root.openNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        root.addFirst(child);
-        assertNotEquals(child, root.getLastChild());
-        assertEquals(child, root.getFirstChild());
-        assertEquals(4, root.getOpenCount());
-    }
+  @Test
+  public void addFirstOpenChildToOpenParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addFirst(new PDOutlineItem());
+    child.addFirst(new PDOutlineItem());
+    child.openNode();
+    root.addFirst(new PDOutlineItem());
+    root.openNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    root.addFirst(child);
+    Assert.assertNotEquals(child, root.getLastChild());
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(4, root.getOpenCount());
+  }
 
-    @Test
-    public void addLastOpenChildToClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        child.openNode();
-        root.addLast(new PDOutlineItem());
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        root.addLast(child);
-        assertNotEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-        assertEquals(-4, root.getOpenCount());
-    }
+  @Test
+  public void addLastOpenChildToClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    child.openNode();
+    root.addLast(new PDOutlineItem());
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    root.addLast(child);
+    Assert.assertNotEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+    Assert.assertEquals(-4, root.getOpenCount());
+  }
 
-    @Test
-    public void addFirstOpenChildToClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addFirst(new PDOutlineItem());
-        child.addFirst(new PDOutlineItem());
-        child.openNode();
-        root.addFirst(new PDOutlineItem());
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(2, child.getOpenCount());
-        root.addFirst(child);
-        assertNotEquals(child, root.getLastChild());
-        assertEquals(child, root.getFirstChild());
-        assertEquals(-4, root.getOpenCount());
-    }
+  @Test
+  public void addFirstOpenChildToClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addFirst(new PDOutlineItem());
+    child.addFirst(new PDOutlineItem());
+    child.openNode();
+    root.addFirst(new PDOutlineItem());
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(2, child.getOpenCount());
+    root.addFirst(child);
+    Assert.assertNotEquals(child, root.getLastChild());
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(-4, root.getOpenCount());
+  }
 
-    @Test
-    public void addLastClosedChildToOpenParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        root.addLast(new PDOutlineItem());
-        root.openNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        root.addLast(child);
-        assertNotEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-        assertEquals(2, root.getOpenCount());
-    }
+  @Test
+  public void addLastClosedChildToOpenParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    root.addLast(new PDOutlineItem());
+    root.openNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    root.addLast(child);
+    Assert.assertNotEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+    Assert.assertEquals(2, root.getOpenCount());
+  }
 
-    @Test
-    public void addFirstClosedChildToOpenParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addFirst(new PDOutlineItem());
-        child.addFirst(new PDOutlineItem());
-        root.addFirst(new PDOutlineItem());
-        root.openNode();
-        assertEquals(1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        root.addFirst(child);
-        assertNotEquals(child, root.getLastChild());
-        assertEquals(child, root.getFirstChild());
-        assertEquals(2, root.getOpenCount());
-    }
+  @Test
+  public void addFirstClosedChildToOpenParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addFirst(new PDOutlineItem());
+    child.addFirst(new PDOutlineItem());
+    root.addFirst(new PDOutlineItem());
+    root.openNode();
+    Assert.assertEquals(1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    root.addFirst(child);
+    Assert.assertNotEquals(child, root.getLastChild());
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(2, root.getOpenCount());
+  }
 
-    @Test
-    public void addLastClosedChildToClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addLast(new PDOutlineItem());
-        child.addLast(new PDOutlineItem());
-        root.addLast(new PDOutlineItem());
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        root.addLast(child);
-        assertNotEquals(child, root.getFirstChild());
-        assertEquals(child, root.getLastChild());
-        assertEquals(-2, root.getOpenCount());
-    }
+  @Test
+  public void addLastClosedChildToClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addLast(new PDOutlineItem());
+    child.addLast(new PDOutlineItem());
+    root.addLast(new PDOutlineItem());
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    root.addLast(child);
+    Assert.assertNotEquals(child, root.getFirstChild());
+    Assert.assertEquals(child, root.getLastChild());
+    Assert.assertEquals(-2, root.getOpenCount());
+  }
 
-    @Test
-    public void addFirstClosedChildToClosedParent()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.addFirst(new PDOutlineItem());
-        child.addFirst(new PDOutlineItem());
-        root.addFirst(new PDOutlineItem());
-        assertEquals(-1, root.getOpenCount());
-        assertEquals(-2, child.getOpenCount());
-        root.addFirst(child);
-        assertNotEquals(child, root.getLastChild());
-        assertEquals(child, root.getFirstChild());
-        assertEquals(-2, root.getOpenCount());
-    }
+  @Test
+  public void addFirstClosedChildToClosedParent() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.addFirst(new PDOutlineItem());
+    child.addFirst(new PDOutlineItem());
+    root.addFirst(new PDOutlineItem());
+    Assert.assertEquals(-1, root.getOpenCount());
+    Assert.assertEquals(-2, child.getOpenCount());
+    root.addFirst(child);
+    Assert.assertNotEquals(child, root.getLastChild());
+    Assert.assertEquals(child, root.getFirstChild());
+    Assert.assertEquals(-2, root.getOpenCount());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotAddLastAList()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.insertSiblingAfter(new PDOutlineItem());
-        child.insertSiblingAfter(new PDOutlineItem());
-        root.addLast(child);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void cannotAddLastAList() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.insertSiblingAfter(new PDOutlineItem());
+    child.insertSiblingAfter(new PDOutlineItem());
+    root.addLast(child);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotAddFirstAList()
-    {
-        PDOutlineItem child = new PDOutlineItem();
-        child.insertSiblingAfter(new PDOutlineItem());
-        child.insertSiblingAfter(new PDOutlineItem());
-        root.addFirst(child);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void cannotAddFirstAList() {
+    final PDOutlineItem child = new PDOutlineItem();
+    child.insertSiblingAfter(new PDOutlineItem());
+    child.insertSiblingAfter(new PDOutlineItem());
+    root.addFirst(child);
+  }
 
-    @Test
-    public void equalsNode()
-    {
-        root.addFirst(new PDOutlineItem());
-        assertEquals(root.getFirstChild(), root.getLastChild());
-    }
+  @Test
+  public void equalsNode() {
+    root.addFirst(new PDOutlineItem());
+    Assert.assertEquals(root.getFirstChild(), root.getLastChild());
+  }
 
-    @Test
-    public void iterator()
-    {
-        PDOutlineItem first = new PDOutlineItem();
-        root.addFirst(first);
-        root.addLast(new PDOutlineItem());
-        PDOutlineItem second = new PDOutlineItem();
-        first.insertSiblingAfter(second);
-        int counter = 0;
-        for (PDOutlineItem current : root.children())
-        {
-            counter++;
-        }
-        assertEquals(3, counter);
+  @Test
+  public void iterator() {
+    final PDOutlineItem first = new PDOutlineItem();
+    root.addFirst(first);
+    root.addLast(new PDOutlineItem());
+    final PDOutlineItem second = new PDOutlineItem();
+    first.insertSiblingAfter(second);
+    int counter = 0;
+    for (final PDOutlineItem current : root.children()) {
+      counter++;
     }
+    Assert.assertEquals(3, counter);
+  }
 
-    @Test
-    public void iteratorNoChildre()
-    {
-        int counter = 0;
-        for (PDOutlineItem current : new PDOutlineItem().children())
-        {
-            counter++;
-        }
-        assertEquals(0, counter);
+  @Test
+  public void iteratorNoChildre() {
+    int counter = 0;
+    for (final PDOutlineItem current : new PDOutlineItem().children()) {
+      counter++;
     }
-    @Test
-    public void openNodeAndAppend()
-    {
-        // TODO
-    }
+    Assert.assertEquals(0, counter);
+  }
+
+  @Test
+  public void openNodeAndAppend() {
+    // TODO
+  }
 
 }
