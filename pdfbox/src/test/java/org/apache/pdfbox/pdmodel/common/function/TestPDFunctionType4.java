@@ -18,87 +18,84 @@ package org.apache.pdfbox.pdmodel.common.function;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import junit.framework.TestCase;
+
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSStream;
+
+import junit.framework.TestCase;
 
 /**
  * Tests the {@link PDFunctionType4} class.
  */
-public class TestPDFunctionType4 extends TestCase
-{
+public class TestPDFunctionType4 extends TestCase {
 
-    private PDFunctionType4 createFunction(String function, float[] domain, float[] range)
-            throws IOException
-    {
-        COSStream stream = new COSStream();
-        stream.setInt("FunctionType", 4);
-        COSArray domainArray = new COSArray();
-        domainArray.setFloatArray(domain);
-        stream.setItem("Domain", domainArray);
-        COSArray rangeArray = new COSArray();
-        rangeArray.setFloatArray(range);
-        stream.setItem("Range", rangeArray);
-        
-        try (OutputStream out = stream.createOutputStream())
-        {
-            byte[] data = function.getBytes("US-ASCII");
-            out.write(data, 0, data.length);
-        }
+  private PDFunctionType4 createFunction(final String function, final float[] domain, final float[] range)
+      throws IOException {
+    final COSStream stream = new COSStream();
+    stream.setInt("FunctionType", 4);
+    final COSArray domainArray = new COSArray();
+    domainArray.setFloatArray(domain);
+    stream.setItem("Domain", domainArray);
+    final COSArray rangeArray = new COSArray();
+    rangeArray.setFloatArray(range);
+    stream.setItem("Range", rangeArray);
 
-        return new PDFunctionType4(stream);
+    try (OutputStream out = stream.createOutputStream()) {
+      final byte[] data = function.getBytes("US-ASCII");
+      out.write(data, 0, data.length);
     }
 
-    /**
-     * Checks the {@link PDFunctionType4}.
-     * @throws Exception if an error occurs
-     */
-    public void testFunctionSimple() throws Exception
-    {
-        String functionText = "{ add }";
-        //Simply adds the two arguments and returns the result
+    return new PDFunctionType4(stream);
+  }
 
-        PDFunctionType4 function = createFunction(functionText,
-                new float[] {-1.0f, 1.0f, -1.0f, 1.0f},
-                new float[] {-1.0f, 1.0f});
+  /**
+   * Checks the {@link PDFunctionType4}.
+   * 
+   * @throws Exception if an error occurs
+   */
+  public void testFunctionSimple() throws Exception {
+    final String functionText = "{ add }";
+    // Simply adds the two arguments and returns the result
 
-        float[] input = new float[] {0.8f, 0.1f};
-        float[] output = function.eval(input);
+    final PDFunctionType4 function = createFunction(functionText, new float[] { -1.0f, 1.0f, -1.0f, 1.0f },
+        new float[] { -1.0f, 1.0f });
 
-        assertEquals(1, output.length);
-        assertEquals(0.9f, output[0], 0.0001f);
+    float[] input = new float[] { 0.8f, 0.1f };
+    float[] output = function.eval(input);
 
-        input = new float[] {0.8f, 0.3f}; //results in 1.1f being outside Range
-        output = function.eval(input);
+    TestCase.assertEquals(1, output.length);
+    TestCase.assertEquals(0.9f, output[0], 0.0001f);
 
-        assertEquals(1, output.length);
-        assertEquals(1f, output[0]);
+    input = new float[] { 0.8f, 0.3f }; // results in 1.1f being outside Range
+    output = function.eval(input);
 
-        input = new float[] {0.8f, 1.2f}; //input argument outside Dimension
-        output = function.eval(input);
+    TestCase.assertEquals(1, output.length);
+    TestCase.assertEquals(1f, output[0]);
 
-        assertEquals(1, output.length);
-        assertEquals(1f, output[0]);
-    }
+    input = new float[] { 0.8f, 1.2f }; // input argument outside Dimension
+    output = function.eval(input);
 
-    /**
-     * Checks the handling of the argument order for a {@link PDFunctionType4}.
-     * @throws Exception if an error occurs
-     */
-    public void testFunctionArgumentOrder() throws Exception
-    {
-        String functionText = "{ pop }";
-        // pops an argument (2nd) and returns the next argument (1st)
+    TestCase.assertEquals(1, output.length);
+    TestCase.assertEquals(1f, output[0]);
+  }
 
-        PDFunctionType4 function = createFunction(functionText,
-                new float[] {-1.0f, 1.0f, -1.0f, 1.0f},
-                new float[] {-1.0f, 1.0f});
+  /**
+   * Checks the handling of the argument order for a {@link PDFunctionType4}.
+   * 
+   * @throws Exception if an error occurs
+   */
+  public void testFunctionArgumentOrder() throws Exception {
+    final String functionText = "{ pop }";
+    // pops an argument (2nd) and returns the next argument (1st)
 
-        float[] input = new float[] {-0.7f, 0.0f };
-        float[] output = function.eval(input);
+    final PDFunctionType4 function = createFunction(functionText, new float[] { -1.0f, 1.0f, -1.0f, 1.0f },
+        new float[] { -1.0f, 1.0f });
 
-        assertEquals(1, output.length);
-        assertEquals(-0.7f, output[0], 0.0001f);
-    }
+    final float[] input = new float[] { -0.7f, 0.0f };
+    final float[] output = function.eval(input);
+
+    TestCase.assertEquals(1, output.length);
+    TestCase.assertEquals(-0.7f, output[0], 0.0001f);
+  }
 
 }
