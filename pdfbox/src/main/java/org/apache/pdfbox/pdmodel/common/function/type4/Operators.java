@@ -21,121 +21,119 @@ import java.util.Map;
 /**
  * This class provides all the supported operators.
  */
-public class Operators
-{
+public class Operators {
 
-    //Arithmetic operators
-    private static final Operator ABS = new ArithmeticOperators.Abs();
-    private static final Operator ADD = new ArithmeticOperators.Add();
-    private static final Operator ATAN = new ArithmeticOperators.Atan();
-    private static final Operator CEILING = new ArithmeticOperators.Ceiling();
-    private static final Operator COS = new ArithmeticOperators.Cos();
-    private static final Operator CVI = new ArithmeticOperators.Cvi();
-    private static final Operator CVR = new ArithmeticOperators.Cvr();
-    private static final Operator DIV = new ArithmeticOperators.Div();
-    private static final Operator EXP = new ArithmeticOperators.Exp();
-    private static final Operator FLOOR = new ArithmeticOperators.Floor();
-    private static final Operator IDIV = new ArithmeticOperators.IDiv();
-    private static final Operator LN = new ArithmeticOperators.Ln();
-    private static final Operator LOG = new ArithmeticOperators.Log();
-    private static final Operator MOD = new ArithmeticOperators.Mod();
-    private static final Operator MUL = new ArithmeticOperators.Mul();
-    private static final Operator NEG = new ArithmeticOperators.Neg();
-    private static final Operator ROUND = new ArithmeticOperators.Round();
-    private static final Operator SIN = new ArithmeticOperators.Sin();
-    private static final Operator SQRT = new ArithmeticOperators.Sqrt();
-    private static final Operator SUB = new ArithmeticOperators.Sub();
-    private static final Operator TRUNCATE = new ArithmeticOperators.Truncate();
+  // Arithmetic operators
+  private static final Operator ABS = new ArithmeticOperators.Abs();
+  private static final Operator ADD = new ArithmeticOperators.Add();
+  private static final Operator ATAN = new ArithmeticOperators.Atan();
+  private static final Operator CEILING = new ArithmeticOperators.Ceiling();
+  private static final Operator COS = new ArithmeticOperators.Cos();
+  private static final Operator CVI = new ArithmeticOperators.Cvi();
+  private static final Operator CVR = new ArithmeticOperators.Cvr();
+  private static final Operator DIV = new ArithmeticOperators.Div();
+  private static final Operator EXP = new ArithmeticOperators.Exp();
+  private static final Operator FLOOR = new ArithmeticOperators.Floor();
+  private static final Operator IDIV = new ArithmeticOperators.IDiv();
+  private static final Operator LN = new ArithmeticOperators.Ln();
+  private static final Operator LOG = new ArithmeticOperators.Log();
+  private static final Operator MOD = new ArithmeticOperators.Mod();
+  private static final Operator MUL = new ArithmeticOperators.Mul();
+  private static final Operator NEG = new ArithmeticOperators.Neg();
+  private static final Operator ROUND = new ArithmeticOperators.Round();
+  private static final Operator SIN = new ArithmeticOperators.Sin();
+  private static final Operator SQRT = new ArithmeticOperators.Sqrt();
+  private static final Operator SUB = new ArithmeticOperators.Sub();
+  private static final Operator TRUNCATE = new ArithmeticOperators.Truncate();
 
-    //Relational, boolean and bitwise operators
-    private static final Operator AND = new BitwiseOperators.And();
-    private static final Operator BITSHIFT = new BitwiseOperators.Bitshift();
-    private static final Operator EQ = new RelationalOperators.Eq();
-    private static final Operator FALSE = new BitwiseOperators.False();
-    private static final Operator GE = new RelationalOperators.Ge();
-    private static final Operator GT = new RelationalOperators.Gt();
-    private static final Operator LE = new RelationalOperators.Le();
-    private static final Operator LT = new RelationalOperators.Lt();
-    private static final Operator NE = new RelationalOperators.Ne();
-    private static final Operator NOT = new BitwiseOperators.Not();
-    private static final Operator OR = new BitwiseOperators.Or();
-    private static final Operator TRUE = new BitwiseOperators.True();
-    private static final Operator XOR = new BitwiseOperators.Xor();
+  // Relational, boolean and bitwise operators
+  private static final Operator AND = new BitwiseOperators.And();
+  private static final Operator BITSHIFT = new BitwiseOperators.Bitshift();
+  private static final Operator EQ = new RelationalOperators.Eq();
+  private static final Operator FALSE = new BitwiseOperators.False();
+  private static final Operator GE = new RelationalOperators.Ge();
+  private static final Operator GT = new RelationalOperators.Gt();
+  private static final Operator LE = new RelationalOperators.Le();
+  private static final Operator LT = new RelationalOperators.Lt();
+  private static final Operator NE = new RelationalOperators.Ne();
+  private static final Operator NOT = new BitwiseOperators.Not();
+  private static final Operator OR = new BitwiseOperators.Or();
+  private static final Operator TRUE = new BitwiseOperators.True();
+  private static final Operator XOR = new BitwiseOperators.Xor();
 
-    //Conditional operators
-    private static final Operator IF = new ConditionalOperators.If();
-    private static final Operator IFELSE = new ConditionalOperators.IfElse();
+  // Conditional operators
+  private static final Operator IF = new ConditionalOperators.If();
+  private static final Operator IFELSE = new ConditionalOperators.IfElse();
 
-    //Stack operators
-    private static final Operator COPY = new StackOperators.Copy();
-    private static final Operator DUP = new StackOperators.Dup();
-    private static final Operator EXCH = new StackOperators.Exch();
-    private static final Operator INDEX = new StackOperators.Index();
-    private static final Operator POP = new StackOperators.Pop();
-    private static final Operator ROLL = new StackOperators.Roll();
+  // Stack operators
+  private static final Operator COPY = new StackOperators.Copy();
+  private static final Operator DUP = new StackOperators.Dup();
+  private static final Operator EXCH = new StackOperators.Exch();
+  private static final Operator INDEX = new StackOperators.Index();
+  private static final Operator POP = new StackOperators.Pop();
+  private static final Operator ROLL = new StackOperators.Roll();
 
-    private final Map<String, Operator> operators = new java.util.HashMap<>();
+  private final Map<String, Operator> operators = new java.util.HashMap<>();
 
-    /**
-     * Creates a new Operators object with the default set of operators.
-     */
-    public Operators()
-    {
-        operators.put("add", ADD);
-        operators.put("abs", ABS);
-        operators.put("atan", ATAN);
-        operators.put("ceiling", CEILING);
-        operators.put("cos", COS);
-        operators.put("cvi", CVI);
-        operators.put("cvr", CVR);
-        operators.put("div", DIV);
-        operators.put("exp", EXP);
-        operators.put("floor", FLOOR);
-        operators.put("idiv", IDIV);
-        operators.put("ln", LN);
-        operators.put("log", LOG);
-        operators.put("mod", MOD);
-        operators.put("mul", MUL);
-        operators.put("neg", NEG);
-        operators.put("round", ROUND);
-        operators.put("sin", SIN);
-        operators.put("sqrt", SQRT);
-        operators.put("sub", SUB);
-        operators.put("truncate", TRUNCATE);
+  /**
+   * Creates a new Operators object with the default set of operators.
+   */
+  public Operators() {
+    operators.put("add", Operators.ADD);
+    operators.put("abs", Operators.ABS);
+    operators.put("atan", Operators.ATAN);
+    operators.put("ceiling", Operators.CEILING);
+    operators.put("cos", Operators.COS);
+    operators.put("cvi", Operators.CVI);
+    operators.put("cvr", Operators.CVR);
+    operators.put("div", Operators.DIV);
+    operators.put("exp", Operators.EXP);
+    operators.put("floor", Operators.FLOOR);
+    operators.put("idiv", Operators.IDIV);
+    operators.put("ln", Operators.LN);
+    operators.put("log", Operators.LOG);
+    operators.put("mod", Operators.MOD);
+    operators.put("mul", Operators.MUL);
+    operators.put("neg", Operators.NEG);
+    operators.put("round", Operators.ROUND);
+    operators.put("sin", Operators.SIN);
+    operators.put("sqrt", Operators.SQRT);
+    operators.put("sub", Operators.SUB);
+    operators.put("truncate", Operators.TRUNCATE);
 
-        operators.put("and", AND);
-        operators.put("bitshift", BITSHIFT);
-        operators.put("eq", EQ);
-        operators.put("false", FALSE);
-        operators.put("ge", GE);
-        operators.put("gt", GT);
-        operators.put("le", LE);
-        operators.put("lt", LT);
-        operators.put("ne", NE);
-        operators.put("not", NOT);
-        operators.put("or", OR);
-        operators.put("true", TRUE);
-        operators.put("xor", XOR);
+    operators.put("and", Operators.AND);
+    operators.put("bitshift", Operators.BITSHIFT);
+    operators.put("eq", Operators.EQ);
+    operators.put("false", Operators.FALSE);
+    operators.put("ge", Operators.GE);
+    operators.put("gt", Operators.GT);
+    operators.put("le", Operators.LE);
+    operators.put("lt", Operators.LT);
+    operators.put("ne", Operators.NE);
+    operators.put("not", Operators.NOT);
+    operators.put("or", Operators.OR);
+    operators.put("true", Operators.TRUE);
+    operators.put("xor", Operators.XOR);
 
-        operators.put("if", IF);
-        operators.put("ifelse", IFELSE);
+    operators.put("if", Operators.IF);
+    operators.put("ifelse", Operators.IFELSE);
 
-        operators.put("copy", COPY);
-        operators.put("dup", DUP);
-        operators.put("exch", EXCH);
-        operators.put("index", INDEX);
-        operators.put("pop", POP);
-        operators.put("roll", ROLL);
-    }
+    operators.put("copy", Operators.COPY);
+    operators.put("dup", Operators.DUP);
+    operators.put("exch", Operators.EXCH);
+    operators.put("index", Operators.INDEX);
+    operators.put("pop", Operators.POP);
+    operators.put("roll", Operators.ROLL);
+  }
 
-    /**
-     * Returns the operator for the given operator name.
-     * @param operatorName the operator name
-     * @return the operator (or null if there's no such operator
-     */
-    public Operator getOperator(String operatorName)
-    {
-        return this.operators.get(operatorName);
-    }
+  /**
+   * Returns the operator for the given operator name.
+   *
+   * @param operatorName the operator name
+   * @return the operator (or null if there's no such operator
+   */
+  public Operator getOperator(final String operatorName) {
+    return operators.get(operatorName);
+  }
 
 }
