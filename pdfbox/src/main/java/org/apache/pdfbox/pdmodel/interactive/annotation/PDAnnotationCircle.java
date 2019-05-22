@@ -23,51 +23,45 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDCircleAppeara
 /**
  * @author Paul King
  */
-public class PDAnnotationCircle extends PDAnnotationSquareCircle
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Circle";
+public class PDAnnotationCircle extends PDAnnotationSquareCircle {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Circle";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-    public PDAnnotationCircle()
-    {
-        super(SUB_TYPE);
+  public PDAnnotationCircle() {
+    super(PDAnnotationCircle.SUB_TYPE);
+  }
+
+  /**
+   * Creates a circle annotation from a COSDictionary, expected to be a correct
+   * object definition.
+   *
+   * @param field the PDF object to represent as a field.
+   */
+  public PDAnnotationCircle(final COSDictionary field) {
+    super(field);
+  }
+
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDCircleAppearanceHandler appearanceHandler = new PDCircleAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * Creates a circle annotation from a COSDictionary, expected to be a correct object definition.
-     *
-     * @param field the PDF object to represent as a field.
-     */
-    public PDAnnotationCircle(COSDictionary field)
-    {
-        super(field);
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDCircleAppearanceHandler appearanceHandler = new PDCircleAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
