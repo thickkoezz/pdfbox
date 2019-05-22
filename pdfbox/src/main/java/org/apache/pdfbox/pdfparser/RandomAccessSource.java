@@ -18,88 +18,76 @@
 package org.apache.pdfbox.pdfparser;
 
 import java.io.IOException;
+
 import org.apache.pdfbox.io.RandomAccessRead;
 
 /**
  * A SequentialSource backed by a RandomAccessRead.
  */
-final class RandomAccessSource implements SequentialSource
-{
-    private final RandomAccessRead reader;
+final class RandomAccessSource implements SequentialSource {
+  private final RandomAccessRead reader;
 
-    /**
-     * Constructor.
-     * 
-     * @param reader The random access reader to wrap.
-     */
-    RandomAccessSource(RandomAccessRead reader)
-    {
-        this.reader = reader;
-    }
+  /**
+   * Constructor.
+   *
+   * @param reader The random access reader to wrap.
+   */
+  RandomAccessSource(final RandomAccessRead reader) {
+    this.reader = reader;
+  }
 
-    @Override
-    public int read() throws IOException
-    {
-        return reader.read();
-    }
+  @Override
+  public int read() throws IOException {
+    return reader.read();
+  }
 
-    @Override
-    public int read(byte[] b) throws IOException
-    {
-        return reader.read(b);
-    }
+  @Override
+  public int read(final byte[] b) throws IOException {
+    return reader.read(b);
+  }
 
-    @Override
-    public int read(byte[] b, int offset, int length) throws IOException
-    {
-        return reader.read(b, offset, length);
-    }
+  @Override
+  public int read(final byte[] b, final int offset, final int length) throws IOException {
+    return reader.read(b, offset, length);
+  }
 
-    @Override
-    public long getPosition() throws IOException
-    {
-        return reader.getPosition();
-    }
+  @Override
+  public long getPosition() throws IOException {
+    return reader.getPosition();
+  }
 
-    @Override
-    public int peek() throws IOException
-    {
-        return reader.peek();
-    }
+  @Override
+  public int peek() throws IOException {
+    return reader.peek();
+  }
 
-    @Override
-    public void unread(int b) throws IOException
-    {
-        reader.rewind(1);
-    }
+  @Override
+  public void unread(final int b) throws IOException {
+    reader.rewind(1);
+  }
 
-    @Override
-    public void unread(byte[] bytes) throws IOException
-    {
-        reader.rewind(bytes.length);
-    }
+  @Override
+  public void unread(final byte[] bytes) throws IOException {
+    reader.rewind(bytes.length);
+  }
 
-    @Override
-    public void unread(byte[] bytes, int start, int len) throws IOException
-    {
-        reader.rewind(len - start);
-    }
+  @Override
+  public void unread(final byte[] bytes, final int start, final int len) throws IOException {
+    reader.rewind(len - start);
+  }
 
-    @Override
-    public byte[] readFully(int length) throws IOException
-    {
-        return reader.readFully(length);
-    }
+  @Override
+  public byte[] readFully(final int length) throws IOException {
+    return reader.readFully(length);
+  }
 
-    @Override
-    public boolean isEOF() throws IOException
-    {
-        return reader.isEOF();
-    }
+  @Override
+  public boolean isEOF() throws IOException {
+    return reader.isEOF();
+  }
 
-    @Override
-    public void close() throws IOException
-    {
-        reader.close();
-    }
+  @Override
+  public void close() throws IOException {
+    reader.close();
+  }
 }
