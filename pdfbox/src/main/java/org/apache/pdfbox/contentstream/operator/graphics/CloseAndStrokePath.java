@@ -16,31 +16,27 @@
  */
 package org.apache.pdfbox.contentstream.operator.graphics;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
-
-import java.io.IOException;
+import org.apache.pdfbox.cos.COSBase;
 
 /**
  * s: close and stroke the path.
  *
  * @author Ben Litchfield
  */
-public class CloseAndStrokePath extends GraphicsOperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> arguments) throws IOException
-    {
-        context.processOperator(OperatorName.CLOSE_PATH, arguments);
-        context.processOperator(OperatorName.STROKE_PATH, arguments);
-    }
+public class CloseAndStrokePath extends GraphicsOperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> arguments) throws IOException {
+    context.processOperator(OperatorName.CLOSE_PATH, arguments);
+    context.processOperator(OperatorName.STROKE_PATH, arguments);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.CLOSE_AND_STROKE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.CLOSE_AND_STROKE;
+  }
 }
