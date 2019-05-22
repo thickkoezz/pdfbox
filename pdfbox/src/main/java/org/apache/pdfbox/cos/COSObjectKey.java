@@ -20,101 +20,88 @@ package org.apache.pdfbox.cos;
  * Object representing the physical reference to an indirect pdf object.
  *
  * @author Michael Traut
- * 
+ *
  */
-public class COSObjectKey implements Comparable<COSObjectKey>
-{
-    private final long number;
-    private int generation;
-    
-    /**
-     * Constructor.
-     *
-     * @param object The object that this key will represent.
-     */
-    public COSObjectKey(COSObject object)
-    {
-        this(object.getObjectNumber(), object.getGenerationNumber());
-    }
+public class COSObjectKey implements Comparable<COSObjectKey> {
+  private final long number;
+  private int generation;
 
-    /**
-     * Constructor.
-     *
-     * @param num The object number.
-     * @param gen The object generation number.
-     */
-    public COSObjectKey(long num, int gen)
-    {
-        number = num;
-        generation = gen;
-    }
+  /**
+   * Constructor.
+   *
+   * @param object The object that this key will represent.
+   */
+  public COSObjectKey(final COSObject object) {
+    this(object.getObjectNumber(), object.getGenerationNumber());
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj)
-    {
-        COSObjectKey objToBeCompared = obj instanceof COSObjectKey ? (COSObjectKey)obj : null;
-        return objToBeCompared != null &&
-                objToBeCompared.getNumber() == getNumber() &&
-                objToBeCompared.getGeneration() == getGeneration();
-    }
+  /**
+   * Constructor.
+   *
+   * @param num The object number.
+   * @param gen The object generation number.
+   */
+  public COSObjectKey(final long num, final int gen) {
+    number = num;
+    generation = gen;
+  }
 
-    /**
-     * This will get the generation number.
-     *
-     * @return The objects generation number.
-     */
-    public int getGeneration()
-    {
-        return generation;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    final COSObjectKey objToBeCompared = obj instanceof COSObjectKey ? (COSObjectKey) obj : null;
+    return objToBeCompared != null && objToBeCompared.getNumber() == getNumber()
+        && objToBeCompared.getGeneration() == getGeneration();
+  }
 
-    /**
-     * This will set the generation number. It is intended for fixes only.
-     * 
-     * @param genNumber the new generation number.
-     */
-    public void fixGeneration(int genNumber)
-    {
-        generation = genNumber;
-    }
+  /**
+   * This will get the generation number.
+   *
+   * @return The objects generation number.
+   */
+  public int getGeneration() {
+    return generation;
+  }
 
-    /**
-     * This will get the objects id.
-     *
-     * @return The object's id.
-     */
-    public long getNumber()
-    {
-        return number;
-    }
+  /**
+   * This will set the generation number. It is intended for fixes only.
+   *
+   * @param genNumber the new generation number.
+   */
+  public void fixGeneration(final int genNumber) {
+    generation = genNumber;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode()
-    {
-        return Long.valueOf(number+generation).hashCode();
-    }
+  /**
+   * This will get the objects id.
+   *
+   * @return The object's id.
+   */
+  public long getNumber() {
+    return number;
+  }
 
-    @Override
-    public String toString()
-    {
-        return Long.toString(number) + " " +  Integer.toString(generation) + " R";
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    return Long.valueOf(number + generation).hashCode();
+  }
 
-    @Override
-    public int compareTo(COSObjectKey other)
-    {
-        int result = Long.compare(getNumber(), other.getNumber());
-        if (result == 0)
-        {
-            return Integer.compare(getGeneration(), other.getGeneration());
-        }
-        return result;
-    }
+  @Override
+  public String toString() {
+    return Long.toString(number) + " " + Integer.toString(generation) + " R";
+  }
+
+  @Override
+  public int compareTo(final COSObjectKey other) {
+    final int result = Long.compare(getNumber(), other.getNumber());
+    if (result == 0)
+      return Integer.compare(getGeneration(), other.getGeneration());
+    return result;
+  }
 
 }
