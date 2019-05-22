@@ -25,48 +25,42 @@ import org.apache.pdfbox.util.Matrix;
 /**
  * Resources for a shading type 5 (Lattice-Form Gouraud-Shade Triangle Mesh).
  */
-public class PDShadingType5 extends PDTriangleBasedShadingType
-{
-    /**
-     * Constructor using the given shading dictionary.
-     *
-     * @param shadingDictionary the dictionary for this shading
-     */
-    public PDShadingType5(COSDictionary shadingDictionary)
-    {
-        super(shadingDictionary);
-    }
+public class PDShadingType5 extends PDTriangleBasedShadingType {
+  /**
+   * Constructor using the given shading dictionary.
+   *
+   * @param shadingDictionary the dictionary for this shading
+   */
+  public PDShadingType5(final COSDictionary shadingDictionary) {
+    super(shadingDictionary);
+  }
 
-    @Override
-    public int getShadingType()
-    {
-        return PDShading.SHADING_TYPE5;
-    }
+  @Override
+  public int getShadingType() {
+    return PDShading.SHADING_TYPE5;
+  }
 
-    /**
-     * The vertices per row of this shading. This will return -1 if one has not
-     * been set.
-     *
-     * @return the number of vertices per row
-     */
-    public int getVerticesPerRow()
-    {
-        return getCOSObject().getInt(COSName.VERTICES_PER_ROW, -1);
-    }
+  /**
+   * The vertices per row of this shading. This will return -1 if one has not been
+   * set.
+   *
+   * @return the number of vertices per row
+   */
+  public int getVerticesPerRow() {
+    return getCOSObject().getInt(COSName.VERTICES_PER_ROW, -1);
+  }
 
-    /**
-     * Set the number of vertices per row.
-     *
-     * @param verticesPerRow the number of vertices per row
-     */
-    public void setVerticesPerRow(int verticesPerRow)
-    {
-        getCOSObject().setInt(COSName.VERTICES_PER_ROW, verticesPerRow);
-    }
+  /**
+   * Set the number of vertices per row.
+   *
+   * @param verticesPerRow the number of vertices per row
+   */
+  public void setVerticesPerRow(final int verticesPerRow) {
+    getCOSObject().setInt(COSName.VERTICES_PER_ROW, verticesPerRow);
+  }
 
-    @Override
-    public Paint toPaint(Matrix matrix)
-    {
-        return new Type5ShadingPaint(this, matrix);
-    }
+  @Override
+  public Paint toPaint(final Matrix matrix) {
+    return new Type5ShadingPaint(this, matrix);
+  }
 }
