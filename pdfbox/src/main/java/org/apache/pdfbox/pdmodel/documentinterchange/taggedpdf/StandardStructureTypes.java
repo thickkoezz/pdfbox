@@ -21,302 +21,291 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * The standard structure types.
- * 
+ *
  * @author Johannes Koch
  */
-public class StandardStructureTypes
-{
+public class StandardStructureTypes {
 
-    /**
-     * Log instance.
-     */
-    private static final Log LOG = LogFactory.getLog(StandardStructureTypes.class);
-    
-    private StandardStructureTypes()
-    {
-    }
+  /**
+   * Log instance.
+   */
+  private static final Log LOG = LogFactory.getLog(StandardStructureTypes.class);
 
+  private StandardStructureTypes() {
+  }
 
-    // Grouping Elements
-    /**
-     * Document
-     */
-    public static final String DOCUMENT = "Document";
+  // Grouping Elements
+  /**
+   * Document
+   */
+  public static final String DOCUMENT = "Document";
 
-    /**
-     * Part
-     */
-    public static final String PART = "Part";
+  /**
+   * Part
+   */
+  public static final String PART = "Part";
 
-    /**
-     * Art
-     */
-    public static final String ART = "Art";
+  /**
+   * Art
+   */
+  public static final String ART = "Art";
 
-    /**
-     * Sect
-     */
-    public static final String SECT = "Sect";
+  /**
+   * Sect
+   */
+  public static final String SECT = "Sect";
 
-    /**
-     * Div
-     */
-    public static final String DIV = "Div";
+  /**
+   * Div
+   */
+  public static final String DIV = "Div";
 
-    /**
-     * BlockQuote
-     */
-    public static final String BLOCK_QUOTE = "BlockQuote";
+  /**
+   * BlockQuote
+   */
+  public static final String BLOCK_QUOTE = "BlockQuote";
 
-    /**
-     * Caption
-     */
-    public static final String CAPTION = "Caption";
+  /**
+   * Caption
+   */
+  public static final String CAPTION = "Caption";
 
-    /**
-     * TOC
-     */
-    public static final String TOC = "TOC";
+  /**
+   * TOC
+   */
+  public static final String TOC = "TOC";
 
-    /**
-     * TOCI
-     */
-    public static final String TOCI = "TOCI";
+  /**
+   * TOCI
+   */
+  public static final String TOCI = "TOCI";
 
-    /**
-     * Index
-     */
-    public static final String INDEX = "Index";
+  /**
+   * Index
+   */
+  public static final String INDEX = "Index";
 
-    /**
-     * NonStruct
-     */
-    public static final String NON_STRUCT = "NonStruct";
+  /**
+   * NonStruct
+   */
+  public static final String NON_STRUCT = "NonStruct";
 
-    /**
-     * Private
-     */
-    public static final String PRIVATE = "Private";
+  /**
+   * Private
+   */
+  public static final String PRIVATE = "Private";
 
+  // Block-Level Structure Elements
+  /**
+   * P
+   */
+  public static final String P = "P";
 
-    // Block-Level Structure Elements
-    /**
-     * P
-     */
-    public static final String P = "P";
+  /**
+   * H
+   */
+  public static final String H = "H";
 
-    /**
-     * H
-     */
-    public static final String H = "H";
+  /**
+   * H1
+   */
+  public static final String H1 = "H1";
 
-    /**
-     * H1
-     */
-    public static final String H1 = "H1";
+  /**
+   * H2
+   */
+  public static final String H2 = "H2";
 
-    /**
-     * H2
-     */
-    public static final String H2 = "H2";
+  /**
+   * H3
+   */
+  public static final String H3 = "H3";
 
-    /**
-     * H3
-     */
-    public static final String H3 = "H3";
+  /**
+   * H4
+   */
+  public static final String H4 = "H4";
 
-    /**
-     * H4
-     */
-    public static final String H4 = "H4";
+  /**
+   * H5
+   */
+  public static final String H5 = "H5";
 
-    /**
-     * H5
-     */
-    public static final String H5 = "H5";
+  /**
+   * H6
+   */
+  public static final String H6 = "H6";
 
-    /**
-     * H6
-     */
-    public static final String H6 = "H6";
+  /**
+   * L
+   */
+  public static final String L = "L";
 
-    /**
-     * L
-     */
-    public static final String L = "L";
+  /**
+   * LI
+   */
+  public static final String LI = "LI";
 
-    /**
-     * LI
-     */
-    public static final String LI = "LI";
+  /**
+   * Lbl
+   */
+  public static final String LBL = "Lbl";
 
-    /**
-     * Lbl
-     */
-    public static final String LBL = "Lbl";
+  /**
+   * LBody
+   */
+  public static final String L_BODY = "LBody";
 
-    /**
-     * LBody
-     */
-    public static final String L_BODY = "LBody";
+  /**
+   * Table
+   */
+  public static final String TABLE = "Table";
 
-    /**
-     * Table
-     */
-    public static final String TABLE = "Table";
+  /**
+   * TR
+   */
+  public static final String TR = "TR";
 
-    /**
-     * TR
-     */
-    public static final String TR = "TR";
+  /**
+   * TH
+   */
+  public static final String TH = "TH";
 
-    /**
-     * TH
-     */
-    public static final String TH = "TH";
+  /**
+   * TD
+   */
+  public static final String TD = "TD";
 
-    /**
-     * TD
-     */
-    public static final String TD = "TD";
+  /**
+   * THead
+   */
+  public static final String T_HEAD = "THead";
 
-    /**
-     * THead
-     */
-    public static final String T_HEAD = "THead";
+  /**
+   * TBody
+   */
+  public static final String T_BODY = "TBody";
 
-    /**
-     * TBody
-     */
-    public static final String T_BODY = "TBody";
+  /**
+   * TFoot
+   */
+  public static final String T_FOOT = "TFoot";
 
-    /**
-     * TFoot
-     */
-    public static final String T_FOOT = "TFoot";
+  // Inline-Level Structure Elements
+  /**
+   * Span
+   */
+  public static final String SPAN = "Span";
 
+  /**
+   * Quote
+   */
+  public static final String QUOTE = "Quote";
 
-    // Inline-Level Structure Elements
-    /**
-     * Span
-     */
-    public static final String SPAN = "Span";
+  /**
+   * Note
+   */
+  public static final String NOTE = "Note";
 
-    /**
-     * Quote
-     */
-    public static final String QUOTE = "Quote";
+  /**
+   * Reference
+   */
+  public static final String REFERENCE = "Reference";
 
-    /**
-     * Note
-     */
-    public static final String NOTE = "Note";
+  /**
+   * BibEntry
+   */
+  public static final String BIB_ENTRY = "BibEntry";
 
-    /**
-     * Reference
-     */
-    public static final String REFERENCE = "Reference";
+  /**
+   * Code
+   */
+  public static final String CODE = "Code";
 
-    /**
-     * BibEntry
-     */
-    public static final String BIB_ENTRY = "BibEntry";
+  /**
+   * Link
+   */
+  public static final String LINK = "Link";
 
-    /**
-     * Code
-     */
-    public static final String CODE = "Code";
+  /**
+   * Annot
+   */
+  public static final String ANNOT = "Annot";
 
-    /**
-     * Link
-     */
-    public static final String LINK = "Link";
+  /**
+   * Ruby
+   */
+  public static final String RUBY = "Ruby";
 
-    /**
-     * Annot
-     */
-    public static final String ANNOT = "Annot";
+  /**
+   * RB
+   */
+  public static final String RB = "RB";
 
-    /**
-     * Ruby
-     */
-    public static final String RUBY = "Ruby";
+  /**
+   * RT
+   */
+  public static final String RT = "RT";
 
-    /**
-     * RB
-     */
-    public static final String RB = "RB";
+  /**
+   * RP
+   */
+  public static final String RP = "RP";
 
-    /**
-     * RT
-     */
-    public static final String RT = "RT";
+  /**
+   * Warichu
+   */
+  public static final String WARICHU = "Warichu";
 
-    /**
-     * RP
-     */
-    public static final String RP = "RP";
+  /**
+   * WT
+   */
+  public static final String WT = "WT";
 
-    /**
-     * Warichu
-     */
-    public static final String WARICHU = "Warichu";
+  /**
+   * WP
+   */
+  public static final String WP = "WP";
 
-    /**
-     * WT
-     */
-    public static final String WT = "WT";
+  // Illustration Elements
+  /**
+   * Figure
+   */
+  public static final String Figure = "Figure";
 
-    /**
-     * WP
-     */
-    public static final String WP = "WP";
+  /**
+   * Formula
+   */
+  public static final String FORMULA = "Formula";
 
+  /**
+   * Form
+   */
+  public static final String FORM = "Form";
 
-    // Illustration Elements
-    /**
-     * Figure
-     */
-    public static final String Figure = "Figure";
+  /**
+   * All standard structure types.
+   */
+  public static List<String> types = new ArrayList<>();
 
-    /**
-     * Formula
-     */
-    public static final String FORMULA = "Formula";
-
-    /**
-     * Form
-     */
-    public static final String FORM = "Form";
-
-    /**
-     * All standard structure types.
-     */
-    public static List<String> types = new ArrayList<>();
-
-    static
-    {
-        Field[] fields = StandardStructureTypes.class.getFields();
-        for (Field field : fields)
-        {
-            if (Modifier.isFinal(field.getModifiers()))
-            {
-                try
-                {
-                    types.add(field.get(null).toString());
-                }
-                catch (IllegalArgumentException | IllegalAccessException e)
-                {
-                    LOG.error(e,e);
-                }
-            }
+  static {
+    final Field[] fields = StandardStructureTypes.class.getFields();
+    for (final Field field : fields) {
+      if (Modifier.isFinal(field.getModifiers())) {
+        try {
+          StandardStructureTypes.types.add(field.get(null).toString());
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+          StandardStructureTypes.LOG.error(e, e);
         }
-        Collections.sort(types);
+      }
     }
+    Collections.sort(StandardStructureTypes.types);
+  }
 
 }
