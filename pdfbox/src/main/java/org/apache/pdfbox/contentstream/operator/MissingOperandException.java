@@ -19,15 +19,19 @@ package org.apache.pdfbox.contentstream.operator;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.apache.pdfbox.cos.COSBase;
 
 /**
  * Throw when a PDF operator is missing required operands.
  */
-public final class MissingOperandException extends IOException
-{
-    public MissingOperandException(Operator operator, List<COSBase> operands)
-    {
-        super("Operator " + operator.getName() + " has too few operands: " + operands);
-    }
+public final class MissingOperandException extends IOException {
+  /**
+  *
+  */
+  private static final long serialVersionUID = 1601480783140452343L;
+
+  public MissingOperandException(final Operator operator, final List<COSBase> operands) {
+    super("Operator " + operator.getName() + " has too few operands: " + operands);
+  }
 }
