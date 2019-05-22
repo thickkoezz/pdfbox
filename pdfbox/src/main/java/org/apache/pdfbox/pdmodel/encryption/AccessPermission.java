@@ -405,7 +405,7 @@ public class AccessPermission {
 
   /**
    * Indicates if any revision 3 access permission is set or not.
-   *
+   * 
    * @return true if any revision 3 access permission is set
    */
   protected boolean hasAnyRevision3PermissionSet() {
