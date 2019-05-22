@@ -17,72 +17,62 @@
 
 package org.apache.pdfbox;
 
-import org.junit.runners.Parameterized;
-import org.junit.runners.model.RunnerScheduler;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.runners.Parameterized;
+import org.junit.runners.model.RunnerScheduler;
 
 /**
  * Runs Parameterized JUnit tests in parallel.
  *
  * @see {http://goo.gl/lkigES}
  */
-public class ParallelParameterized extends Parameterized
-{
-    private static class FixedThreadPoolScheduler implements RunnerScheduler
-    {
-        private final ExecutorService executorService;
-        private final long timeoutSeconds;
+public class ParallelParameterized extends Parameterized {
+  private static class FixedThreadPoolScheduler implements RunnerScheduler {
+    private final ExecutorService executorService;
+    private final long timeoutSeconds;
 
-        FixedThreadPoolScheduler(long timeoutSeconds)
-        {
-            this.timeoutSeconds = timeoutSeconds;
-            int cores = Runtime.getRuntime().availableProcessors();
+    FixedThreadPoolScheduler(final long timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      int cores = Runtime.getRuntime().availableProcessors();
 
-            // for debugging
-            System.out.println("JDK: " + System.getProperty("java.runtime.name"));
-            System.out.println("Version: " + System.getProperty("java.specification.version"));
+      // for debugging
+      System.out.println("JDK: " + System.getProperty("java.runtime.name"));
+      System.out.println("Version: " + System.getProperty("java.specification.version"));
 
-            // workaround Open JDK 6 bug which causes CMMException: Invalid profile data
-            if (System.getProperty("java.runtime.name").equals("OpenJDK Runtime Environment") &&
-                System.getProperty("java.specification.version").equals("1.6"))
-            {
-                cores = 1;
-            }
+      // workaround Open JDK 6 bug which causes CMMException: Invalid profile data
+      if (System.getProperty("java.runtime.name").equals("OpenJDK Runtime Environment")
+          && System.getProperty("java.specification.version").equals("1.6")) {
+        cores = 1;
+      }
 
-            executorService = Executors.newFixedThreadPool(cores);
-        }
-
-        @Override 
-        public void finished()
-        {
-            executorService.shutdown();
-            try
-            {
-                executorService.awaitTermination(timeoutSeconds, TimeUnit.SECONDS);
-            }
-            catch (InterruptedException exc)
-            {
-                throw new RuntimeException(exc);
-            }
-        }
-
-        @Override public void schedule(Runnable childStatement)
-        {
-            executorService.submit(childStatement);
-        }
+      executorService = Executors.newFixedThreadPool(cores);
     }
 
-    public ParallelParameterized(Class c) throws Throwable
-    {
-        super(c);
-        long timeoutSeconds = Long.MAX_VALUE;
-        if (c.getSimpleName().equals("TestRendering"))
-        {
-            timeoutSeconds = 30;
-        }
-        setScheduler(new FixedThreadPoolScheduler(timeoutSeconds));
+    @Override
+    public void finished() {
+      executorService.shutdown();
+      try {
+        executorService.awaitTermination(timeoutSeconds, TimeUnit.SECONDS);
+      } catch (final InterruptedException exc) {
+        throw new RuntimeException(exc);
+      }
     }
+
+    @Override
+    public void schedule(final Runnable childStatement) {
+      executorService.submit(childStatement);
+    }
+  }
+
+  public ParallelParameterized(final Class c) throws Throwable {
+    super(c);
+    long timeoutSeconds = Long.MAX_VALUE;
+    if (c.getSimpleName().equals("TestRendering")) {
+      timeoutSeconds = 30;
+    }
+    setScheduler(new FixedThreadPoolScheduler(timeoutSeconds));
+  }
 }
