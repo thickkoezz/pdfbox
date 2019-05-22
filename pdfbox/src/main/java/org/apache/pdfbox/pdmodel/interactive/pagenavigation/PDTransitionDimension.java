@@ -17,21 +17,20 @@
 package org.apache.pdfbox.pdmodel.interactive.pagenavigation;
 
 /**
- * The dimension in which the specified transition effect shall occur. Only for {@link PDTransitionStyle#Split} and
- * {@link PDTransitionStyle#Blinds}.
- * 
+ * The dimension in which the specified transition effect shall occur. Only for
+ * {@link PDTransitionStyle#Split} and {@link PDTransitionStyle#Blinds}.
+ *
  * @author Andrea Vacondio
  *
  */
-public enum PDTransitionDimension
-{
-    /**
-     * Horizontal
-     */
-    H,
-    /**
-     * Vertical
-     */
-    V
+public enum PDTransitionDimension {
+  /**
+   * Horizontal
+   */
+  H,
+  /**
+   * Vertical
+   */
+  V
 
 }
