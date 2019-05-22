@@ -24,56 +24,46 @@ import org.apache.pdfbox.cos.COSDictionary;
  * @author Johannes Koch
  *
  */
-public class PDDictionaryWrapper implements COSObjectable
-{
+public class PDDictionaryWrapper implements COSObjectable {
 
-    private final COSDictionary dictionary;
+  private final COSDictionary dictionary;
 
-    /**
-     * Default constructor
-     */
-    public PDDictionaryWrapper()
-    {
-        this.dictionary = new COSDictionary();
-    }
+  /**
+   * Default constructor
+   */
+  public PDDictionaryWrapper() {
+    dictionary = new COSDictionary();
+  }
 
-    /**
-     * Creates a new instance with a given COS dictionary.
-     * 
-     * @param dictionary the dictionary
-     */
-    public PDDictionaryWrapper(COSDictionary dictionary)
-    {
-        this.dictionary = dictionary;
-    }
+  /**
+   * Creates a new instance with a given COS dictionary.
+   *
+   * @param dictionary the dictionary
+   */
+  public PDDictionaryWrapper(final COSDictionary dictionary) {
+    this.dictionary = dictionary;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return this.dictionary;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return dictionary;
+  }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj instanceof PDDictionaryWrapper)
-        {
-            return this.dictionary.equals(((PDDictionaryWrapper) obj).dictionary);
-        }
-        return false;
-    }
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj instanceof PDDictionaryWrapper)
+      return dictionary.equals(((PDDictionaryWrapper) obj).dictionary);
+    return false;
+  }
 
-    @Override
-    public int hashCode()
-    {
-        return this.dictionary.hashCode();
-    }
+  @Override
+  public int hashCode() {
+    return dictionary.hashCode();
+  }
 
 }
