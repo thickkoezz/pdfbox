@@ -18,86 +18,67 @@
 package org.apache.pdfbox.pdmodel.font;
 
 /**
- * Represents a 10-byte <a href="http://monotype.de/services/pan2">PANOSE classification</a>.
+ * Represents a 10-byte <a href="http://monotype.de/services/pan2">PANOSE
+ * classification</a>.
  *
  * @author John Hewson
  */
-public class PDPanoseClassification
-{
-    private final byte[] bytes;
+public class PDPanoseClassification {
+  private final byte[] bytes;
 
-    PDPanoseClassification(byte[] bytes)
-    {
-        this.bytes = bytes;
-    }
-    
-    public int getFamilyKind()
-    {
-        return bytes[0];
-    }
+  PDPanoseClassification(final byte[] bytes) {
+    this.bytes = bytes;
+  }
 
-    public int getSerifStyle()
-    {
-        return bytes[1];
-    }
+  public int getFamilyKind() {
+    return bytes[0];
+  }
 
-    public int getWeight()
-    {
-        return bytes[2];
-    }
+  public int getSerifStyle() {
+    return bytes[1];
+  }
 
-    public int getProportion()
-    {
-        return bytes[3];
-    }
+  public int getWeight() {
+    return bytes[2];
+  }
 
-    public int getContrast()
-    {
-        return bytes[4];
-    }
+  public int getProportion() {
+    return bytes[3];
+  }
 
-    public int getStrokeVariation()
-    {
-        return bytes[5];
-    }
+  public int getContrast() {
+    return bytes[4];
+  }
 
-    public int getArmStyle()
-    {
-        return bytes[6];
-    }
-    
-    public int getLetterform()
-    {
-        return bytes[7];
-    }
+  public int getStrokeVariation() {
+    return bytes[5];
+  }
 
-    public int getMidline()
-    {
-        return bytes[8];
-    }
+  public int getArmStyle() {
+    return bytes[6];
+  }
 
-    public int getXHeight()
-    {
-        return bytes[9];
-    }
+  public int getLetterform() {
+    return bytes[7];
+  }
 
-    public byte[] getBytes()
-    {
-        return bytes;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return "{ FamilyKind = " + getFamilyKind() + ", " +
-                 "SerifStyle = " + getSerifStyle() + ", " +
-                 "Weight = " + getWeight() + ", " +
-                 "Proportion = " + getProportion() + ", " + 
-                 "Contrast = " + getContrast() + ", " +
-                 "StrokeVariation = " + getStrokeVariation() + ", " +
-                 "ArmStyle = " + getArmStyle() + ", " +
-                 "Letterform = " + getLetterform() + ", " +
-                 "Midline = " + getMidline() + ", " +
-                 "XHeight = " + getXHeight() + "}";
-    }
+  public int getMidline() {
+    return bytes[8];
+  }
+
+  public int getXHeight() {
+    return bytes[9];
+  }
+
+  public byte[] getBytes() {
+    return bytes;
+  }
+
+  @Override
+  public String toString() {
+    return "{ FamilyKind = " + getFamilyKind() + ", " + "SerifStyle = " + getSerifStyle() + ", " + "Weight = "
+        + getWeight() + ", " + "Proportion = " + getProportion() + ", " + "Contrast = " + getContrast() + ", "
+        + "StrokeVariation = " + getStrokeVariation() + ", " + "ArmStyle = " + getArmStyle() + ", " + "Letterform = "
+        + getLetterform() + ", " + "Midline = " + getMidline() + ", " + "XHeight = " + getXHeight() + "}";
+  }
 }
