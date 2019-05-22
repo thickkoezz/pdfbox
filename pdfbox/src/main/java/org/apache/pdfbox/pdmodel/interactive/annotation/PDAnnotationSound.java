@@ -24,51 +24,45 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDSoundAppearan
  *
  * @author Paul King
  */
-public class PDAnnotationSound extends PDAnnotationMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Sound";
+public class PDAnnotationSound extends PDAnnotationMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Sound";
 
-    private PDAppearanceHandler customAppearanceHandler;
+  private PDAppearanceHandler customAppearanceHandler;
 
-    public PDAnnotationSound()
-    {
-        getCOSObject().setName(COSName.SUBTYPE, SUB_TYPE);
-    }
+  public PDAnnotationSound() {
+    getCOSObject().setName(COSName.SUBTYPE, PDAnnotationSound.SUB_TYPE);
+  }
 
-    /**
-     * Creates a sound annotation from a COSDictionary, expected to be a correct object definition.
-     *
-     * @param field the PDF object to represent as a field.
-     */
-    public PDAnnotationSound(COSDictionary field)
-    {
-        super(field);
-    }
-    
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
+  /**
+   * Creates a sound annotation from a COSDictionary, expected to be a correct
+   * object definition.
+   *
+   * @param field the PDF object to represent as a field.
+   */
+  public PDAnnotationSound(final COSDictionary field) {
+    super(field);
+  }
 
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDSoundAppearanceHandler appearanceHandler = new PDSoundAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
+
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDSoundAppearanceHandler appearanceHandler = new PDSoundAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
+  }
 }
