@@ -19,35 +19,29 @@ package org.apache.pdfbox.contentstream.operator.graphics;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.pdfbox.contentstream.operator.Operator;
+import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
-import org.apache.pdfbox.contentstream.operator.Operator;
-import org.apache.pdfbox.contentstream.operator.OperatorName;
 
 /**
  * BI Begins an inline image.
  *
  * @author Ben Litchfield
  */
-public final class BeginInlineImage extends GraphicsOperatorProcessor
-{
-    @Override
-    public void process(Operator operator, List<COSBase> operands) throws IOException
-    {
-        if (operator.getImageData() == null || operator.getImageData().length == 0)
-        {
-            return;
-        }
-        PDImage image = new PDInlineImage(operator.getImageParameters(),
-                                          operator.getImageData(),
-                                          context.getResources());
-        context.drawImage(image);
-    }
+public final class BeginInlineImage extends GraphicsOperatorProcessor {
+  @Override
+  public void process(final Operator operator, final List<COSBase> operands) throws IOException {
+    if (operator.getImageData() == null || operator.getImageData().length == 0)
+      return;
+    final PDImage image = new PDInlineImage(operator.getImageParameters(), operator.getImageData(),
+        context.getResources());
+    context.drawImage(image);
+  }
 
-    @Override
-    public String getName()
-    {
-        return OperatorName.BEGIN_INLINE_IMAGE;
-    }
+  @Override
+  public String getName() {
+    return OperatorName.BEGIN_INLINE_IMAGE;
+  }
 }
