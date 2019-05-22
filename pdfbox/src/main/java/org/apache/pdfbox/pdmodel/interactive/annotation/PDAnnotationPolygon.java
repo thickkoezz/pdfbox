@@ -27,169 +27,147 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.handlers.PDPolygonAppear
  *
  * @author Paul King
  */
-public class PDAnnotationPolygon extends PDAnnotationMarkup
-{
-    /**
-     * The type of annotation.
-     */
-    public static final String SUB_TYPE = "Polygon";
+public class PDAnnotationPolygon extends PDAnnotationMarkup {
+  /**
+   * The type of annotation.
+   */
+  public static final String SUB_TYPE = "Polygon";
 
-    private PDAppearanceHandler customAppearanceHandler;
-    
-    /**
-     * Constructor.
-     */
-    public PDAnnotationPolygon()
-    {
-        getCOSObject().setName(COSName.SUBTYPE, SUB_TYPE);
-    }
+  private PDAppearanceHandler customAppearanceHandler;
 
-    /**
-     * Constructor.
-     *
-     * @param dict The annotations dictionary.
-     */
-    public PDAnnotationPolygon(COSDictionary dict)
-    {
-        super(dict);
-    }
+  /**
+   * Constructor.
+   */
+  public PDAnnotationPolygon() {
+    getCOSObject().setName(COSName.SUBTYPE, PDAnnotationPolygon.SUB_TYPE);
+  }
 
-    // PDF 32000 specification has "the interior color with which to fill the annotation’s line endings"
-    // but it is the inside of the polygon.
-    
-    /**
-     * This will set interior color.
-     *
-     * @param ic color.
-     */
-    public void setInteriorColor(PDColor ic)
-    {
-        getCOSObject().setItem(COSName.IC, ic.toCOSArray());
-    }
+  /**
+   * Constructor.
+   *
+   * @param dict The annotations dictionary.
+   */
+  public PDAnnotationPolygon(final COSDictionary dict) {
+    super(dict);
+  }
 
-    /**
-     * This will retrieve the interior color.
-     *
-     * @return object representing the color.
-     */
-    public PDColor getInteriorColor()
-    {
-        return getColor(COSName.IC);
-    }
+  // PDF 32000 specification has "the interior color with which to fill the
+  // annotation’s line endings"
+  // but it is the inside of the polygon.
 
-    /**
-     * This will set the border effect dictionary, specifying effects to be applied when drawing the
-     * line. This is supported by PDF 1.5 and higher.
-     *
-     * @param be The border effect dictionary to set.
-     *
-     */
-    public void setBorderEffect(PDBorderEffectDictionary be)
-    {
-        getCOSObject().setItem(COSName.BE, be);
-    }
+  /**
+   * This will set interior color.
+   *
+   * @param ic color.
+   */
+  public void setInteriorColor(final PDColor ic) {
+    getCOSObject().setItem(COSName.IC, ic.toCOSArray());
+  }
 
-    /**
-     * This will retrieve the border effect dictionary, specifying effects to be applied used in
-     * drawing the line.
-     *
-     * @return The border effect dictionary
-     */
-    public PDBorderEffectDictionary getBorderEffect()
-    {
-        COSDictionary be = (COSDictionary) getCOSObject().getDictionaryObject(COSName.BE);
-        if (be != null)
-        {
-            return new PDBorderEffectDictionary(be);
+  /**
+   * This will retrieve the interior color.
+   *
+   * @return object representing the color.
+   */
+  public PDColor getInteriorColor() {
+    return getColor(COSName.IC);
+  }
+
+  /**
+   * This will set the border effect dictionary, specifying effects to be applied
+   * when drawing the line. This is supported by PDF 1.5 and higher.
+   *
+   * @param be The border effect dictionary to set.
+   *
+   */
+  public void setBorderEffect(final PDBorderEffectDictionary be) {
+    getCOSObject().setItem(COSName.BE, be);
+  }
+
+  /**
+   * This will retrieve the border effect dictionary, specifying effects to be
+   * applied used in drawing the line.
+   *
+   * @return The border effect dictionary
+   */
+  public PDBorderEffectDictionary getBorderEffect() {
+    final COSDictionary be = (COSDictionary) getCOSObject().getDictionaryObject(COSName.BE);
+    if (be != null)
+      return new PDBorderEffectDictionary(be);
+    else
+      return null;
+  }
+
+  /**
+   * This will retrieve the numbers that shall represent the alternating
+   * horizontal and vertical coordinates.
+   *
+   * @return An array of floats representing the alternating horizontal and
+   *         vertical coordinates.
+   */
+  public float[] getVertices() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.VERTICES);
+    if (base instanceof COSArray)
+      return ((COSArray) base).toFloatArray();
+    return null;
+  }
+
+  /**
+   * This will set the numbers that shall represent the alternating horizontal and
+   * vertical coordinates.
+   *
+   * @param points an array with the numbers that shall represent the alternating
+   *               horizontal and vertical coordinates.
+   */
+  public void setVertices(final float[] points) {
+    final COSArray ar = new COSArray();
+    ar.setFloatArray(points);
+    getCOSObject().setItem(COSName.VERTICES, ar);
+  }
+
+  /**
+   * PDF 2.0: This will retrieve the arrays that shall represent the alternating
+   * horizontal and vertical coordinates for path building.
+   *
+   * @return An array of float arrays, each supplying the operands for a path
+   *         building operator (m, l or c). The first array should have 2
+   *         elements, the others should have 2 or 6 elements.
+   */
+  public float[][] getPath() {
+    final COSBase base = getCOSObject().getDictionaryObject(COSName.PATH);
+    if (base instanceof COSArray) {
+      final COSArray array = (COSArray) base;
+      final float[][] pathArray = new float[array.size()][];
+      for (int i = 0; i < array.size(); ++i) {
+        final COSBase base2 = array.getObject(i);
+        if (base2 instanceof COSArray) {
+          pathArray[i] = ((COSArray) array.getObject(i)).toFloatArray();
+        } else {
+          pathArray[i] = new float[0];
         }
-        else
-        {
-            return null;
-        }
+      }
+      return pathArray;
     }
+    return null;
+  }
 
-    /**
-     * This will retrieve the numbers that shall represent the alternating horizontal and vertical
-     * coordinates.
-     *
-     * @return An array of floats representing the alternating horizontal and vertical coordinates.
-     */
-    public float[] getVertices()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.VERTICES);
-        if (base instanceof COSArray)
-        {
-            return ((COSArray) base).toFloatArray();
-        }
-        return null;
-    }
+  /**
+   * Set a custom appearance handler for generating the annotations appearance
+   * streams.
+   *
+   * @param appearanceHandler
+   */
+  public void setCustomAppearanceHandler(final PDAppearanceHandler appearanceHandler) {
+    customAppearanceHandler = appearanceHandler;
+  }
 
-    /**
-     * This will set the numbers that shall represent the alternating horizontal and vertical
-     * coordinates.
-     *
-     * @param points an array with the numbers that shall represent the alternating horizontal and
-     * vertical coordinates.
-     */
-    public void setVertices(float[] points)
-    {
-        COSArray ar = new COSArray();
-        ar.setFloatArray(points);
-        getCOSObject().setItem(COSName.VERTICES, ar);
+  @Override
+  public void constructAppearances() {
+    if (customAppearanceHandler == null) {
+      final PDPolygonAppearanceHandler appearanceHandler = new PDPolygonAppearanceHandler(this);
+      appearanceHandler.generateAppearanceStreams();
+    } else {
+      customAppearanceHandler.generateAppearanceStreams();
     }
-
-    /**
-     * PDF 2.0: This will retrieve the arrays that shall represent the alternating horizontal
-     * and vertical coordinates for path building.
-     *
-     * @return An array of float arrays, each supplying the operands for a path building operator
-     * (m, l or c). The first array should have 2 elements, the others should have 2 or 6 elements.
-     */
-    public float[][] getPath()
-    {
-        COSBase base = getCOSObject().getDictionaryObject(COSName.PATH);
-        if (base instanceof COSArray)
-        {
-            COSArray array = (COSArray) base;
-            float[][] pathArray = new float[array.size()][];
-            for (int i = 0; i < array.size(); ++i)
-            {
-                COSBase base2 = array.getObject(i);
-                if (base2 instanceof COSArray)
-                {
-                    pathArray[i] = ((COSArray) array.getObject(i)).toFloatArray();
-                }
-                else
-                {
-                    pathArray[i] = new float[0];
-                }
-            }
-            return pathArray;
-        }
-        return null;
-    }
-
-    /**
-     * Set a custom appearance handler for generating the annotations appearance streams.
-     * 
-     * @param appearanceHandler
-     */
-    public void setCustomAppearanceHandler(PDAppearanceHandler appearanceHandler)
-    {
-        customAppearanceHandler = appearanceHandler;
-    }
-
-    @Override
-    public void constructAppearances()
-    {
-        if (customAppearanceHandler == null)
-        {
-            PDPolygonAppearanceHandler appearanceHandler = new PDPolygonAppearanceHandler(this);
-            appearanceHandler.generateAppearanceStreams();
-        }
-        else
-        {
-            customAppearanceHandler.generateAppearanceStreams();
-        }
-    }
+  }
 }
