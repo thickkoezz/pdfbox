@@ -18,6 +18,7 @@
 package org.apache.pdfbox.pdmodel.font.encoding;
 
 import java.util.Map;
+
 import org.apache.pdfbox.cos.COSBase;
 
 /**
@@ -25,30 +26,25 @@ import org.apache.pdfbox.cos.COSBase;
  *
  * @author John Hewson
  */
-public class BuiltInEncoding extends Encoding
-{
-    /**
-     * Constructor.
-     *
-     * @param codeToName the given code to name mapping
-     */
-    public BuiltInEncoding(Map<Integer, String> codeToName)
-    {
-        for (Map.Entry<Integer, String> entry : codeToName.entrySet())
-        {
-            add(entry.getKey(), entry.getValue());
-        }
+public class BuiltInEncoding extends Encoding {
+  /**
+   * Constructor.
+   *
+   * @param codeToName the given code to name mapping
+   */
+  public BuiltInEncoding(final Map<Integer, String> codeToName) {
+    for (final Map.Entry<Integer, String> entry : codeToName.entrySet()) {
+      add(entry.getKey(), entry.getValue());
     }
-    
-    @Override
-    public COSBase getCOSObject()
-    {
-        throw new UnsupportedOperationException("Built-in encodings cannot be serialized");
-    }
+  }
 
-    @Override
-    public String getEncodingName()
-    {
-        return "built-in (TTF)";
-    }
+  @Override
+  public COSBase getCOSObject() {
+    throw new UnsupportedOperationException("Built-in encodings cannot be serialized");
+  }
+
+  @Override
+  public String getEncodingName() {
+    return "built-in (TTF)";
+  }
 }
