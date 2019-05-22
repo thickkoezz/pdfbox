@@ -17,37 +17,34 @@
 
 package org.apache.pdfbox.cos;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Test class for {@link COSUpdateInfo}.
  */
-public class TestCOSUpdateInfo
-{
-    
-    /**
-     * Tests isNeedToBeUpdate() and setNeedToBeUpdate() - tests the getter/setter methods.
-     */
-    @Test
-    public void testIsSetNeedToBeUpdate()
-    {
-        // COSDictionary
-        COSUpdateInfo testCOSDictionary = new COSDictionary();
-        testCOSDictionary.setNeedToBeUpdated(true);
-        assertTrue(testCOSDictionary.isNeedToBeUpdated());
-        testCOSDictionary.setNeedToBeUpdated(false);
-        assertFalse(testCOSDictionary.isNeedToBeUpdated());
+public class TestCOSUpdateInfo {
 
-        // COSObject
-        COSUpdateInfo testCOSObject;
-        testCOSObject = new COSObject(null);
-        testCOSObject.setNeedToBeUpdated(true);
-        assertTrue(testCOSObject.isNeedToBeUpdated());
-        testCOSObject.setNeedToBeUpdated(false);
-        assertFalse(testCOSObject.isNeedToBeUpdated());
-    }
+  /**
+   * Tests isNeedToBeUpdate() and setNeedToBeUpdate() - tests the getter/setter
+   * methods.
+   */
+  @Test
+  public void testIsSetNeedToBeUpdate() {
+    // COSDictionary
+    final COSUpdateInfo testCOSDictionary = new COSDictionary();
+    testCOSDictionary.setNeedToBeUpdated(true);
+    Assert.assertTrue(testCOSDictionary.isNeedToBeUpdated());
+    testCOSDictionary.setNeedToBeUpdated(false);
+    Assert.assertFalse(testCOSDictionary.isNeedToBeUpdated());
+
+    // COSObject
+    COSUpdateInfo testCOSObject;
+    testCOSObject = new COSObject(null);
+    testCOSObject.setNeedToBeUpdated(true);
+    Assert.assertTrue(testCOSObject.isNeedToBeUpdated());
+    testCOSObject.setNeedToBeUpdated(false);
+    Assert.assertFalse(testCOSObject.isNeedToBeUpdated());
+  }
 
 }
