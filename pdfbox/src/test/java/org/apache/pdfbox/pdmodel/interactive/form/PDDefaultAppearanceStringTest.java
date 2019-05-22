@@ -16,8 +16,6 @@
  */
 package org.apache.pdfbox.pdmodel.interactive.form;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.apache.pdfbox.cos.COSName;
@@ -25,50 +23,46 @@ import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PDDefaultAppearanceStringTest
-{
-    // Used to check resources lookup 
-    private PDResources resources;
-    private COSName fontResourceName;
-    
-    @Before
-    public void setUp()
-    {
-        resources = new PDResources();
-        // the resource name is created when the font is added so need
-        // to capture that
-        fontResourceName = resources.add(PDType1Font.HELVETICA);
-    }
-    
-    @Test
-    public void testParseDAString() throws IOException
-    {
-        COSString sampleString = new COSString("/" + fontResourceName.getName() + " 12 Tf 0.019 0.305 0.627 rg");
+public class PDDefaultAppearanceStringTest {
+  // Used to check resources lookup
+  private PDResources resources;
+  private COSName fontResourceName;
 
-        PDDefaultAppearanceString defaultAppearanceString = new PDDefaultAppearanceString(sampleString, resources);
+  @Before
+  public void setUp() {
+    resources = new PDResources();
+    // the resource name is created when the font is added so need
+    // to capture that
+    fontResourceName = resources.add(PDType1Font.HELVETICA);
+  }
 
-        assertEquals(12, defaultAppearanceString.getFontSize(), 0.001);
-        assertEquals(PDType1Font.HELVETICA, defaultAppearanceString.getFont());
-        assertEquals(PDDeviceRGB.INSTANCE, defaultAppearanceString.getFontColor().getColorSpace());
-        assertEquals(0.019, defaultAppearanceString.getFontColor().getComponents()[0], 0.0001);
-        assertEquals(0.305, defaultAppearanceString.getFontColor().getComponents()[1], 0.0001);
-        assertEquals(0.627, defaultAppearanceString.getFontColor().getComponents()[2], 0.0001);
-    }
-    
-    @Test(expected=IOException.class)
-    public void testFontResourceUnavailable() throws IOException
-    {
-        COSString sampleString = new COSString("/Helvetica 12 Tf 0.019 0.305 0.627 rg");
-        new PDDefaultAppearanceString(sampleString, resources);
-    }
-    
-    @Test(expected=IOException.class)
-    public void testWrongNumberOfColorArguments() throws IOException
-    {
-        COSString sampleString = new COSString("/Helvetica 12 Tf 0.305 0.627 rg");
-        new PDDefaultAppearanceString(sampleString, resources);
-    } 
+  @Test
+  public void testParseDAString() throws IOException {
+    final COSString sampleString = new COSString("/" + fontResourceName.getName() + " 12 Tf 0.019 0.305 0.627 rg");
+
+    final PDDefaultAppearanceString defaultAppearanceString = new PDDefaultAppearanceString(sampleString, resources);
+
+    Assert.assertEquals(12, defaultAppearanceString.getFontSize(), 0.001);
+    Assert.assertEquals(PDType1Font.HELVETICA, defaultAppearanceString.getFont());
+    Assert.assertEquals(PDDeviceRGB.INSTANCE, defaultAppearanceString.getFontColor().getColorSpace());
+    Assert.assertEquals(0.019, defaultAppearanceString.getFontColor().getComponents()[0], 0.0001);
+    Assert.assertEquals(0.305, defaultAppearanceString.getFontColor().getComponents()[1], 0.0001);
+    Assert.assertEquals(0.627, defaultAppearanceString.getFontColor().getComponents()[2], 0.0001);
+  }
+
+  @Test(expected = IOException.class)
+  public void testFontResourceUnavailable() throws IOException {
+    final COSString sampleString = new COSString("/Helvetica 12 Tf 0.019 0.305 0.627 rg");
+    new PDDefaultAppearanceString(sampleString, resources);
+  }
+
+  @Test(expected = IOException.class)
+  public void testWrongNumberOfColorArguments() throws IOException {
+    final COSString sampleString = new COSString("/Helvetica 12 Tf 0.305 0.627 rg");
+    new PDDefaultAppearanceString(sampleString, resources);
+  }
 }
