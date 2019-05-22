@@ -23,93 +23,81 @@ import org.apache.pdfbox.pdmodel.common.COSObjectable;
 
 /**
  * A marked-content reference.
- * 
+ *
  * @author Johannes Koch
  */
-public class PDMarkedContentReference implements COSObjectable
-{
-    public static final String TYPE = "MCR";
+public class PDMarkedContentReference implements COSObjectable {
+  public static final String TYPE = "MCR";
 
-    private final COSDictionary dictionary;
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public COSDictionary getCOSObject()
-    {
-        return this.dictionary;
-    }
+  private final COSDictionary dictionary;
 
-    /**
-     * Default constructor
-     */
-    public PDMarkedContentReference()
-    {
-        this.dictionary = new COSDictionary();
-        this.dictionary.setName(COSName.TYPE, TYPE);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public COSDictionary getCOSObject() {
+    return dictionary;
+  }
 
-    /**
-     * Constructor for an existing marked content reference.
-     * 
-     * @param dictionary the page dictionary
-     */
-    public PDMarkedContentReference(COSDictionary dictionary)
-    {
-        this.dictionary = dictionary;
-    }
+  /**
+   * Default constructor
+   */
+  public PDMarkedContentReference() {
+    dictionary = new COSDictionary();
+    dictionary.setName(COSName.TYPE, PDMarkedContentReference.TYPE);
+  }
 
-    /**
-     * Gets the page.
-     * 
-     * @return the page
-     */
-    public PDPage getPage()
-    {
-        COSDictionary pg = (COSDictionary) this.getCOSObject().getDictionaryObject(COSName.PG);
-        if (pg != null)
-        {
-            return new PDPage(pg);
-        }
-        return null;
-    }
+  /**
+   * Constructor for an existing marked content reference.
+   *
+   * @param dictionary the page dictionary
+   */
+  public PDMarkedContentReference(final COSDictionary dictionary) {
+    this.dictionary = dictionary;
+  }
 
-    /**
-     * Sets the page.
-     * 
-     * @param page the page
-     */
-    public void setPage(PDPage page)
-    {
-        this.getCOSObject().setItem(COSName.PG, page);
-    }
+  /**
+   * Gets the page.
+   *
+   * @return the page
+   */
+  public PDPage getPage() {
+    final COSDictionary pg = (COSDictionary) getCOSObject().getDictionaryObject(COSName.PG);
+    if (pg != null)
+      return new PDPage(pg);
+    return null;
+  }
 
-    /**
-     * Gets the marked content identifier.
-     * 
-     * @return the marked content identifier
-     */
-    public int getMCID()
-    {
-        return this.getCOSObject().getInt(COSName.MCID);
-    }
+  /**
+   * Sets the page.
+   *
+   * @param page the page
+   */
+  public void setPage(final PDPage page) {
+    getCOSObject().setItem(COSName.PG, page);
+  }
 
-    /**
-     * Sets the marked content identifier.
-     * 
-     * @param mcid the marked content identifier
-     */
-    public void setMCID(int mcid)
-    {
-        this.getCOSObject().setInt(COSName.MCID, mcid);
-    }
+  /**
+   * Gets the marked content identifier.
+   *
+   * @return the marked content identifier
+   */
+  public int getMCID() {
+    return getCOSObject().getInt(COSName.MCID);
+  }
 
+  /**
+   * Sets the marked content identifier.
+   *
+   * @param mcid the marked content identifier
+   */
+  public void setMCID(final int mcid) {
+    getCOSObject().setInt(COSName.MCID, mcid);
+  }
 
-    @Override
-    public String toString()
-    {
-        return "mcid=" + this.getMCID();
-    }
+  @Override
+  public String toString() {
+    return "mcid=" + getMCID();
+  }
 
 }
