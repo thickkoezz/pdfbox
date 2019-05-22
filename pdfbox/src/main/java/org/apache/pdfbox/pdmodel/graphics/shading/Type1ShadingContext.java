@@ -22,6 +22,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
@@ -32,135 +33,109 @@ import org.apache.pdfbox.util.Matrix;
  *
  * @author Tilman Hausherr
  */
-class Type1ShadingContext extends ShadingContext implements PaintContext
-{
-    private static final Log LOG = LogFactory.getLog(Type1ShadingContext.class);
+class Type1ShadingContext extends ShadingContext implements PaintContext {
+  private static final Log LOG = LogFactory.getLog(Type1ShadingContext.class);
 
-    private PDShadingType1 type1ShadingType;
-    private AffineTransform rat;
-    private final float[] domain;
+  private PDShadingType1 type1ShadingType;
+  private AffineTransform rat;
+  private final float[] domain;
 
-    /**
-     * Constructor creates an instance to be used for fill operations.
-     *
-     * @param shading the shading type to be used
-     * @param colorModel the color model to be used
-     * @param xform transformation for user to device space
-     * @param matrix the pattern matrix concatenated with that of the parent content stream
-     */
-    Type1ShadingContext(PDShadingType1 shading, ColorModel colorModel, AffineTransform xform,
-                               Matrix matrix) throws IOException
-    {
-        super(shading, colorModel, xform, matrix);
-        this.type1ShadingType = shading;
+  /**
+   * Constructor creates an instance to be used for fill operations.
+   *
+   * @param shading    the shading type to be used
+   * @param colorModel the color model to be used
+   * @param xform      transformation for user to device space
+   * @param matrix     the pattern matrix concatenated with that of the parent
+   *                   content stream
+   */
+  Type1ShadingContext(final PDShadingType1 shading, final ColorModel colorModel, final AffineTransform xform,
+      final Matrix matrix) throws IOException {
+    super(shading, colorModel, xform, matrix);
+    type1ShadingType = shading;
 
-        // (Optional) An array of four numbers [ xmin xmax ymin ymax ] 
-        // specifying the rectangular domain of coordinates over which the 
-        // color function(s) are defined. Default value: [ 0.0 1.0 0.0 1.0 ].
-        if (shading.getDomain() != null)
-        {
-            domain = shading.getDomain().toFloatArray();
-        }
-        else
-        {
-            domain = new float[] { 0, 1, 0, 1 };
-        }
-
-        try
-        {
-            // get inverse transform to be independent of 
-            // shading matrix and current user / device space 
-            // when handling actual pixels in getRaster()
-            rat = shading.getMatrix().createAffineTransform().createInverse();
-            rat.concatenate(matrix.createAffineTransform().createInverse());
-            rat.concatenate(xform.createInverse());
-        }
-        catch (NoninvertibleTransformException ex)
-        {
-            LOG.error(ex.getMessage() + ", matrix: " + matrix, ex);
-            rat = new AffineTransform();
-        }
+    // (Optional) An array of four numbers [ xmin xmax ymin ymax ]
+    // specifying the rectangular domain of coordinates over which the
+    // color function(s) are defined. Default value: [ 0.0 1.0 0.0 1.0 ].
+    if (shading.getDomain() != null) {
+      domain = shading.getDomain().toFloatArray();
+    } else {
+      domain = new float[] { 0, 1, 0, 1 };
     }
 
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        type1ShadingType = null;
+    try {
+      // get inverse transform to be independent of
+      // shading matrix and current user / device space
+      // when handling actual pixels in getRaster()
+      rat = shading.getMatrix().createAffineTransform().createInverse();
+      rat.concatenate(matrix.createAffineTransform().createInverse());
+      rat.concatenate(xform.createInverse());
+    } catch (final NoninvertibleTransformException ex) {
+      Type1ShadingContext.LOG.error(ex.getMessage() + ", matrix: " + matrix, ex);
+      rat = new AffineTransform();
     }
+  }
 
-    @Override
-    public ColorModel getColorModel()
-    {
-        return super.getColorModel();
-    }
+  @Override
+  public void dispose() {
+    super.dispose();
 
-    @Override
-    public Raster getRaster(int x, int y, int w, int h)
-    {
-        WritableRaster raster = getColorModel().createCompatibleWritableRaster(w, h);
-        int[] data = new int[w * h * 4];
-        for (int j = 0; j < h; j++)
-        {
-            for (int i = 0; i < w; i++)
-            {
-                int index = (j * w + i) * 4;
-                boolean useBackground = false;
-                float[] values = new float[] { x + i, y + j };
-                rat.transform(values, 0, values, 0, 1);
-                if (values[0] < domain[0] || values[0] > domain[1] ||
-                    values[1] < domain[2] || values[1] > domain[3])
-                {
-                    if (getBackground() == null)
-                    {
-                        continue;
-                    }
-                    useBackground = true;
-                }
+    type1ShadingType = null;
+  }
 
-                // evaluate function
-                if (useBackground)
-                {
-                    values = getBackground();
-                }
-                else
-                {
-                    try
-                    {
-                        values = type1ShadingType.evalFunction(values);
-                    }
-                    catch (IOException e)
-                    {
-                        LOG.error("error while processing a function", e);
-                    }
-                }
+  @Override
+  public ColorModel getColorModel() {
+    return super.getColorModel();
+  }
 
-                // convert color values from shading color space to RGB
-                PDColorSpace shadingColorSpace = getShadingColorSpace();
-                if (shadingColorSpace != null)
-                {
-                    try
-                    {
-                        values = shadingColorSpace.toRGB(values);
-                    }
-                    catch (IOException e)
-                    {
-                        LOG.error("error processing color space", e);
-                    }
-                }
-                data[index] = (int) (values[0] * 255);
-                data[index + 1] = (int) (values[1] * 255);
-                data[index + 2] = (int) (values[2] * 255);
-                data[index + 3] = 255;
-            }
+  @Override
+  public Raster getRaster(final int x, final int y, final int w, final int h) {
+    final WritableRaster raster = getColorModel().createCompatibleWritableRaster(w, h);
+    final int[] data = new int[w * h * 4];
+    for (int j = 0; j < h; j++) {
+      for (int i = 0; i < w; i++) {
+        final int index = (j * w + i) * 4;
+        boolean useBackground = false;
+        float[] values = new float[] { x + i, y + j };
+        rat.transform(values, 0, values, 0, 1);
+        if (values[0] < domain[0] || values[0] > domain[1] || values[1] < domain[2] || values[1] > domain[3]) {
+          if (getBackground() == null) {
+            continue;
+          }
+          useBackground = true;
         }
-        raster.setPixels(0, 0, w, h, data);
-        return raster;
-    }
 
-    public float[] getDomain()
-    {
-        return domain;
+        // evaluate function
+        if (useBackground) {
+          values = getBackground();
+        } else {
+          try {
+            values = type1ShadingType.evalFunction(values);
+          } catch (final IOException e) {
+            Type1ShadingContext.LOG.error("error while processing a function", e);
+          }
+        }
+
+        // convert color values from shading color space to RGB
+        final PDColorSpace shadingColorSpace = getShadingColorSpace();
+        if (shadingColorSpace != null) {
+          try {
+            values = shadingColorSpace.toRGB(values);
+          } catch (final IOException e) {
+            Type1ShadingContext.LOG.error("error processing color space", e);
+          }
+        }
+        data[index] = (int) (values[0] * 255);
+        data[index + 1] = (int) (values[1] * 255);
+        data[index + 2] = (int) (values[2] * 255);
+        data[index + 3] = 255;
+      }
     }
+    raster.setPixels(0, 0, w, h, data);
+    return raster;
+  }
+
+  public float[] getDomain() {
+    return domain;
+  }
 }
