@@ -23,65 +23,54 @@ import junit.framework.TestSuite;
  *
  * @author Michael Doswald
  */
-public class TestHexUtil extends TestCase
-{
-    
-    /**
-     * Test conversion from short to char[]
-     */
-    public void testGetCharsFromShortWithoutPassingInABuffer()
-    {
-        assertArrayEquals(new char[]{'0','0','0','0'}, Hex.getChars((short)0x0000));
-        assertArrayEquals(new char[]{'0','0','0','F'}, Hex.getChars((short)0x000F));
-        assertArrayEquals(new char[]{'A','B','C','D'}, Hex.getChars((short)0xABCD));
-        assertArrayEquals(new char[]{'B','A','B','E'}, Hex.getChars((short)0xCAFEBABE));
-    }
+public class TestHexUtil extends TestCase {
 
-    /**
-     * Check conversion from String to a char[] which contains the UTF16-BE encoded
-     * bytes of the string as hex digits
-     *
-     */
-    public void testGetCharsUTF16BE()
-    {
-        assertArrayEquals(new char[]{'0','0','6','1','0','0','6','2'}, Hex.getCharsUTF16BE("ab"));
-        assertArrayEquals(new char[]{'5','E','2','E','5','2','A','9'}, Hex.getCharsUTF16BE("帮助"));
-    }
+  /**
+   * Test conversion from short to char[]
+   */
+  public void testGetCharsFromShortWithoutPassingInABuffer() {
+    assertArrayEquals(new char[] { '0', '0', '0', '0' }, Hex.getChars((short) 0x0000));
+    assertArrayEquals(new char[] { '0', '0', '0', 'F' }, Hex.getChars((short) 0x000F));
+    assertArrayEquals(new char[] { 'A', 'B', 'C', 'D' }, Hex.getChars((short) 0xABCD));
+    assertArrayEquals(new char[] { 'B', 'A', 'B', 'E' }, Hex.getChars((short) 0xCAFEBABE));
+  }
 
-    private void assertArrayEquals(char[] expected, char[] actual)
-    {
-        assertEquals("Length of char array not equal", expected.length, actual.length);
-        for (int idx = 0; idx < expected.length; idx++)
-        {
-            if (expected[idx] != actual[idx])
-            {
-                fail(String.format("Character at index %d not equal. Expected '%c' but got '%c'", 
-                        idx, expected[idx], actual[idx]));
-            }
-        }
-    }
+  /**
+   * Check conversion from String to a char[] which contains the UTF16-BE encoded
+   * bytes of the string as hex digits
+   *
+   */
+  public void testGetCharsUTF16BE() {
+    assertArrayEquals(new char[] { '0', '0', '6', '1', '0', '0', '6', '2' }, Hex.getCharsUTF16BE("ab"));
+    assertArrayEquals(new char[] { '5', 'E', '2', 'E', '5', '2', 'A', '9' }, Hex.getCharsUTF16BE("帮助"));
+  }
 
-    /**
-     * Set the tests in the suite for this test class.
-     *
-     * @return the Suite.
-     */
-    public static Test suite()
-    {
-        return new TestSuite(TestHexUtil.class);
+  private void assertArrayEquals(final char[] expected, final char[] actual) {
+    TestCase.assertEquals("Length of char array not equal", expected.length, actual.length);
+    for (int idx = 0; idx < expected.length; idx++) {
+      if (expected[idx] != actual[idx]) {
+        TestCase.fail(String.format("Character at index %d not equal. Expected '%c' but got '%c'", idx, expected[idx],
+            actual[idx]));
+      }
     }
+  }
 
-    /**
-     * Command line execution.
-     *
-     * @param args Command line arguments.
-     */
-    public static void main(String[] args)
-    {
-        String[] arg =
-        {
-            TestHexUtil.class.getName()
-        };
-        junit.textui.TestRunner.main(arg);
-    }
+  /**
+   * Set the tests in the suite for this test class.
+   *
+   * @return the Suite.
+   */
+  public static Test suite() {
+    return new TestSuite(TestHexUtil.class);
+  }
+
+  /**
+   * Command line execution.
+   *
+   * @param args Command line arguments.
+   */
+  public static void main(final String[] args) {
+    final String[] arg = { TestHexUtil.class.getName() };
+    junit.textui.TestRunner.main(arg);
+  }
 }
