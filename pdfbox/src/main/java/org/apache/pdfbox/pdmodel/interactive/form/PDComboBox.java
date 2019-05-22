@@ -23,72 +23,64 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 
 /**
- * A combo box consisting of a drop-down list.
- * May be accompanied by an editable text box in which non-predefined values may be entered.
- * 
+ * A combo box consisting of a drop-down list. May be accompanied by an editable
+ * text box in which non-predefined values may be entered.
+ *
  * @author John Hewson
  */
-public final class PDComboBox extends PDChoice
-{
-    private static final int FLAG_EDIT = 1 << 18;
-    
-    /**
-     * @see PDField#PDField(PDAcroForm)
-     *
-     * @param acroForm The acroform.
-     */
-    public PDComboBox(PDAcroForm acroForm)
-    {
-        super(acroForm);
-        setCombo(true);
-    }    
+public final class PDComboBox extends PDChoice {
+  private static final int FLAG_EDIT = 1 << 18;
 
-    /**
-     * Constructor.
-     * 
-     * @param acroForm The form that this field is part of.
-     * @param field the PDF object to represent as a field.
-     * @param parent the parent node of the node
-     */
-    PDComboBox(PDAcroForm acroForm, COSDictionary field, PDNonTerminalField parent)
-    {
-        super(acroForm, field, parent);
-    }
+  /**
+   * @see PDField#PDField(PDAcroForm)
+   *
+   * @param acroForm The acroform.
+   */
+  public PDComboBox(final PDAcroForm acroForm) {
+    super(acroForm);
+    setCombo(true);
+  }
 
-    /**
-     * Determines if Edit is set.
-     * 
-     * @return true if the combo box shall include an editable text box as well as a drop-down list.
-     */
-    public boolean isEdit()
-    {
-        return getCOSObject().getFlag(COSName.FF, FLAG_EDIT);
-    }
+  /**
+   * Constructor.
+   *
+   * @param acroForm The form that this field is part of.
+   * @param field    the PDF object to represent as a field.
+   * @param parent   the parent node of the node
+   */
+  PDComboBox(final PDAcroForm acroForm, final COSDictionary field, final PDNonTerminalField parent) {
+    super(acroForm, field, parent);
+  }
 
-    /**
-     * Set the Edit bit.
-     *
-     * @param edit The value for Edit.
-     */
-    public void setEdit(boolean edit)
-    {
-        getCOSObject().setFlag(COSName.FF, FLAG_EDIT, edit);
+  /**
+   * Determines if Edit is set.
+   *
+   * @return true if the combo box shall include an editable text box as well as a
+   *         drop-down list.
+   */
+  public boolean isEdit() {
+    return getCOSObject().getFlag(COSName.FF, PDComboBox.FLAG_EDIT);
+  }
+
+  /**
+   * Set the Edit bit.
+   *
+   * @param edit The value for Edit.
+   */
+  public void setEdit(final boolean edit) {
+    getCOSObject().setFlag(COSName.FF, PDComboBox.FLAG_EDIT, edit);
+  }
+
+  @Override
+  void constructAppearances() throws IOException {
+    AppearanceGeneratorHelper apHelper;
+    apHelper = new AppearanceGeneratorHelper(this);
+    final List<String> values = getValue();
+
+    if (!values.isEmpty()) {
+      apHelper.setAppearanceValue(values.get(0));
+    } else {
+      apHelper.setAppearanceValue("");
     }
-    
-    @Override
-    void constructAppearances() throws IOException
-    {
-        AppearanceGeneratorHelper apHelper;
-        apHelper = new AppearanceGeneratorHelper(this);
-        List<String> values = getValue();
-        
-        if (!values.isEmpty())
-        {
-            apHelper.setAppearanceValue(values.get(0));
-        }
-        else
-        {
-            apHelper.setAppearanceValue("");
-        }
-    }
+  }
 }
