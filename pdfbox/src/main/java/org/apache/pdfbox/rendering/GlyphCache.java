@@ -20,6 +20,7 @@ import java.awt.geom.GeneralPath;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.font.PDFontLike;
@@ -32,66 +33,50 @@ import org.apache.pdfbox.pdmodel.font.PDVectorFont;
  *
  * @author John Hewson
  */
-final class GlyphCache
-{
-    private static final Log LOG = LogFactory.getLog(GlyphCache.class);
-    
-    private final PDVectorFont font;
-    private final Map<Integer, GeneralPath> cache = new HashMap<>();
+final class GlyphCache {
+  private static final Log LOG = LogFactory.getLog(GlyphCache.class);
 
-    GlyphCache(PDVectorFont font)
-    {
-        this.font = font;
-    }
-    
-    public GeneralPath getPathForCharacterCode(int code)
-    {
-        GeneralPath path = cache.get(code);
-        if (path != null)
-        {
-            return path;
-        }
+  private final PDVectorFont font;
+  private final Map<Integer, GeneralPath> cache = new HashMap<>();
 
-        try
-        {
-            if (!font.hasGlyph(code))
-            {
-                String fontName = ((PDFontLike) font).getName();
-                if (font instanceof PDType0Font)
-                {
-                    int cid = ((PDType0Font) font).codeToCID(code);
-                    String cidHex = String.format("%04x", cid);
-                    LOG.warn("No glyph for code " + code + " (CID " + cidHex + ") in font " + fontName);
-                }
-                else if (font instanceof PDSimpleFont)
-                {
-                    LOG.warn("No glyph for code " + code + " in " + font.getClass().getSimpleName()
-                            + " " + fontName + " (embedded or system font used: "
-                            + ((PDSimpleFont) font).getFontBoxFont().getName() + ")");
-                    PDSimpleFont simpleFont = (PDSimpleFont) font;
-                    if (code == 10 && simpleFont.isStandard14())
-                    {
-                        // PDFBOX-4001 return empty path for line feed on std14
-                        path = new GeneralPath();
-                        cache.put(code, path);
-                        return path;
-                    }
-                }
-                else
-                {
-                    LOG.warn("No glyph for code " + code + " in font " + fontName);
-                }
-            }
+  GlyphCache(final PDVectorFont font) {
+    this.font = font;
+  }
 
-            path = font.getNormalizedPath(code);
+  public GeneralPath getPathForCharacterCode(final int code) {
+    GeneralPath path = cache.get(code);
+    if (path != null)
+      return path;
+
+    try {
+      if (!font.hasGlyph(code)) {
+        final String fontName = ((PDFontLike) font).getName();
+        if (font instanceof PDType0Font) {
+          final int cid = ((PDType0Font) font).codeToCID(code);
+          final String cidHex = String.format("%04x", cid);
+          GlyphCache.LOG.warn("No glyph for code " + code + " (CID " + cidHex + ") in font " + fontName);
+        } else if (font instanceof PDSimpleFont) {
+          GlyphCache.LOG.warn("No glyph for code " + code + " in " + font.getClass().getSimpleName() + " " + fontName
+              + " (embedded or system font used: " + ((PDSimpleFont) font).getFontBoxFont().getName() + ")");
+          final PDSimpleFont simpleFont = (PDSimpleFont) font;
+          if (code == 10 && simpleFont.isStandard14()) {
+            // PDFBOX-4001 return empty path for line feed on std14
+            path = new GeneralPath();
             cache.put(code, path);
             return path;
+          }
+        } else {
+          GlyphCache.LOG.warn("No glyph for code " + code + " in font " + fontName);
         }
-        catch (IOException e)
-        {
-            // todo: escalate this error?
-            LOG.error("Glyph rendering failed", e);
-            return new GeneralPath();
-        }
+      }
+
+      path = font.getNormalizedPath(code);
+      cache.put(code, path);
+      return path;
+    } catch (final IOException e) {
+      // todo: escalate this error?
+      GlyphCache.LOG.error("Glyph rendering failed", e);
+      return new GeneralPath();
     }
+  }
 }
